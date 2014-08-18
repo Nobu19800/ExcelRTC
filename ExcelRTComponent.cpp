@@ -16,8 +16,8 @@ ExcelRTComponent *tertc;
 static const char* excelrtc_spec[] =
   {
     "implementation_id", "ExcelRTC",
-    "type_name",         "Excel Component",
-    "description",       "ModuleDescription",
+    "type_name",         "ExcelRTC",
+    "description",       "Excel Component",
     "version",           "0.0.2",
     "vendor",            "Miyamoto Nobuhiko",
     "category",          "Category",
@@ -129,6 +129,7 @@ TreeObject* ExcelRTComponent::GetRTCTree(string IP_adress)
 
 RTC::ReturnCode_t ExcelRTComponent::onInitialize()
 {
+	//ExcelRTC::Form1::m_form->m_excel = gcnew myExcel();
   
   this->addConfigurationSetListener(ON_SET_CONFIG_SET, new MyConfigUpdateParam(this));
 
@@ -142,6 +143,7 @@ RTC::ReturnCode_t ExcelRTComponent::onInitialize()
 
  
   
+
   return RTC::RTC_OK;
 }
 
@@ -582,115 +584,117 @@ MyPortBase* ExcelRTComponent::CreatePort(OtherPort &op, int c, std::string l, st
 	
 	string tdt = split(DataType, ":")[1];
 
+	tdt = Replace(tdt, "RTC/", "");
+
 	MyPortBase* mpb = NULL;
 	
 
-	if(tdt == "RTC/TimedDouble")
+	if(tdt == "TimedDouble")
 	{
 		
 		mpb = crPort<RTC::TimedDouble, double>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedLong")
+	else if(tdt == "TimedLong")
 	{
 		mpb = crPort<RTC::TimedLong, long>(op, tdt, op, c, l, sn, leng, mstate);
 	}
 	
 
-	else if(tdt == "RTC/TimedFloat")
+	else if(tdt == "TimedFloat")
 	{
 		mpb = crPort<RTC::TimedFloat, float>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedShort")
+	else if(tdt == "TimedShort")
 	{
 		
 		mpb = crPort<RTC::TimedShort, short>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedULong")
+	else if(tdt == "TimedULong")
 	{
 		mpb = crPort<RTC::TimedULong, long>(op, tdt, op, c, l, sn, leng, mstate);
 	}
 	
-	else if(tdt == "RTC/TimedUShort")
+	else if(tdt == "TimedUShort")
 	{
 		mpb = crPort<RTC::TimedUShort, short>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedChar")
+	else if(tdt == "TimedChar")
 	{
 		mpb = crPort<RTC::TimedChar, char>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedWChar")
+	else if(tdt == "TimedWChar")
 	{
 		//mpb = crPort<RTC::TimedWChar, char>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedBoolean")
+	else if(tdt == "TimedBoolean")
 	{
 		mpb = crPort<RTC::TimedBoolean, bool>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedOctet")
+	else if(tdt == "TimedOctet")
 	{
 		
 		mpb = crPort<RTC::TimedOctet, char>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedString")
+	else if(tdt == "TimedString")
 	{
 		
 		//mpb = crPort<RTC::TimedString, char*>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedWString")
+	else if(tdt == "TimedWString")
 	{
 		
 		//mpb = crPort<RTC::TimedWString, char*>(op, tdt, op, c, l, sn, leng, mstate);
 	}
 	
 
-	else if(tdt == "RTC/TimedDoubleSeq")
+	else if(tdt == "TimedDoubleSeq")
 	{
 		
 		mpb = crPortSeq<RTC::TimedDoubleSeq, double>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedLongSeq")
+	else if(tdt == "TimedLongSeq")
 	{
 		mpb = crPortSeq<RTC::TimedLongSeq, long>(op, tdt, op, c, l, sn, leng, mstate);
 	}
 
-	else if(tdt == "RTC/TimedFloatSeq")
+	else if(tdt == "TimedFloatSeq")
 	{
 		mpb = crPortSeq<RTC::TimedFloatSeq, float>(op, tdt, op, c, l, sn, leng, mstate);
 	}
 	
-	else if(tdt == "RTC/TimedShortSeq")
+	else if(tdt == "TimedShortSeq")
 	{
 		mpb = crPortSeq<RTC::TimedShortSeq, short>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedULongSeq")
+	else if(tdt == "TimedULongSeq")
 	{
 		
 		mpb = crPortSeq<RTC::TimedULongSeq, long>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedUShortSeq")
+	else if(tdt == "TimedUShortSeq")
 	{
 		mpb = crPortSeq<RTC::TimedUShortSeq, short>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedCharSeq")
+	else if(tdt == "TimedCharSeq")
 	{
 		mpb = crPortSeq<RTC::TimedCharSeq, char>(op, tdt, op, c, l, sn, leng, mstate);
 	}
-	else if(tdt == "RTC/TimedWCharSeq")
+	else if(tdt == "TimedWCharSeq")
 	{
 		//mpb = crPortSeq<RTC::TimedWCharSeq, char>(op, tdt, op, c, l, sn, leng, mstate);
 	}
 	
-	else if(tdt == "RTC/TimedOctetSeq")
+	else if(tdt == "TimedOctetSeq")
 	{
 		mpb = crPortSeq<RTC::TimedOctetSeq, char>(op, tdt, op, c, l, sn, leng, mstate);
 	}
 
-	else if(tdt == "RTC/TimedStringSeq")
+	else if(tdt == "TimedStringSeq")
 	{
 		//mpb = crPortSeq<RTC::TimedStringSeq, char*>(op, tdt, op, c, l, sn, leng, mstate);
 	}
 
-	else if(tdt == "RTC/TimedWStringSeq")
+	else if(tdt == "TimedWStringSeq")
 	{
 		//mpb = crPortSeq<RTC::TimedWStringSeq, char*>(op, tdt, op, c, l, sn, leng, mstate);
 	}
