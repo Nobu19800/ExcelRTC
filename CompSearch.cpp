@@ -7,6 +7,12 @@
 
 using namespace std;
 
+/*
+http://www17.atpages.jp/~aitech/wiki/?OpenRTM%2FControl%2Fconnect
+http://www17.atpages.jp/~aitech/wiki/?OpenRTM%2FControl%2Flist
+のソースコードを一部改変しました
+*/
+
 
 
 void portConnect(PortService_ptr p1, PortService_var p2)
@@ -28,6 +34,11 @@ void portConnect(PortService_ptr p1, PortService_var p2)
 	ConnectIDName += p2->get_port_profile()->name;
 
 
+/*
+http://www17.atpages.jp/~aitech/wiki/?OpenRTM%2FControl%2Fconnect
+のソースコード70～78行目
+*/
+
 	RTC::ConnectorProfile prof;
 	prof.connector_id = ConnectIDName.c_str();
 	prof.name = CORBA::string_dup(ConnectName.c_str());
@@ -47,13 +58,22 @@ void portConnect(PortService_ptr p1, PortService_var p2)
         CORBA_SeqUtil::push_back(prof.properties,NVUtil::newNV("dataport.push_rate",period.c_str()));
     }
 
+/*ここまで*/
 
     RTC::ReturnCode_t ret;
+
+
+
     ret = p1->connect(prof);
 
 }
 
+/*
+以下はhttp://www17.atpages.jp/~aitech/wiki/?OpenRTM%2FControl%2Flist
+のソースコードを改変しています。
+*/
 
+/*引数にTreeObjectを追加*/
 void ListRecursive(CosNaming::NamingContext_ptr context,vector<OtherPort> &rtclist,vector<string> &name, TreeObject *to){
     CosNaming::BindingList_var     bl;
     CosNaming::BindingIterator_var bi;
@@ -81,6 +101,9 @@ void ListRecursive(CosNaming::NamingContext_ptr context,vector<OtherPort> &rtcli
                     break;
                 vector<string> namebuff=name;
                 name.push_back(string(bl[i].binding_name[0].id));
+/*
+データポートの情報を取得するためのコードを追加
+*/
 				if(string(bl[i].binding_name[0].kind) == "rtc")
 				{
 					
@@ -117,6 +140,7 @@ void ListRecursive(CosNaming::NamingContext_ptr context,vector<OtherPort> &rtcli
 
 					//name=namebuff2;
 				}
+/*ここまで*/
 				name=namebuff;
 				
                 //rtclist.push_back(name_buff);
@@ -135,7 +159,7 @@ void ListRecursive(CosNaming::NamingContext_ptr context,vector<OtherPort> &rtcli
 }
 
 
-
+/*引数にTreeObjectとIPアドレスを追加*/
 int rtc_get_rtclist(RTC::CorbaNaming &naming,vector<OtherPort> &rtclist, TreeObject *to, std::string IP_adress){
 	
     
