@@ -27,7 +27,22 @@ static const char* excelrtc_spec[] =
     "language",          "C++",
     "lang_type",         "compile",
 	"conf.default.file_path", "NewFile",
+	"conf.dataport0.port_type", "DataInPort",
+	"conf.dataport0.data_type", "TimedFloat",
+	"conf.dataport0.column", "1",
+	"conf.dataport0.start_row", "A",
+	"conf.dataport0.end_row", "A",
+	"conf.dataport0.sheetname", "Sheet1",
 	"conf.__widget__.file_path", "text",
+	"conf.__widget__.port_type", "radio",
+	"conf.__widget__.column", "spin",
+	"conf.__widget__.start_row", "text",
+	"conf.__widget__.end_row", "text",
+	"conf.__widget__.sheetname", "text",
+	"conf.__widget__.data_type", "radio",
+	"conf.__constraints__.column", "1<=x<=1000",
+	"conf.__constraints__.port_type", "(DataInPort,DataOutPort)",
+	"conf.__constraints__.data_type", "(TimedDouble,TimedLong,TimedFloat,TimedShort,TimedULong,TimedUShort,TimedChar,TimedWChar,TimedBoolean,TimedOctet,TimedString,TimedWString,TimedDoubleSeq,TimedLongSeq,TimedFloatSeq,TimedShortSeq,TimedULongSeq,TimedUShortSeq,TimedCharSeq,TimedWCharSeq,TimedOctetSeq,TimedStringSeq,TimedWStringSeq)",
 	""
   };
 
@@ -133,8 +148,15 @@ RTC::ReturnCode_t ExcelRTComponent::onInitialize()
   
   this->addConfigurationSetListener(ON_SET_CONFIG_SET, new MyConfigUpdateParam(this));
 
-    
+
   bindParameter("file_path", file_path, "NewFile");
+  bindParameter("data_type", conf_data_type, "TimedFloat");
+  bindParameter("port_type", conf_port_type, "DataInPort");
+  bindParameter("column", conf_column, "1");
+  bindParameter("start_row", conf_start_row, "A");
+  bindParameter("end_row", conf_end_row, "A");
+  bindParameter("sheetname", conf_sheetname, "Sheet1");
+  
 
   
   m_DataBasePort.registerProvider("database", "DataBase::mDataBase", m_database);
@@ -164,6 +186,19 @@ RTC::ReturnCode_t ExcelRTComponent::onDeactivated(RTC::UniqueId ec_id)
 RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
 {
 	//ExcelRTC::Form1::m_form->m_excel->xlApplication->ScreenUpdating = false;
+
+	for(int i=0;i < ConfInPorts.size();i++)
+	{
+		ConfInPorts[i]->PutData(true);
+		
+	}
+
+	for(int i=0;i < ConfOutPorts.size();i++)
+	{
+		ConfOutPorts[i]->PutData(true);
+
+	}
+
 
 	for(int i=0;i < InPorts.size();i++)
 	{
@@ -242,7 +277,7 @@ void ExcelRTComponent::DelDPort(std::vector<std::string> pt)
 
 void ExcelRTComponent::ConfigUpdate()
 {
-	this->m_configsets.update("default","file_path");
+	this->m_configsets.update();
 	std::string sfn = Replace(file_path, "/", "\\");
 	System::String ^tfn = gcnew System::String(sfn.c_str());
 	//System::Console::WriteLine(tfn);
@@ -257,6 +292,161 @@ void ExcelRTComponent::ConfigUpdate()
 		ExcelRTC::Form1::m_form->m_excel->Open(tfn);
 		 
 		
+	}
+	for(int i=0;i < 100;i++)
+	{
+		std::string dn = "dataport";
+		std::stringstream ss;
+		ss << i+1;
+		dn = dn + ss.str();
+
+		
+		
+		if(this->m_configsets.haveConfig(dn.c_str()))
+		{
+			this->m_configsets.activateConfigurationSet(dn.c_str());
+			this->m_configsets.update();
+
+			std::string tdt = "DataInPort";
+
+			MyPortBase* tmp = GetConfInPort(dn);
+			if(tmp == NULL)
+			{
+				tmp = GetConfOutPort(dn);
+				tdt = "DataOutPort";
+			}
+			if(tmp && tmp->data_type == conf_data_type && conf_port_type == tdt)
+			{
+				tmp->SetExcelParam(conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+			}
+			else
+			{
+				if(tmp)
+				{
+					tmp->pb->disconnect_all();
+					removePort(*tmp->pb);
+					
+					std::vector<MyPortBase*>::iterator end_it = remove( ConfInPorts.begin(), ConfInPorts.end(), tmp );
+					ConfInPorts.erase( end_it, ConfInPorts.end() );
+
+					std::vector<MyPortBase*>::iterator end_it2 = remove( ConfOutPorts.begin(), ConfOutPorts.end(), tmp );
+					ConfOutPorts.erase( end_it2, ConfOutPorts.end() );
+				}
+				
+				
+				if(conf_data_type == "TimedDouble")
+				{
+					
+					ConfcrPort<RTC::TimedDouble, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedLong")
+				{
+					ConfcrPort<RTC::TimedLong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				
+
+				else if(conf_data_type == "TimedFloat")
+				{
+					
+					ConfcrPort<RTC::TimedFloat, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedShort")
+				{
+					
+					ConfcrPort<RTC::TimedShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedULong")
+				{
+					ConfcrPort<RTC::TimedULong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				
+				else if(conf_data_type == "TimedUShort")
+				{
+					ConfcrPort<RTC::TimedUShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedChar")
+				{
+					ConfcrPort<RTC::TimedChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedWChar")
+				{
+					//ConfcrPort<RTC::TimedWChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedBoolean")
+				{
+					ConfcrPort<RTC::TimedBoolean, bool>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedOctet")
+				{
+					
+					ConfcrPort<RTC::TimedOctet, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedString")
+				{
+					
+					//ConfcrPort<RTC::TimedString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedWString")
+				{
+					
+					//ConfcrPort<RTC::TimedWString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				
+
+				else if(conf_data_type == "TimedDoubleSeq")
+				{
+					
+					ConfcrPortSeq<RTC::TimedDoubleSeq, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedLongSeq")
+				{
+					ConfcrPortSeq<RTC::TimedLongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+
+				else if(conf_data_type == "TimedFloatSeq")
+				{
+					ConfcrPortSeq<RTC::TimedFloatSeq, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				
+				else if(conf_data_type == "TimedShortSeq")
+				{
+					ConfcrPortSeq<RTC::TimedShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedULongSeq")
+				{
+					
+					ConfcrPortSeq<RTC::TimedULongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedUShortSeq")
+				{
+					ConfcrPortSeq<RTC::TimedUShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedCharSeq")
+				{
+					ConfcrPortSeq<RTC::TimedCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else if(conf_data_type == "TimedWCharSeq")
+				{
+					//ConfcrPortSeq<RTC::TimedWCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				
+				else if(conf_data_type == "TimedOctetSeq")
+				{
+					ConfcrPortSeq<RTC::TimedOctetSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+
+				else if(conf_data_type == "TimedStringSeq")
+				{
+					//ConfcrPortSeq<RTC::TimedStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+
+				else if(conf_data_type == "TimedWStringSeq")
+				{
+					//ConfcrPortSeq<RTC::TimedWStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+			}	
+				
+		}
 	}
 	Load();
 }
@@ -432,6 +622,33 @@ MyPortBase *ExcelRTComponent::GetOutPort(std::string n)
 	}
 	return NULL;
 }
+MyPortBase *ExcelRTComponent::GetConfInPort(std::string n)
+{
+	for(int i=0;i < ConfInPorts.size();i++)
+	{
+		if(ConfInPorts[i]->name == n)
+		{
+			return ConfInPorts[i];
+		}
+	}
+	
+	return NULL;
+}
+
+MyPortBase *ExcelRTComponent::GetConfOutPort(std::string n)
+{
+	
+	for(int i=0;i < ConfOutPorts.size();i++)
+	{
+		if(ConfOutPorts[i]->name == n)
+		{
+			return ConfOutPorts[i];
+		}
+	}
+	return NULL;
+}
+
+
 
 void ExcelRTComponent::DeleteAllPort()
 {
@@ -569,6 +786,24 @@ void ExcelRTComponent::ResetAllPort()
 		OutPorts[i]->num = 0;
 		
 	}
+
+
+	for(int i=0;i < ConfInPorts.size();i++)
+	{
+				
+		ConfInPorts[i]->num = 0;
+		
+		
+
+	}
+	for(int i=0;i < ConfOutPorts.size();i++)
+	{
+		if(ConfOutPorts[i]->num > 0)
+			ExcelRTC::Form1::m_form->m_excel->ResetCellColor(ConfOutPorts[i]->col+ConfOutPorts[i]->num-1, ConfOutPorts[i]->low, ConfOutPorts[i]->sheetName, ConfOutPorts[i]->length);
+
+		ConfOutPorts[i]->num = 0;
+		
+	}
 }
 
 MyPortBase* ExcelRTComponent::CreatePort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate)
@@ -592,111 +827,111 @@ MyPortBase* ExcelRTComponent::CreatePort(OtherPort &op, int c, std::string l, st
 	if(tdt == "TimedDouble")
 	{
 		
-		mpb = crPort<RTC::TimedDouble, double>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedDouble, double>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedLong")
 	{
-		mpb = crPort<RTC::TimedLong, long>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedLong, long>(op, tdt, c, l, sn, leng, mstate);
 	}
 	
 
 	else if(tdt == "TimedFloat")
 	{
-		mpb = crPort<RTC::TimedFloat, float>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedFloat, float>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedShort")
 	{
 		
-		mpb = crPort<RTC::TimedShort, short>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedShort, short>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedULong")
 	{
-		mpb = crPort<RTC::TimedULong, long>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedULong, long>(op, tdt, c, l, sn, leng, mstate);
 	}
 	
 	else if(tdt == "TimedUShort")
 	{
-		mpb = crPort<RTC::TimedUShort, short>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedUShort, short>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedChar")
 	{
-		mpb = crPort<RTC::TimedChar, char>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedChar, char>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedWChar")
 	{
-		//mpb = crPort<RTC::TimedWChar, char>(op, tdt, op, c, l, sn, leng, mstate);
+		//mpb = crPort<RTC::TimedWChar, char>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedBoolean")
 	{
-		mpb = crPort<RTC::TimedBoolean, bool>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedBoolean, bool>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedOctet")
 	{
 		
-		mpb = crPort<RTC::TimedOctet, char>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPort<RTC::TimedOctet, char>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedString")
 	{
 		
-		//mpb = crPort<RTC::TimedString, char*>(op, tdt, op, c, l, sn, leng, mstate);
+		//mpb = crPort<RTC::TimedString, char*>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedWString")
 	{
 		
-		//mpb = crPort<RTC::TimedWString, char*>(op, tdt, op, c, l, sn, leng, mstate);
+		//mpb = crPort<RTC::TimedWString, char*>(op, tdt, c, l, sn, leng, mstate);
 	}
 	
 
 	else if(tdt == "TimedDoubleSeq")
 	{
 		
-		mpb = crPortSeq<RTC::TimedDoubleSeq, double>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPortSeq<RTC::TimedDoubleSeq, double>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedLongSeq")
 	{
-		mpb = crPortSeq<RTC::TimedLongSeq, long>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPortSeq<RTC::TimedLongSeq, long>(op, tdt, c, l, sn, leng, mstate);
 	}
 
 	else if(tdt == "TimedFloatSeq")
 	{
-		mpb = crPortSeq<RTC::TimedFloatSeq, float>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPortSeq<RTC::TimedFloatSeq, float>(op, tdt, c, l, sn, leng, mstate);
 	}
 	
 	else if(tdt == "TimedShortSeq")
 	{
-		mpb = crPortSeq<RTC::TimedShortSeq, short>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPortSeq<RTC::TimedShortSeq, short>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedULongSeq")
 	{
 		
-		mpb = crPortSeq<RTC::TimedULongSeq, long>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPortSeq<RTC::TimedULongSeq, long>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedUShortSeq")
 	{
-		mpb = crPortSeq<RTC::TimedUShortSeq, short>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPortSeq<RTC::TimedUShortSeq, short>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedCharSeq")
 	{
-		mpb = crPortSeq<RTC::TimedCharSeq, char>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPortSeq<RTC::TimedCharSeq, char>(op, tdt, c, l, sn, leng, mstate);
 	}
 	else if(tdt == "TimedWCharSeq")
 	{
-		//mpb = crPortSeq<RTC::TimedWCharSeq, char>(op, tdt, op, c, l, sn, leng, mstate);
+		//mpb = crPortSeq<RTC::TimedWCharSeq, char>(op, tdt, c, l, sn, leng, mstate);
 	}
 	
 	else if(tdt == "TimedOctetSeq")
 	{
-		mpb = crPortSeq<RTC::TimedOctetSeq, char>(op, tdt, op, c, l, sn, leng, mstate);
+		mpb = crPortSeq<RTC::TimedOctetSeq, char>(op, tdt, c, l, sn, leng, mstate);
 	}
 
 	else if(tdt == "TimedStringSeq")
 	{
-		//mpb = crPortSeq<RTC::TimedStringSeq, char*>(op, tdt, op, c, l, sn, leng, mstate);
+		//mpb = crPortSeq<RTC::TimedStringSeq, char*>(op, tdt, c, l, sn, leng, mstate);
 	}
 
 	else if(tdt == "TimedWStringSeq")
 	{
-		//mpb = crPortSeq<RTC::TimedWStringSeq, char*>(op, tdt, op, c, l, sn, leng, mstate);
+		//mpb = crPortSeq<RTC::TimedWStringSeq, char*>(op, tdt, c, l, sn, leng, mstate);
 	}
 	
 	

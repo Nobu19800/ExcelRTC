@@ -12,7 +12,7 @@ myExcel::myExcel()
 	xlWorksheets = nullptr;
 
 	xlWorksheet = gcnew System::Collections::Generic::List<Excel::Worksheet^>();
-
+	filename = gcnew System::String(" ");
 	Open("");
 }
 
@@ -100,6 +100,11 @@ std::vector<std::string> myExcel::LoadRTC()
 
 void myExcel::Open(System::String^ fn)
 {
+	if(filename == fn)
+	{
+		return;
+	}
+
 	Excel::Application^ t_xlApplication;
 	Excel::Workbooks^ t_xlWorkbooks;
 	Excel::Workbook^ t_xlWorkbook;

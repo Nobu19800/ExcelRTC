@@ -196,7 +196,7 @@ template <class T, class T2>
 class MyInPort : public MyPortBase
 {
 public:
-	MyInPort(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, OtherPort &otp, ExcelRTComponent *m_mexc){
+	MyInPort(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelRTComponent *m_mexc){
 		In = id;
 		inIn = ip;
 		name = n;
@@ -207,7 +207,7 @@ public:
 		sheetnum = 1;
 		
 
-		mop = &otp;
+		
 		pb = ip;
 
 		
@@ -282,7 +282,7 @@ template <class T, class T2>
 class MyInPortSeq : public MyPortBase
 {
 public:
-	MyInPortSeq(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, OtherPort &otp, ExcelRTComponent *m_mexc){
+	MyInPortSeq(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelRTComponent *m_mexc){
 		In = id;
 		inIn = ip;
 		name = n;
@@ -293,7 +293,7 @@ public:
 		sheetnum = 1;
 		
 
-		mop = &otp;
+		
 		pb = ip;
 
 		
@@ -371,7 +371,7 @@ template <class T, class T2>
 class MyOutPort : public MyPortBase
 {
 public:
-	MyOutPort(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, OtherPort &otp, ExcelRTComponent *m_mexc){
+	MyOutPort(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelRTComponent *m_mexc){
 		Out = od;
 		outOut = op;
 		name = n;
@@ -382,7 +382,7 @@ public:
 		sheetnum = 1;
 		
 
-		mop = &otp;
+		
 		pb = op;
 
 		mexc = m_mexc;
@@ -418,7 +418,7 @@ template <class T, class T2>
 class MyOutPortSeq : public MyPortBase
 {
 public:
-	MyOutPortSeq(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, OtherPort &otp, ExcelRTComponent *m_mexc){
+	MyOutPortSeq(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelRTComponent *m_mexc){
 		Out = od;
 		outOut = op;
 		name = n;
@@ -429,7 +429,7 @@ public:
 		sheetnum = 1;
 		
 
-		mop = &otp;
+		
 		pb = op;
 
 		mexc = m_mexc;
@@ -504,7 +504,7 @@ class ExcelRTComponent
    void ResetPort(MyPortBase* mpb);
    //全てのデータを書き込む列を初期化する
    void ResetAllPort();
-   //コンフィギュレーションパラメータが変更されたときにファイルを再読み込みする関数
+   //コンフィギュレーションパラメータが変更されたときに呼び出される関数
    void ConfigUpdate();
 
    //セルに値を書き込み関数
@@ -524,7 +524,7 @@ class ExcelRTComponent
 		return td;
 	}
 	//シーケンス型のデータポートを作成する関数
-	template <typename T, typename T2> MyPortBase* crPortSeq(OtherPort &op, std::string tdt, OtherPort &otp, int c, std::string l, std::string sn, std::string leng, bool mstate)
+	template <typename T, typename T2> MyPortBase* crPortSeq(OtherPort &op, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
 		string PortType = NVUtil::toString(op.pb->get_port_profile()->properties,"port.port_type");
 		
@@ -539,11 +539,12 @@ class ExcelRTComponent
 			
 			MyPortBase *mip;
 			
-			mip= new MyOutPortSeq<T,T2>(m_out,m_outOut,tname,tdt,otp,this);
+			mip= new MyOutPortSeq<T,T2>(m_out,m_outOut,tname,tdt,this);
+			mip->mop = &op;
 			
 			mip->SetExcelParam(c,l,sn,leng,mstate);
 			OutPorts.push_back(mip);
-			portConnect(m_outOut->getPortRef(), otp.pb);
+			portConnect(m_outOut->getPortRef(), op.pb);
 
 			op.mpb = mip;
 
@@ -557,13 +558,13 @@ class ExcelRTComponent
 
 			addInPort(tname.c_str(), *m_inIn);
 
-			MyPortBase *mip = new MyInPortSeq<T,T2>(m_in,m_inIn,tname,tdt,otp,this);
+			MyPortBase *mip = new MyInPortSeq<T,T2>(m_in,m_inIn,tname,tdt,this);
+			mip->mop = &op;
 			
-			mip = new MyInPortSeq<T,T2>(m_in,m_inIn,tname,tdt,otp,this);
 
 			mip->SetExcelParam(c,l,sn,leng,mstate);
 			InPorts.push_back(mip);
-			portConnect(m_inIn->getPortRef(), otp.pb);
+			portConnect(m_inIn->getPortRef(), op.pb);
 
 			op.mpb = mip;
 
@@ -572,7 +573,7 @@ class ExcelRTComponent
 		return NULL;
 	}
 	//データポートを作成する関数
-   template <typename T, typename T2> MyPortBase* crPort(OtherPort &op, std::string tdt, OtherPort &otp, int c, std::string l, std::string sn, std::string leng, bool mstate)
+   template <typename T, typename T2> MyPortBase* crPort(OtherPort &op, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
 	   string PortType = NVUtil::toString(op.pb->get_port_profile()->properties,"port.port_type");
 		
@@ -587,11 +588,12 @@ class ExcelRTComponent
 			
 			MyPortBase *mip;
 			
-			mip= new MyOutPort<T,T2>(m_out,m_outOut,tname,tdt,otp,this);
+			mip= new MyOutPort<T,T2>(m_out,m_outOut,tname,tdt,this);
+			mip->mop = &op;
 			
 			mip->SetExcelParam(c,l,sn,leng,mstate);
 			OutPorts.push_back(mip);
-			portConnect(m_outOut->getPortRef(), otp.pb);
+			portConnect(m_outOut->getPortRef(), op.pb);
 
 			op.mpb = mip;
 
@@ -606,13 +608,13 @@ class ExcelRTComponent
 
 			addInPort(tname.c_str(), *m_inIn);
 
-			MyPortBase *mip = new MyInPort<T,T2>(m_in,m_inIn,tname,tdt,otp,this);
+			MyPortBase *mip = new MyInPort<T,T2>(m_in,m_inIn,tname,tdt,this);
+			mip->mop = &op;
 			
-			mip = new MyInPort<T,T2>(m_in,m_inIn,tname,tdt,otp,this);
 
 			mip->SetExcelParam(c,l,sn,leng,mstate);
 			InPorts.push_back(mip);
-			portConnect(m_inIn->getPortRef(), otp.pb);
+			portConnect(m_inIn->getPortRef(), op.pb);
 
 			op.mpb = mip;
 
@@ -620,6 +622,98 @@ class ExcelRTComponent
 		}
 		return NULL;
    }
+   //コンフィギュレーションパラメータによりシーケンス型のデータポートを作成する関数
+   template <typename T, typename T2> MyPortBase* ConfcrPortSeq(std::string tname, std::string PortType, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
+   {
+		
+	  
+		if(PortType == "DataOutPort")
+		{
+			T *m_out = new T();
+			OutPort<T> *m_outOut = new OutPort<T>(tname.c_str(),*m_out);
+			addOutPort(tname.c_str(), *m_outOut);
+			
+			MyPortBase *mip;
+			
+			mip= new MyOutPortSeq<T,T2>(m_out,m_outOut,tname,tdt,this);
+			
+			mip->SetExcelParam(c,l,sn,leng,mstate);
+			ConfOutPorts.push_back(mip);
+			
+
+			
+
+			return mip;
+		
+		}
+		else if(PortType == "DataInPort")
+		{
+			T *m_in = new T();
+			InPort<T> *m_inIn = new InPort<T>(tname.c_str(),*m_in);
+
+			addInPort(tname.c_str(), *m_inIn);
+
+			MyPortBase *mip = new MyInPortSeq<T,T2>(m_in,m_inIn,tname,tdt,this);
+			
+			
+
+			mip->SetExcelParam(c,l,sn,leng,mstate);
+			ConfInPorts.push_back(mip);
+			
+
+			
+
+			return mip;
+		}
+		return NULL;
+	}
+	//コンフィギュレーションパラメータによりデータポートを作成する関数
+   template <typename T, typename T2> MyPortBase* ConfcrPort(std::string tname, std::string PortType, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
+   {
+	  
+	  
+		if(PortType == "DataOutPort")
+		{
+			T *m_out = new T();
+			OutPort<T> *m_outOut = new OutPort<T>(tname.c_str(),*m_out);
+			addOutPort(tname.c_str(), *m_outOut);
+			
+			MyPortBase *mip;
+			
+			mip= new MyOutPort<T,T2>(m_out,m_outOut,tname,tdt,this);
+			
+			mip->SetExcelParam(c,l,sn,leng,mstate);
+			ConfOutPorts.push_back(mip);
+			
+
+			
+
+			return mip;
+		
+		}
+		else if(PortType == "DataInPort")
+		{
+			T *m_in = new T();
+			InPort<T> *m_inIn = new InPort<T>(tname.c_str(),*m_in);
+			
+
+			addInPort(tname.c_str(), *m_inIn);
+
+			MyPortBase *mip = new MyInPort<T,T2>(m_in,m_inIn,tname,tdt,this);
+			
+			
+
+			mip->SetExcelParam(c,l,sn,leng,mstate);
+			ConfInPorts.push_back(mip);
+			
+
+			
+
+			return mip;
+		}
+		return NULL;
+   }
+
 
    
 
@@ -640,12 +734,18 @@ class ExcelRTComponent
    MyPortBase *GetInPort(std::string n);
    //アウトポートを取得する関数
    MyPortBase *GetOutPort(std::string n);
+   //コンフィギュレーションパラメータで設定したデータポートを取得する関数
+   MyPortBase *GetConfOutPort(std::string n);
+   MyPortBase *GetConfInPort(std::string n);
 
    //RTCのデータポートのツリーを取得する関数
    TreeObject* GetRTCTree(std::string IP_adress);
 
    std::vector<MyPortBase*> InPorts;
    std::vector<MyPortBase*> OutPorts;
+
+   std::vector<MyPortBase*> ConfInPorts;
+   std::vector<MyPortBase*> ConfOutPorts;
 
    RTC::Manager* m_manager;
 
@@ -659,6 +759,13 @@ class ExcelRTComponent
 
  protected:
 	std::string file_path;
+	std::string conf_data_type;
+	std::string conf_port_type;
+	int conf_column;
+	std::string conf_start_row;
+	std::string conf_end_row;
+	std::string conf_sheetname;
+
 
  private:
 
