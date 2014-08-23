@@ -309,143 +309,147 @@ void ExcelRTComponent::ConfigUpdate()
 
 			std::string tdt = "DataInPort";
 
-			MyPortBase* tmp = GetConfInPort(dn);
-			if(tmp == NULL)
+			if(conf_column > 0 && conf_start_row.size() > 0)
 			{
-				tmp = GetConfOutPort(dn);
-				tdt = "DataOutPort";
+
+				MyPortBase* tmp = GetConfInPort(dn);
+				if(tmp == NULL)
+				{
+					tmp = GetConfOutPort(dn);
+					tdt = "DataOutPort";
+				}
+				if(tmp && tmp->data_type == conf_data_type && conf_port_type == tdt)
+				{
+					tmp->SetExcelParam(conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+				}
+				else
+				{
+					if(tmp)
+					{
+						tmp->pb->disconnect_all();
+						removePort(*tmp->pb);
+						
+						std::vector<MyPortBase*>::iterator end_it = remove( ConfInPorts.begin(), ConfInPorts.end(), tmp );
+						ConfInPorts.erase( end_it, ConfInPorts.end() );
+
+						std::vector<MyPortBase*>::iterator end_it2 = remove( ConfOutPorts.begin(), ConfOutPorts.end(), tmp );
+						ConfOutPorts.erase( end_it2, ConfOutPorts.end() );
+					}
+					
+					
+					if(conf_data_type == "TimedDouble")
+					{
+						
+						ConfcrPort<RTC::TimedDouble, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedLong")
+					{
+						ConfcrPort<RTC::TimedLong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					
+
+					else if(conf_data_type == "TimedFloat")
+					{
+						
+						ConfcrPort<RTC::TimedFloat, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedShort")
+					{
+						
+						ConfcrPort<RTC::TimedShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedULong")
+					{
+						ConfcrPort<RTC::TimedULong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					
+					else if(conf_data_type == "TimedUShort")
+					{
+						ConfcrPort<RTC::TimedUShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedChar")
+					{
+						ConfcrPort<RTC::TimedChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedWChar")
+					{
+						//ConfcrPort<RTC::TimedWChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedBoolean")
+					{
+						ConfcrPort<RTC::TimedBoolean, bool>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedOctet")
+					{
+						
+						ConfcrPort<RTC::TimedOctet, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedString")
+					{
+						
+						//ConfcrPort<RTC::TimedString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedWString")
+					{
+						
+						//ConfcrPort<RTC::TimedWString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					
+
+					else if(conf_data_type == "TimedDoubleSeq")
+					{
+						
+						ConfcrPortSeq<RTC::TimedDoubleSeq, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedLongSeq")
+					{
+						ConfcrPortSeq<RTC::TimedLongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+
+					else if(conf_data_type == "TimedFloatSeq")
+					{
+						ConfcrPortSeq<RTC::TimedFloatSeq, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					
+					else if(conf_data_type == "TimedShortSeq")
+					{
+						ConfcrPortSeq<RTC::TimedShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedULongSeq")
+					{
+						
+						ConfcrPortSeq<RTC::TimedULongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedUShortSeq")
+					{
+						ConfcrPortSeq<RTC::TimedUShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedCharSeq")
+					{
+						ConfcrPortSeq<RTC::TimedCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					else if(conf_data_type == "TimedWCharSeq")
+					{
+						//ConfcrPortSeq<RTC::TimedWCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+					
+					else if(conf_data_type == "TimedOctetSeq")
+					{
+						ConfcrPortSeq<RTC::TimedOctetSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+
+					else if(conf_data_type == "TimedStringSeq")
+					{
+						//ConfcrPortSeq<RTC::TimedStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+
+					else if(conf_data_type == "TimedWStringSeq")
+					{
+						//ConfcrPortSeq<RTC::TimedWStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					}
+				}	
+					
 			}
-			if(tmp && tmp->data_type == conf_data_type && conf_port_type == tdt)
-			{
-				tmp->SetExcelParam(conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-			}
-			else
-			{
-				if(tmp)
-				{
-					tmp->pb->disconnect_all();
-					removePort(*tmp->pb);
-					
-					std::vector<MyPortBase*>::iterator end_it = remove( ConfInPorts.begin(), ConfInPorts.end(), tmp );
-					ConfInPorts.erase( end_it, ConfInPorts.end() );
-
-					std::vector<MyPortBase*>::iterator end_it2 = remove( ConfOutPorts.begin(), ConfOutPorts.end(), tmp );
-					ConfOutPorts.erase( end_it2, ConfOutPorts.end() );
-				}
-				
-				
-				if(conf_data_type == "TimedDouble")
-				{
-					
-					ConfcrPort<RTC::TimedDouble, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedLong")
-				{
-					ConfcrPort<RTC::TimedLong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				
-
-				else if(conf_data_type == "TimedFloat")
-				{
-					
-					ConfcrPort<RTC::TimedFloat, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedShort")
-				{
-					
-					ConfcrPort<RTC::TimedShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedULong")
-				{
-					ConfcrPort<RTC::TimedULong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				
-				else if(conf_data_type == "TimedUShort")
-				{
-					ConfcrPort<RTC::TimedUShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedChar")
-				{
-					ConfcrPort<RTC::TimedChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedWChar")
-				{
-					//ConfcrPort<RTC::TimedWChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedBoolean")
-				{
-					ConfcrPort<RTC::TimedBoolean, bool>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedOctet")
-				{
-					
-					ConfcrPort<RTC::TimedOctet, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedString")
-				{
-					
-					//ConfcrPort<RTC::TimedString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedWString")
-				{
-					
-					//ConfcrPort<RTC::TimedWString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				
-
-				else if(conf_data_type == "TimedDoubleSeq")
-				{
-					
-					ConfcrPortSeq<RTC::TimedDoubleSeq, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedLongSeq")
-				{
-					ConfcrPortSeq<RTC::TimedLongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-
-				else if(conf_data_type == "TimedFloatSeq")
-				{
-					ConfcrPortSeq<RTC::TimedFloatSeq, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				
-				else if(conf_data_type == "TimedShortSeq")
-				{
-					ConfcrPortSeq<RTC::TimedShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedULongSeq")
-				{
-					
-					ConfcrPortSeq<RTC::TimedULongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedUShortSeq")
-				{
-					ConfcrPortSeq<RTC::TimedUShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedCharSeq")
-				{
-					ConfcrPortSeq<RTC::TimedCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				else if(conf_data_type == "TimedWCharSeq")
-				{
-					//ConfcrPortSeq<RTC::TimedWCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-				
-				else if(conf_data_type == "TimedOctetSeq")
-				{
-					ConfcrPortSeq<RTC::TimedOctetSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-
-				else if(conf_data_type == "TimedStringSeq")
-				{
-					//ConfcrPortSeq<RTC::TimedStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-
-				else if(conf_data_type == "TimedWStringSeq")
-				{
-					//ConfcrPortSeq<RTC::TimedWStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
-				}
-			}	
-				
 		}
 	}
 	Load();

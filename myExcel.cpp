@@ -39,13 +39,17 @@ void myExcel::ResetCellColor(int c, std::string l, std::string sn, std::string l
 		int t_leng = convertStrToVal(len);
 
 
-		Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l]);
-		Excel::Range^c2 = safe_cast<Excel::Range^>(ws->Cells[c,t_leng]);
-		
-		
-		Excel::Range^mr = ws->Range[c1,c2];
+		if(c > 0 && t_l > 0 && t_leng >= t_l)
+		{
+			Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l]);
+			Excel::Range^c2 = safe_cast<Excel::Range^>(ws->Cells[c,t_leng]);
+			
+			
+			Excel::Range^mr = ws->Range[c1,c2];
 
-		mr->Interior->ColorIndex = 0;
+			mr->Interior->ColorIndex = 0;
+		}
+		
 
 	}
 }

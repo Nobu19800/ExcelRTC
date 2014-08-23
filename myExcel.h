@@ -34,8 +34,11 @@ public:
 		Excel::Worksheet^ws = GetWorksheet(sn);
 		if(ws != nullptr)
 		{
-			Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l]);
-			c1->Value2 = val;
+			if(c > 0 && t_l > 0)
+			{
+				Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l]);
+				c1->Value2 = val;
+			}
 		}
 	}
 
@@ -46,9 +49,12 @@ public:
 		Excel::Worksheet^ws = GetWorksheet(sn);
 		if(ws != nullptr)
 		{
-			Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l]);
+			if(c > 0 && t_l > 0)
+			{
+				Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l]);
 			
-			return MarshalString(c1->Value2->ToString());
+				return MarshalString(c1->Value2->ToString());
+			}
 		}
 		return "error";
 	}
@@ -68,27 +74,29 @@ public:
 				mnum = 1;
 			for(int i=0;i < mnum;i++)
 			{
-				
-				Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c+i,t_l]);
-				Excel::Range^c2 = safe_cast<Excel::Range^>(ws->Cells[c+i,t_l+v[i].size()-1]);
-				
-				
-				Excel::Range^mr = ws->Range[c1,c2];		
-				
-				array<T>^dt = gcnew array<T>(v[i].size());
-				//std::cout << v.size() << std::endl;
-				for(int j=0;j < v[i].size();j++)
+				if(c+i > 0 && t_l > 0)
 				{
+					Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c+i,t_l]);
+					Excel::Range^c2 = safe_cast<Excel::Range^>(ws->Cells[c+i,t_l+v[i].size()-1]);
 					
-					dt[j] = v[i][j];//gcnew System::String(v[i].c_str());
 					
-					//mr->Value2 = gcnew System::String(v.c_str());
-					//ws->Cells[c,l] =  gcnew System::String(v.c_str());
-				}
+					Excel::Range^mr = ws->Range[c1,c2];		
+					
+					array<T>^dt = gcnew array<T>(v[i].size());
+					//std::cout << v.size() << std::endl;
+					for(int j=0;j < v[i].size();j++)
+					{
+						
+						dt[j] = v[i][j];//gcnew System::String(v[i].c_str());
+						
+						//mr->Value2 = gcnew System::String(v.c_str());
+						//ws->Cells[c,l] =  gcnew System::String(v.c_str());
+					}
 
-				
-				
-				mr->Value2 = dt;
+					
+					
+					mr->Value2 = dt;
+				}
 			}
 
 			
@@ -118,11 +126,11 @@ public:
 
 			
 
-			if(c > 1)
+			if(c > 0 && t_l > 0 && t_leng >= t_l)
 			{
 				
 
-				{
+				if(c > 1){
 					
 
 					Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c-1,t_l]);
@@ -155,23 +163,26 @@ public:
 			
 			for(int i=0;i < t_leng-t_l+1;i++)
 			{
-				Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l+i]);
-				/*if(c > 1)
+				if(c > 0 && t_l+i > 0)
 				{
-					Excel::Range^c2 = safe_cast<Excel::Range^>(ws->Cells[c-1,l+i]);
-					c2->Interior->ColorIndex = 0;
-				}
-				c1->Interior->ColorIndex = 6;*/
+					Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l+i]);
+					/*if(c > 1)
+					{
+						Excel::Range^c2 = safe_cast<Excel::Range^>(ws->Cells[c-1,l+i]);
+						c2->Interior->ColorIndex = 0;
+					}
+					c1->Interior->ColorIndex = 6;*/
 
-				try{
-					
-					
-					v.push_back(string2binary<T>(MarshalString(c1->Value2->ToString()),10));
-					
-				}
-				catch(...)
-				{
-					v.push_back(0);
+					try{
+						
+						
+						v.push_back(string2binary<T>(MarshalString(c1->Value2->ToString()),10));
+						
+					}
+					catch(...)
+					{
+						v.push_back(0);
+					}
 				}
 				//Excel::Range^mr2 = safe_cast<Excel::Range^>(mr[0,i]);
 				//v.push_back(string2binary<T>(MarshalString(mr[0,i]->ToString()),10));
