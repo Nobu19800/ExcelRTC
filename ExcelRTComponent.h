@@ -720,7 +720,7 @@ class ExcelRTComponent
    
    
    //データポートの作成、値の設定を行う関数
-   MyPortBase* SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate);
+   MyPortBase* SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag);
    //データポートを削除する関数
    void DelDPort(std::vector<std::string> pt);
    //データポートを取得する関数

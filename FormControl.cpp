@@ -254,7 +254,7 @@ void ExcelRTC::Form1::CreatePort()
 				bt.erase(bt.begin());
 
 				
-				MyPortBase* mpb = tertc->SetDPort(bt,c,l,sn,leng,mstate);
+				MyPortBase* mpb = tertc->SetDPort(bt,c,l,sn,leng,mstate,true);
 				if(mpb != NULL)
 				{
 					this->InfotextBox->Text = "ì¬Ï‚Ý";

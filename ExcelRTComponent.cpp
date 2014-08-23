@@ -277,6 +277,7 @@ void ExcelRTComponent::DelDPort(std::vector<std::string> pt)
 
 void ExcelRTComponent::ConfigUpdate()
 {
+
 	this->m_configsets.update();
 	std::string sfn = Replace(file_path, "/", "\\");
 	System::String ^tfn = gcnew System::String(sfn.c_str());
@@ -285,11 +286,13 @@ void ExcelRTComponent::ConfigUpdate()
 	if(sfn ==  "NewFile")
 	{
 		ExcelRTC::Form1::m_form->m_excel->Open("");
+		Load();
 	}
 	else if(ExcelRTC::Form1::m_form->m_excel->filename != tfn)
 	{
 		
 		ExcelRTC::Form1::m_form->m_excel->Open(tfn);
+		Load();
 		 
 		
 	}
@@ -452,7 +455,7 @@ void ExcelRTComponent::ConfigUpdate()
 			}
 		}
 	}
-	Load();
+	
 }
 
 MyPortBase* ExcelRTComponent::GetDPort(std::vector<std::string> pt)
@@ -468,7 +471,7 @@ MyPortBase* ExcelRTComponent::GetDPort(std::vector<std::string> pt)
 	return NULL;
 }
 
-MyPortBase* ExcelRTComponent::SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate)
+MyPortBase* ExcelRTComponent::SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag)
 {
 	/*for(int i=0;i < pt.size();i++)
 	{
@@ -492,7 +495,8 @@ MyPortBase* ExcelRTComponent::SetDPort(std::vector<std::string> pt, int c, std::
 			tmp += gcnew System::String(rtclist[i].buff[rtclist[i].buff.size()-1].c_str());
 			tmp += "と通信するデータポートを作成しました。";
 
-			System::Windows::Forms::MessageBox::Show(tmp);
+			if(msflag)
+				System::Windows::Forms::MessageBox::Show(tmp);
 
 			return CreatePort(rtclist[i], c, l, sn, leng, mstate);
 		}
@@ -750,7 +754,7 @@ void ExcelRTComponent::Load()
 					{
 						GetRTCTree(mpath[0]);
 					}
-					MyPortBase *mpb = SetDPort(mpath, col, low, sheetname, len, mstate);
+					MyPortBase *mpb = SetDPort(mpath, col, low, sheetname, len, mstate, false);
 
 					vector<string> atrtc = split(confs[6], "/");
 					
