@@ -17,10 +17,10 @@ typedef sequence<ValueLine> ValueList;
 
 
 
-module DataBase {
+module SpreadSheet {
 	
 
-	interface mDataBase
+	interface mSpreadSheet
 	{
 		string get_string(in string l, in string c, in string sn);
 		void set_value(in string l, in string c, in string sn, in float v);

@@ -1,37 +1,37 @@
 // -*-C++-*-
 /*!
- * @file  DataBaseSVC_impl.h
- * @brief Service implementation header of DataBase.idl
+ * @file  SpreadSheetSVC_impl.h
+ * @brief Service implementation header of SpreadSheet.idl
  *
  */
 
-#include "DataBaseSkel.h"
+#include "SpreadSheetSkel.h"
 
 #ifndef DATABASESVC_IMPL_H
 #define DATABASESVC_IMPL_H
  
 /*!
- * @class mDataBaseSVC_impl
- * Example class implementing IDL interface DataBase::mDataBase
+ * @class mSpreadSheetSVC_impl
+ * Example class implementing IDL interface SpreadSheet::mSpreadSheet
  */
-class mDataBaseSVC_impl
- : public virtual POA_DataBase::mDataBase,
+class mSpreadSheetSVC_impl
+ : public virtual POA_SpreadSheet::mSpreadSheet,
    public virtual PortableServer::RefCountServantBase
 {
  private:
    // Make sure all instances are built on the heap by making the
    // destructor non-public
-   //virtual ~mDataBaseSVC_impl();
+   //virtual ~mSpreadSheetSVC_impl();
 
  public:
   /*!
    * @brief standard constructor
    */
-   mDataBaseSVC_impl();
+   mSpreadSheetSVC_impl();
   /*!
    * @brief destructor
    */
-   virtual ~mDataBaseSVC_impl();
+   virtual ~mSpreadSheetSVC_impl();
 
    // attributes and operations
    char* get_string(const char* l, const char* c, const char* sn);

@@ -3,8 +3,8 @@
  *
  * THIS FILE IS GENERATED AUTOMATICALLY!! DO NOT EDIT!!
  *
- * @file DataBaseSkel.h 
- * @brief DataBase server skeleton header wrapper code
+ * @file SpreadSheetSkel.h 
+ * @brief SpreadSheet server skeleton header wrapper code
  * @date Tue Aug 12 02:27:17 2014 
  *
  */
@@ -22,20 +22,20 @@
 #undef PACKAGE_VERSION
 
 #if   defined ORB_IS_TAO
-#  include "DataBaseC.h"
-#  include "DataBaseS.h"
+#  include "SpreadSheetC.h"
+#  include "SpreadSheetS.h"
 #elif defined ORB_IS_OMNIORB
 #  if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #    undef USE_stub_in_nt_dll
 #  endif
-#  include "DataBase.hh"
+#  include "SpreadSheet.hh"
 #elif defined ORB_IS_MICO
-#  include "DataBase.h"
+#  include "SpreadSheet.h"
 #elif defined ORB_IS_ORBIT2
-#  include "/DataBase-cpp-stubs.h"
-#  include "/DataBase-cpp-skels.h"
+#  include "/SpreadSheet-cpp-stubs.h"
+#  include "/SpreadSheet-cpp-skels.h"
 #elif defined ORB_IS_RTORB
-#  include "DataBase.h"
+#  include "SpreadSheet.h"
 #else
 #  error "NO ORB defined"
 #endif
