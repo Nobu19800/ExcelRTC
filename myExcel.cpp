@@ -14,6 +14,17 @@ myExcel::myExcel()
 	xlWorksheet = gcnew System::Collections::Generic::List<Excel::Worksheet^>();
 	filename = gcnew System::String(" ");
 	Open("");
+
+	red = 255;
+	green = 255;
+	blue = 0;
+}
+
+void myExcel::SetColor(int r, int g, int b)
+{
+	red = r;
+	green = g;
+	blue = b;
 }
 
 Excel::Worksheet^ myExcel::GetWorksheet(std::string sn)

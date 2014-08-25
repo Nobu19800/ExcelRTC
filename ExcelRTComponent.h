@@ -23,7 +23,7 @@
 
 using namespace RTC;
 
-#include "DataBaseSVC_impl.h"
+#include "SpreadSheetSVC_impl.h"
 
 
 
@@ -751,8 +751,8 @@ class ExcelRTComponent
 
    std::vector<OtherPort> rtclist;
 
-   RTC::CorbaPort m_DataBasePort;
-   mDataBaseSVC_impl m_database;
+   RTC::CorbaPort m_SpreadSheetPort;
+   mSpreadSheetSVC_impl m_spreadsheet;
 
    
    
@@ -765,6 +765,11 @@ class ExcelRTComponent
 	std::string conf_start_row;
 	std::string conf_end_row;
 	std::string conf_sheetname;
+
+	int actionLock;
+	int Red;
+	int Green;
+	int Blue;
 
 
  private:

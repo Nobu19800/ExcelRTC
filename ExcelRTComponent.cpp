@@ -27,12 +27,20 @@ static const char* excelrtc_spec[] =
     "language",          "C++",
     "lang_type",         "compile",
 	"conf.default.file_path", "NewFile",
+	"conf.default.actionLock", "0",
+    "conf.default.Red", "255",
+    "conf.default.Green", "255",
+    "conf.default.Blue", "0",
 	"conf.dataport0.port_type", "DataInPort",
 	"conf.dataport0.data_type", "TimedFloat",
 	"conf.dataport0.column", "1",
 	"conf.dataport0.start_row", "A",
 	"conf.dataport0.end_row", "A",
 	"conf.dataport0.sheetname", "Sheet1",
+	"conf.__widget__.actionLock", "radio",
+    "conf.__widget__.Red", "spin",
+    "conf.__widget__.Green", "spin",
+    "conf.__widget__.Blue", "spin",
 	"conf.__widget__.file_path", "text",
 	"conf.__widget__.port_type", "radio",
 	"conf.__widget__.column", "spin",
@@ -40,6 +48,11 @@ static const char* excelrtc_spec[] =
 	"conf.__widget__.end_row", "text",
 	"conf.__widget__.sheetname", "text",
 	"conf.__widget__.data_type", "radio",
+	"conf.__constraints__.actionLock", "(0,1)",
+    "conf.__constraints__.Red", "0<=x<=255",
+    "conf.__constraints__.Green", "0<=x<=255",
+    "conf.__constraints__.Blue", "0<=x<=255",
+    "conf.__constraints__.column", "1<=x<=1000",
 	"conf.__constraints__.column", "1<=x<=1000",
 	"conf.__constraints__.port_type", "(DataInPort,DataOutPort)",
 	"conf.__constraints__.data_type", "(TimedDouble,TimedLong,TimedFloat,TimedShort,TimedULong,TimedUShort,TimedChar,TimedWChar,TimedBoolean,TimedOctet,TimedString,TimedWString,TimedDoubleSeq,TimedLongSeq,TimedFloatSeq,TimedShortSeq,TimedULongSeq,TimedUShortSeq,TimedCharSeq,TimedWCharSeq,TimedOctetSeq,TimedStringSeq,TimedWStringSeq)",
@@ -89,7 +102,7 @@ void SetTree(TreeObject *to)
 
 ExcelRTComponent::ExcelRTComponent(RTC::Manager* manager)
   : RTC::DataFlowComponentBase(manager),
-  m_DataBasePort("DataBase")
+  m_SpreadSheetPort("SpreadSheet")
 
 {
 	tertc = this;
@@ -156,12 +169,16 @@ RTC::ReturnCode_t ExcelRTComponent::onInitialize()
   bindParameter("start_row", conf_start_row, "A");
   bindParameter("end_row", conf_end_row, "A");
   bindParameter("sheetname", conf_sheetname, "Sheet1");
+  bindParameter("actionLock", actionLock, "0");
+  bindParameter("Red", Red, "255");
+  bindParameter("Green", Green, "255");
+  bindParameter("Blue", Blue, "0");
   
 
   
-  m_DataBasePort.registerProvider("database", "DataBase::mDataBase", m_database);
+  m_SpreadSheetPort.registerProvider("spreadsheet", "SpreadSheet::mSpreadSheet", m_spreadsheet);
 
-  addPort(m_DataBasePort);
+  addPort(m_SpreadSheetPort);
 
  
   
@@ -185,7 +202,10 @@ RTC::ReturnCode_t ExcelRTComponent::onDeactivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
 {
-	//ExcelRTC::Form1::m_form->m_excel->xlApplication->ScreenUpdating = false;
+	if(actionLock == 1)
+		ExcelRTC::Form1::m_form->m_excel->xlApplication->ScreenUpdating = false;
+
+	ExcelRTC::Form1::m_form->m_excel->SetColor(Red, Green, Blue);
 
 	for(int i=0;i < ConfInPorts.size();i++)
 	{
@@ -219,7 +239,9 @@ RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
 			
 		}
 	}
-	//ExcelRTC::Form1::m_form->m_excel->xlApplication->ScreenUpdating = true;
+
+	if(actionLock == 1)
+		ExcelRTC::Form1::m_form->m_excel->xlApplication->ScreenUpdating = true;
 	
 
 	for(int i=0;i < OutPorts.size();i++)

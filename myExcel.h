@@ -150,6 +150,8 @@ public:
 					Excel::Range^mr = ws->Range[c1,c2];
 
 					mr->Interior->ColorIndex = 6;
+					//mr->Interior->Color = System::Drawing::Color::FromArgb(red, blue, green);
+					
 				}
 			}
 
@@ -207,6 +209,10 @@ public:
 	void Open(System::String^ fn);
 	//COMオブジェクトを解放する関数
 	void Close();
+
+	void SetColor(int r, int g, int b);
+
+	int red, green, blue;
 
 	System::String^ filename;
 	Excel::Application^ xlApplication;
