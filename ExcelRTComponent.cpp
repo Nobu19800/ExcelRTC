@@ -180,6 +180,8 @@ RTC::ReturnCode_t ExcelRTComponent::onInitialize()
 
   addPort(m_SpreadSheetPort);
 
+  
+
  
   
 

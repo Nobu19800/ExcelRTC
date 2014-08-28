@@ -326,6 +326,11 @@ void ExcelRTC::Form1::InitFunc()
 {
 	m_form = this;
 	NamingServertextBox->Text = "localhost:2809";
+
+	if(tertc)
+	{
+		tertc->Load();
+	}
 }
 
 void ExcelRTC::Form1::OpenFile()
