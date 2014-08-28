@@ -58,11 +58,7 @@ int main(array<System::String ^> ^args)
 	int argc = 0;
 	manager = RTC::Manager::init(argc, argv);
 
-	myExcel::Obj = gcnew myExcel();
-	std::string filePath = "";
-    coil::Properties& prop(::RTC::Manager::instance().getConfig());
-    getProperty(prop, "excel.filename", filePath);
-    myExcel::Obj->Open(gcnew System::String(filePath.c_str()));
+	
 
 
 
@@ -70,6 +66,14 @@ int main(array<System::String ^> ^args)
 	manager->setModuleInitProc(MyModuleInit);
 	manager->activateManager();
 	manager->runManager(true);
+
+
+	myExcel::Obj = gcnew myExcel();
+	std::string filePath = "";
+    coil::Properties& prop(::RTC::Manager::instance().getConfig());
+    getProperty(prop, "excel.filename", filePath);
+    myExcel::Obj->Open(gcnew System::String(filePath.c_str()));
+	myExcel::Obj->filename = "";
 
 
 	// メイン ウィンドウを作成して、実行します
