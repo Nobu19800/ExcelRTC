@@ -17,6 +17,7 @@ ref class myExcel
 {
 public:
 	myExcel();
+	static myExcel^ Obj;
 	//名前からワークシートを取得する関数
 	Excel::Worksheet^ GetWorksheet(std::string sn);
 	//保存用ワークシートに書き込む関数

@@ -32,6 +32,18 @@ void MyModuleInit(RTC::Manager* manager)
   return;
 }
 
+template <class T>
+void getProperty(coil::Properties& prop, const char* key, T& value)
+{
+if (prop.findNode(key) != 0)
+  {
+    T tmp;
+    if (coil::stringTo(tmp, prop[key].c_str()))
+      {
+        value = tmp;
+      }
+  }
+}
 
 
 [STAThreadAttribute]
@@ -45,6 +57,15 @@ int main(array<System::String ^> ^args)
 	char* argv[] = {""};
 	int argc = 0;
 	manager = RTC::Manager::init(argc, argv);
+
+	myExcel::Obj = gcnew myExcel();
+	std::string filePath = "";
+    coil::Properties& prop(::RTC::Manager::instance().getConfig());
+    getProperty(prop, "excel.filename", filePath);
+    myExcel::Obj->Open(gcnew System::String(filePath.c_str()));
+
+
+
 	manager->init(argc, argv);
 	manager->setModuleInitProc(MyModuleInit);
 	manager->activateManager();

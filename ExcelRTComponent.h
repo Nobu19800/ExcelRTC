@@ -490,6 +490,8 @@ class ExcelRTComponent
    //不活性化時のコールバック関数
    virtual RTC::ReturnCode_t onDeactivated(RTC::UniqueId ec_id);
 
+   virtual RTC::ReturnCode_t onFinalize();
+
    //データポートを作成する関数
    MyPortBase* CreatePort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate);
    //データポートを削除する関数
@@ -512,14 +514,14 @@ class ExcelRTComponent
    void SetCellData(std::vector<std::vector<T>> dt, MyPortBase *pb)
 	{
 		
-		ExcelRTC::Form1::m_form->m_excel->SetCellValue<T>(pb->col+pb->num, pb->low, pb->sheetName, pb->state, dt);
+		myExcel::Obj->SetCellValue<T>(pb->col+pb->num, pb->low, pb->sheetName, pb->state, dt);
 		
 	}
    //セルの値を取得する関数
     template <typename T>
 	std::vector<T> GetCellData(MyPortBase *pb)
 	{
-		std::vector<T> td = ExcelRTC::Form1::m_form->m_excel->GetCellValue<T>(pb->col+pb->num, pb->low, pb->sheetName, pb->length);
+		std::vector<T> td = myExcel::Obj->GetCellValue<T>(pb->col+pb->num, pb->low, pb->sheetName, pb->length);
 		
 		return td;
 	}

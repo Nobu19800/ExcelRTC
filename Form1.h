@@ -39,7 +39,7 @@ namespace ExcelRTC {
 
 			InitFunc();
 
-			m_excel = gcnew myExcel();
+			
 		}
 		//ツリーを表示する関数
 		void SetTree();
@@ -72,7 +72,7 @@ namespace ExcelRTC {
 		//GUIの値を更新する関数
 		void SetPortParamEx(std::string m_low, int m_col, std::string m_len, std::string m_sn, bool m_state);
 		private: System::String^ currentDirectory;
-		public: myExcel^ m_excel;
+		public:
 		System::Windows::Forms::TreeNode^ m_node;
 	private: System::Windows::Forms::ComboBox^  InPortcomboBox;
 	private: System::Windows::Forms::ComboBox^  AttachcomboBox;
@@ -486,7 +486,7 @@ private: System::Void Addbutton_Click(System::Object^  sender, System::EventArgs
 			 CreatePort();
 		 }
 private: System::Void Closebutton_Click(System::Object^  sender, System::EventArgs^  e) {
-			m_excel->Close();
+			myExcel::Obj->Close();
 		 }
 private: System::Void Resetbutton_Click(System::Object^  sender, System::EventArgs^  e) {
 			 ResetPort();

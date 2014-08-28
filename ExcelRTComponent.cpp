@@ -157,7 +157,7 @@ TreeObject* ExcelRTComponent::GetRTCTree(string IP_adress)
 
 RTC::ReturnCode_t ExcelRTComponent::onInitialize()
 {
-	//ExcelRTC::Form1::m_form->m_excel = gcnew myExcel();
+	//myExcel::Obj = gcnew myExcel();
   
   this->addConfigurationSetListener(ON_SET_CONFIG_SET, new MyConfigUpdateParam(this));
 
@@ -195,6 +195,12 @@ RTC::ReturnCode_t ExcelRTComponent::onDeactivated(RTC::UniqueId ec_id)
 }
 
 
+RTC::ReturnCode_t ExcelRTComponent::onFinalize()
+{
+  myExcel::Obj->Close();
+  return RTC::RTC_OK;
+}
+
 
 
 
@@ -203,9 +209,9 @@ RTC::ReturnCode_t ExcelRTComponent::onDeactivated(RTC::UniqueId ec_id)
 RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
 {
 	if(actionLock == 1)
-		ExcelRTC::Form1::m_form->m_excel->xlApplication->ScreenUpdating = false;
+		myExcel::Obj->xlApplication->ScreenUpdating = false;
 
-	ExcelRTC::Form1::m_form->m_excel->SetColor(Red, Green, Blue);
+	myExcel::Obj->SetColor(Red, Green, Blue);
 
 	for(int i=0;i < ConfInPorts.size();i++)
 	{
@@ -241,7 +247,7 @@ RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
 	}
 
 	if(actionLock == 1)
-		ExcelRTC::Form1::m_form->m_excel->xlApplication->ScreenUpdating = true;
+		myExcel::Obj->xlApplication->ScreenUpdating = true;
 	
 
 	for(int i=0;i < OutPorts.size();i++)
@@ -307,13 +313,13 @@ void ExcelRTComponent::ConfigUpdate()
 	
 	if(sfn ==  "NewFile")
 	{
-		ExcelRTC::Form1::m_form->m_excel->Open("");
+		myExcel::Obj->Open("");
 		Load();
 	}
-	else if(ExcelRTC::Form1::m_form->m_excel->filename != tfn)
+	else if(myExcel::Obj->filename != tfn)
 	{
 		
-		ExcelRTC::Form1::m_form->m_excel->Open(tfn);
+		myExcel::Obj->Open(tfn);
 		Load();
 		 
 		
@@ -741,11 +747,11 @@ void ExcelRTComponent::Save()
 		v.push_back(sw);
 	}
 
-	ExcelRTC::Form1::m_form->m_excel->SaveRTC(v);
+	myExcel::Obj->SaveRTC(v);
 }
 void ExcelRTComponent::Load()
 {
-	std::vector<std::string> lw = ExcelRTC::Form1::m_form->m_excel->LoadRTC();
+	std::vector<std::string> lw = myExcel::Obj->LoadRTC();
 	
 
 	
@@ -811,7 +817,7 @@ void ExcelRTComponent::ResetAllPort()
 	for(int i=0;i < OutPorts.size();i++)
 	{
 		if(OutPorts[i]->num > 0)
-			ExcelRTC::Form1::m_form->m_excel->ResetCellColor(OutPorts[i]->col+OutPorts[i]->num-1, OutPorts[i]->low, OutPorts[i]->sheetName, OutPorts[i]->length);
+			myExcel::Obj->ResetCellColor(OutPorts[i]->col+OutPorts[i]->num-1, OutPorts[i]->low, OutPorts[i]->sheetName, OutPorts[i]->length);
 
 		OutPorts[i]->num = 0;
 		
@@ -829,7 +835,7 @@ void ExcelRTComponent::ResetAllPort()
 	for(int i=0;i < ConfOutPorts.size();i++)
 	{
 		if(ConfOutPorts[i]->num > 0)
-			ExcelRTC::Form1::m_form->m_excel->ResetCellColor(ConfOutPorts[i]->col+ConfOutPorts[i]->num-1, ConfOutPorts[i]->low, ConfOutPorts[i]->sheetName, ConfOutPorts[i]->length);
+			myExcel::Obj->ResetCellColor(ConfOutPorts[i]->col+ConfOutPorts[i]->num-1, ConfOutPorts[i]->low, ConfOutPorts[i]->sheetName, ConfOutPorts[i]->length);
 
 		ConfOutPorts[i]->num = 0;
 		

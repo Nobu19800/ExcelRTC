@@ -13,7 +13,7 @@ myExcel::myExcel()
 
 	xlWorksheet = gcnew System::Collections::Generic::List<Excel::Worksheet^>();
 	filename = gcnew System::String(" ");
-	Open("");
+	//Open("");
 
 	red = 255;
 	green = 255;

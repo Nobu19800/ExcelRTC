@@ -18,11 +18,11 @@ void ExcelRTC::Form1::SetTree()
 
 
 	this->SheetcomboBox->Items->Clear();
-	for(int i=0;i < m_excel->xlWorksheet->Count;i++)
+	for(int i=0;i < myExcel::Obj->xlWorksheet->Count;i++)
 	{
-		this->SheetcomboBox->Items->Add(m_excel->xlWorksheet[i]->Name);
+		this->SheetcomboBox->Items->Add(myExcel::Obj->xlWorksheet[i]->Name);
 	}
-	this->SheetcomboBox->Text = m_excel->xlWorksheet[0]->Name;
+	this->SheetcomboBox->Text = myExcel::Obj->xlWorksheet[0]->Name;
 	
 	LawtextBox->Text = "A";
 	ColtextBox->Text = "1";
@@ -338,7 +338,7 @@ void ExcelRTC::Form1::OpenFile()
 	 if(openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 	 {
 		 
-		 m_excel->Open(openFileDialog1->FileName);
+		 myExcel::Obj->Open(openFileDialog1->FileName);
 		 currentDirectory = System::IO::Path::GetDirectoryName(openFileDialog1->FileName);
 		 tertc->Load();
 	 }

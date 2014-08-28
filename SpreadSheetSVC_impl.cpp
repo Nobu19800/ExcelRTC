@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "Form1.h"
+#include "myExcel.h"
 #include "MyObject.h"
 
 
@@ -35,7 +35,7 @@ mSpreadSheetSVC_impl::~mSpreadSheetSVC_impl()
  */
 char* mSpreadSheetSVC_impl::get_string(const char* l, const char* c, const char* sn)
 {
-	std::string cans = ExcelRTC::Form1::m_form->m_excel->GetCellValueSingle(string2binary<int>(c,10),l, sn);
+	std::string cans = myExcel::Obj->GetCellValueSingle(string2binary<int>(c,10),l, sn);
 	//char *ans = const_cast <char *>(cans);
 	std::cout << cans.c_str() << std::endl;
 	
@@ -53,7 +53,7 @@ char* mSpreadSheetSVC_impl::get_string(const char* l, const char* c, const char*
 void mSpreadSheetSVC_impl::set_value(const char* l, const char* c, const char* sn, CORBA::Float v)
 {
 
-	ExcelRTC::Form1::m_form->m_excel->SetCellValueSingle<float>(string2binary<int>(c,10),l, sn, v);
+	myExcel::Obj->SetCellValueSingle<float>(string2binary<int>(c,10),l, sn, v);
   // Please insert your code here and remove the following warning pragma
 #ifndef WIN32
   #warning "Code missing in function <void mSpreadSheetSVC_impl::set_value(const char* l, const char* c, const char* sn, CORBA::Float v)>"
@@ -80,7 +80,7 @@ void mSpreadSheetSVC_impl::set_value_range(const char* l, const char* c, const c
 void mSpreadSheetSVC_impl::set_string(const char* l, const char* c, const char* sn, const char* v)
 {
 	
-	ExcelRTC::Form1::m_form->m_excel->SetCellValueSingle<System::String^>(string2binary<int>(c,10),l, sn, gcnew System::String(v));
+	myExcel::Obj->SetCellValueSingle<System::String^>(string2binary<int>(c,10),l, sn, gcnew System::String(v));
   // Please insert your code here and remove the following warning pragma
 #ifndef WIN32
   #warning "Code missing in function <void mSpreadSheetSVC_impl::set_string(const char* l, const char* c, const char* sn, const char* v)>"
