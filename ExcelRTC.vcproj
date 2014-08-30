@@ -214,14 +214,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DataBaseSK.cc"
-				>
-			</File>
-			<File
-				RelativePath=".\DataBaseSVC_impl.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\ExcelRTC.cpp"
 				>
 			</File>
@@ -239,6 +231,14 @@
 			</File>
 			<File
 				RelativePath=".\MyObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SpreadSheetSK.cc"
+				>
+			</File>
+			<File
+				RelativePath=".\SpreadSheetSVC_impl.cpp"
 				>
 			</File>
 			<File
@@ -268,18 +268,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\DataBaseSkel.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DataBaseStub.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DataBaseSVC_impl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ExcelRTComponent.h"
 				>
 			</File>
@@ -306,6 +294,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SpreadSheetSkel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SpreadSheetStub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SpreadSheetSVC_impl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
@@ -325,11 +325,11 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\DataBase.hh"
+			RelativePath=".\ReadMe.txt"
 			>
 		</File>
 		<File
-			RelativePath=".\ReadMe.txt"
+			RelativePath=".\SpreadSheet.hh"
 			>
 		</File>
 	</Files>
