@@ -69,7 +69,7 @@ StringList *mSpreadSheetSVC_impl::get_string_range(const char* l1, const char* c
   return 0;
 }
 
-void mSpreadSheetSVC_impl::set_value_range(const char* l, const char* c, const char* sn, ValueList v)
+void mSpreadSheetSVC_impl::set_value_range(const char* l, const char* c, const char* sn, FloatList v)
 {
   // Please insert your code here and remove the following warning pragma
 #ifndef WIN32

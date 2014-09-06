@@ -5,12 +5,12 @@
  *
  * @file SpreadSheetStub.h 
  * @brief SpreadSheet client stub header wrapper code
- * @date Tue Aug 12 02:27:17 2014 
+ * @date Sat Sep 06 20:59:51 2014 
  *
  */
 
-#ifndef _DATABASESTUB_H
-#define _DATABASESTUB_H
+#ifndef _SPREADSHEETSTUB_H
+#define _SPREADSHEETSTUB_H
 
 
 
@@ -38,4 +38,4 @@
 #  error "NO ORB defined"
 #endif
 
-#endif // _DATABASESTUB_H
+#endif // _SPREADSHEETSTUB_H

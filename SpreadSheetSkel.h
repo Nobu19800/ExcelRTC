@@ -5,12 +5,12 @@
  *
  * @file SpreadSheetSkel.h 
  * @brief SpreadSheet server skeleton header wrapper code
- * @date Tue Aug 12 02:27:17 2014 
+ * @date Sat Sep 06 20:59:51 2014 
  *
  */
 
-#ifndef _DATABASESKEL_H
-#define _DATABASESKEL_H
+#ifndef _SPREADSHEETSKEL_H
+#define _SPREADSHEETSKEL_H
 
 
 
@@ -40,4 +40,4 @@
 #  error "NO ORB defined"
 #endif
 
-#endif // _DATABASESKEL_H
+#endif // _SPREADSHEETSKEL_H

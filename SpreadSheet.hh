@@ -54,45 +54,137 @@
 
 
 
-struct StringLine {
-  typedef _CORBA_ConstrType_Variable_Var<StringLine> _var_type;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_StringSeq;
 
-  
-  typedef _CORBA_Unbounded_Sequence_String _value_seq;
-  _value_seq value;
+class StringSeq_var;
+
+class StringSeq : public _CORBA_Unbounded_Sequence_String {
+public:
+  typedef StringSeq_var _var_type;
+  inline StringSeq() {}
+  inline StringSeq(const StringSeq& _s)
+    : _CORBA_Unbounded_Sequence_String(_s) {}
+
+  inline StringSeq(_CORBA_ULong _max)
+    : _CORBA_Unbounded_Sequence_String(_max) {}
+  inline StringSeq(_CORBA_ULong _max, _CORBA_ULong _len, char** _val, _CORBA_Boolean _rel=0)
+    : _CORBA_Unbounded_Sequence_String(_max, _len, _val, _rel) {}
 
 
 
-  void operator>>= (cdrStream &) const;
-  void operator<<= (cdrStream &);
+  inline StringSeq& operator = (const StringSeq& _s) {
+    _CORBA_Unbounded_Sequence_String::operator=(_s);
+    return *this;
+  }
 };
 
-typedef StringLine::_var_type StringLine_var;
+class StringSeq_out;
 
-typedef _CORBA_ConstrType_Variable_OUT_arg< StringLine,StringLine_var > StringLine_out;
+class StringSeq_var {
+public:
+  inline StringSeq_var() : _pd_seq(0) {}
+  inline StringSeq_var(StringSeq* _s) : _pd_seq(_s) {}
+  inline StringSeq_var(const StringSeq_var& _s) {
+    if( _s._pd_seq )  _pd_seq = new StringSeq(*_s._pd_seq);
+    else              _pd_seq = 0;
+  }
+  inline ~StringSeq_var() { if( _pd_seq )  delete _pd_seq; }
+    
+  inline StringSeq_var& operator = (StringSeq* _s) {
+    if( _pd_seq )  delete _pd_seq;
+    _pd_seq = _s;
+    return *this;
+  }
+  inline StringSeq_var& operator = (const StringSeq_var& _s) {
+    if( _s._pd_seq ) {
+      if( !_pd_seq )  _pd_seq = new StringSeq;
+      *_pd_seq = *_s._pd_seq;
+    } else if( _pd_seq ) {
+      delete _pd_seq;
+      _pd_seq = 0;
+    }
+    return *this;
+  }
+  inline _CORBA_String_element operator [] (_CORBA_ULong _s) {
+    return (*_pd_seq)[_s];
+  }
 
-_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_StringLine;
+
+
+  inline StringSeq* operator -> () { return _pd_seq; }
+  inline const StringSeq* operator -> () const { return _pd_seq; }
+#if defined(__GNUG__)
+  inline operator StringSeq& () const { return *_pd_seq; }
+#else
+  inline operator const StringSeq& () const { return *_pd_seq; }
+  inline operator StringSeq& () { return *_pd_seq; }
+#endif
+    
+  inline const StringSeq& in() const { return *_pd_seq; }
+  inline StringSeq&       inout()    { return *_pd_seq; }
+  inline StringSeq*&      out() {
+    if( _pd_seq ) { delete _pd_seq; _pd_seq = 0; }
+    return _pd_seq;
+  }
+  inline StringSeq* _retn() { StringSeq* tmp = _pd_seq; _pd_seq = 0; return tmp; }
+    
+  friend class StringSeq_out;
+  
+private:
+  StringSeq* _pd_seq;
+};
+
+class StringSeq_out {
+public:
+  inline StringSeq_out(StringSeq*& _s) : _data(_s) { _data = 0; }
+  inline StringSeq_out(StringSeq_var& _s)
+    : _data(_s._pd_seq) { _s = (StringSeq*) 0; }
+  inline StringSeq_out(const StringSeq_out& _s) : _data(_s._data) {}
+  inline StringSeq_out& operator = (const StringSeq_out& _s) {
+    _data = _s._data;
+    return *this;
+  }
+  inline StringSeq_out& operator = (StringSeq* _s) {
+    _data = _s;
+    return *this;
+  }
+  inline operator StringSeq*&()  { return _data; }
+  inline StringSeq*& ptr()       { return _data; }
+  inline StringSeq* operator->() { return _data; }
+
+  inline _CORBA_String_element operator [] (_CORBA_ULong _i) {
+    return (*_data)[_i];
+  }
+
+
+
+  StringSeq*& _data;
+
+private:
+  StringSeq_out();
+  StringSeq_out& operator=(const StringSeq_var&);
+};
 
 _CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_StringList;
 
 class StringList_var;
 
-class StringList : public _CORBA_Unbounded_Sequence< StringLine >  {
+class StringList : public _CORBA_Unbounded_Sequence< StringSeq >  {
 public:
   typedef StringList_var _var_type;
   inline StringList() {}
   inline StringList(const StringList& _s)
-    : _CORBA_Unbounded_Sequence< StringLine > (_s) {}
+    : _CORBA_Unbounded_Sequence< StringSeq > (_s) {}
 
   inline StringList(_CORBA_ULong _max)
-    : _CORBA_Unbounded_Sequence< StringLine > (_max) {}
-  inline StringList(_CORBA_ULong _max, _CORBA_ULong _len, StringLine* _val, _CORBA_Boolean _rel=0)
-    : _CORBA_Unbounded_Sequence< StringLine > (_max, _len, _val, _rel) {}
+    : _CORBA_Unbounded_Sequence< StringSeq > (_max) {}
+  inline StringList(_CORBA_ULong _max, _CORBA_ULong _len, StringSeq* _val, _CORBA_Boolean _rel=0)
+    : _CORBA_Unbounded_Sequence< StringSeq > (_max, _len, _val, _rel) {}
 
 
 
   inline StringList& operator = (const StringList& _s) {
-    _CORBA_Unbounded_Sequence< StringLine > ::operator=(_s);
+    _CORBA_Unbounded_Sequence< StringSeq > ::operator=(_s);
     return *this;
   }
 };
@@ -124,7 +216,7 @@ public:
     }
     return *this;
   }
-  inline StringLine& operator [] (_CORBA_ULong _s) {
+  inline StringSeq& operator [] (_CORBA_ULong _s) {
     return (*_pd_seq)[_s];
   }
 
@@ -171,7 +263,7 @@ public:
   inline StringList*& ptr()       { return _data; }
   inline StringList* operator->() { return _data; }
 
-  inline StringLine& operator [] (_CORBA_ULong _i) {
+  inline StringSeq& operator [] (_CORBA_ULong _i) {
     return (*_data)[_i];
   }
 
@@ -184,69 +276,50 @@ private:
   StringList_out& operator=(const StringList_var&);
 };
 
-struct ValueLine {
-  typedef _CORBA_ConstrType_Variable_Var<ValueLine> _var_type;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_FloatSeq;
 
-  
-  typedef _CORBA_Unbounded_Sequence_w_FixSizeElement< ::CORBA::Float, 4, 4 >  _value_seq;
-  _value_seq value;
+class FloatSeq_var;
 
-
-
-  void operator>>= (cdrStream &) const;
-  void operator<<= (cdrStream &);
-};
-
-typedef ValueLine::_var_type ValueLine_var;
-
-typedef _CORBA_ConstrType_Variable_OUT_arg< ValueLine,ValueLine_var > ValueLine_out;
-
-_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_ValueLine;
-
-_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_ValueList;
-
-class ValueList_var;
-
-class ValueList : public _CORBA_Unbounded_Sequence< ValueLine >  {
+class FloatSeq : public _CORBA_Unbounded_Sequence_w_FixSizeElement< ::CORBA::Float, 4, 4 >  {
 public:
-  typedef ValueList_var _var_type;
-  inline ValueList() {}
-  inline ValueList(const ValueList& _s)
-    : _CORBA_Unbounded_Sequence< ValueLine > (_s) {}
+  typedef FloatSeq_var _var_type;
+  inline FloatSeq() {}
+  inline FloatSeq(const FloatSeq& _s)
+    : _CORBA_Unbounded_Sequence_w_FixSizeElement< ::CORBA::Float, 4, 4 > (_s) {}
 
-  inline ValueList(_CORBA_ULong _max)
-    : _CORBA_Unbounded_Sequence< ValueLine > (_max) {}
-  inline ValueList(_CORBA_ULong _max, _CORBA_ULong _len, ValueLine* _val, _CORBA_Boolean _rel=0)
-    : _CORBA_Unbounded_Sequence< ValueLine > (_max, _len, _val, _rel) {}
+  inline FloatSeq(_CORBA_ULong _max)
+    : _CORBA_Unbounded_Sequence_w_FixSizeElement< ::CORBA::Float, 4, 4 > (_max) {}
+  inline FloatSeq(_CORBA_ULong _max, _CORBA_ULong _len, ::CORBA::Float* _val, _CORBA_Boolean _rel=0)
+    : _CORBA_Unbounded_Sequence_w_FixSizeElement< ::CORBA::Float, 4, 4 > (_max, _len, _val, _rel) {}
 
 
 
-  inline ValueList& operator = (const ValueList& _s) {
-    _CORBA_Unbounded_Sequence< ValueLine > ::operator=(_s);
+  inline FloatSeq& operator = (const FloatSeq& _s) {
+    _CORBA_Unbounded_Sequence_w_FixSizeElement< ::CORBA::Float, 4, 4 > ::operator=(_s);
     return *this;
   }
 };
 
-class ValueList_out;
+class FloatSeq_out;
 
-class ValueList_var {
+class FloatSeq_var {
 public:
-  inline ValueList_var() : _pd_seq(0) {}
-  inline ValueList_var(ValueList* _s) : _pd_seq(_s) {}
-  inline ValueList_var(const ValueList_var& _s) {
-    if( _s._pd_seq )  _pd_seq = new ValueList(*_s._pd_seq);
+  inline FloatSeq_var() : _pd_seq(0) {}
+  inline FloatSeq_var(FloatSeq* _s) : _pd_seq(_s) {}
+  inline FloatSeq_var(const FloatSeq_var& _s) {
+    if( _s._pd_seq )  _pd_seq = new FloatSeq(*_s._pd_seq);
     else              _pd_seq = 0;
   }
-  inline ~ValueList_var() { if( _pd_seq )  delete _pd_seq; }
+  inline ~FloatSeq_var() { if( _pd_seq )  delete _pd_seq; }
     
-  inline ValueList_var& operator = (ValueList* _s) {
+  inline FloatSeq_var& operator = (FloatSeq* _s) {
     if( _pd_seq )  delete _pd_seq;
     _pd_seq = _s;
     return *this;
   }
-  inline ValueList_var& operator = (const ValueList_var& _s) {
+  inline FloatSeq_var& operator = (const FloatSeq_var& _s) {
     if( _s._pd_seq ) {
-      if( !_pd_seq )  _pd_seq = new ValueList;
+      if( !_pd_seq )  _pd_seq = new FloatSeq;
       *_pd_seq = *_s._pd_seq;
     } else if( _pd_seq ) {
       delete _pd_seq;
@@ -254,64 +327,175 @@ public:
     }
     return *this;
   }
-  inline ValueLine& operator [] (_CORBA_ULong _s) {
+  inline ::CORBA::Float& operator [] (_CORBA_ULong _s) {
     return (*_pd_seq)[_s];
   }
 
 
 
-  inline ValueList* operator -> () { return _pd_seq; }
-  inline const ValueList* operator -> () const { return _pd_seq; }
+  inline FloatSeq* operator -> () { return _pd_seq; }
+  inline const FloatSeq* operator -> () const { return _pd_seq; }
 #if defined(__GNUG__)
-  inline operator ValueList& () const { return *_pd_seq; }
+  inline operator FloatSeq& () const { return *_pd_seq; }
 #else
-  inline operator const ValueList& () const { return *_pd_seq; }
-  inline operator ValueList& () { return *_pd_seq; }
+  inline operator const FloatSeq& () const { return *_pd_seq; }
+  inline operator FloatSeq& () { return *_pd_seq; }
 #endif
     
-  inline const ValueList& in() const { return *_pd_seq; }
-  inline ValueList&       inout()    { return *_pd_seq; }
-  inline ValueList*&      out() {
+  inline const FloatSeq& in() const { return *_pd_seq; }
+  inline FloatSeq&       inout()    { return *_pd_seq; }
+  inline FloatSeq*&      out() {
     if( _pd_seq ) { delete _pd_seq; _pd_seq = 0; }
     return _pd_seq;
   }
-  inline ValueList* _retn() { ValueList* tmp = _pd_seq; _pd_seq = 0; return tmp; }
+  inline FloatSeq* _retn() { FloatSeq* tmp = _pd_seq; _pd_seq = 0; return tmp; }
     
-  friend class ValueList_out;
+  friend class FloatSeq_out;
   
 private:
-  ValueList* _pd_seq;
+  FloatSeq* _pd_seq;
 };
 
-class ValueList_out {
+class FloatSeq_out {
 public:
-  inline ValueList_out(ValueList*& _s) : _data(_s) { _data = 0; }
-  inline ValueList_out(ValueList_var& _s)
-    : _data(_s._pd_seq) { _s = (ValueList*) 0; }
-  inline ValueList_out(const ValueList_out& _s) : _data(_s._data) {}
-  inline ValueList_out& operator = (const ValueList_out& _s) {
+  inline FloatSeq_out(FloatSeq*& _s) : _data(_s) { _data = 0; }
+  inline FloatSeq_out(FloatSeq_var& _s)
+    : _data(_s._pd_seq) { _s = (FloatSeq*) 0; }
+  inline FloatSeq_out(const FloatSeq_out& _s) : _data(_s._data) {}
+  inline FloatSeq_out& operator = (const FloatSeq_out& _s) {
     _data = _s._data;
     return *this;
   }
-  inline ValueList_out& operator = (ValueList* _s) {
+  inline FloatSeq_out& operator = (FloatSeq* _s) {
     _data = _s;
     return *this;
   }
-  inline operator ValueList*&()  { return _data; }
-  inline ValueList*& ptr()       { return _data; }
-  inline ValueList* operator->() { return _data; }
+  inline operator FloatSeq*&()  { return _data; }
+  inline FloatSeq*& ptr()       { return _data; }
+  inline FloatSeq* operator->() { return _data; }
 
-  inline ValueLine& operator [] (_CORBA_ULong _i) {
+  inline ::CORBA::Float& operator [] (_CORBA_ULong _i) {
     return (*_data)[_i];
   }
 
 
 
-  ValueList*& _data;
+  FloatSeq*& _data;
 
 private:
-  ValueList_out();
-  ValueList_out& operator=(const ValueList_var&);
+  FloatSeq_out();
+  FloatSeq_out& operator=(const FloatSeq_var&);
+};
+
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_FloatList;
+
+class FloatList_var;
+
+class FloatList : public _CORBA_Unbounded_Sequence< FloatSeq >  {
+public:
+  typedef FloatList_var _var_type;
+  inline FloatList() {}
+  inline FloatList(const FloatList& _s)
+    : _CORBA_Unbounded_Sequence< FloatSeq > (_s) {}
+
+  inline FloatList(_CORBA_ULong _max)
+    : _CORBA_Unbounded_Sequence< FloatSeq > (_max) {}
+  inline FloatList(_CORBA_ULong _max, _CORBA_ULong _len, FloatSeq* _val, _CORBA_Boolean _rel=0)
+    : _CORBA_Unbounded_Sequence< FloatSeq > (_max, _len, _val, _rel) {}
+
+
+
+  inline FloatList& operator = (const FloatList& _s) {
+    _CORBA_Unbounded_Sequence< FloatSeq > ::operator=(_s);
+    return *this;
+  }
+};
+
+class FloatList_out;
+
+class FloatList_var {
+public:
+  inline FloatList_var() : _pd_seq(0) {}
+  inline FloatList_var(FloatList* _s) : _pd_seq(_s) {}
+  inline FloatList_var(const FloatList_var& _s) {
+    if( _s._pd_seq )  _pd_seq = new FloatList(*_s._pd_seq);
+    else              _pd_seq = 0;
+  }
+  inline ~FloatList_var() { if( _pd_seq )  delete _pd_seq; }
+    
+  inline FloatList_var& operator = (FloatList* _s) {
+    if( _pd_seq )  delete _pd_seq;
+    _pd_seq = _s;
+    return *this;
+  }
+  inline FloatList_var& operator = (const FloatList_var& _s) {
+    if( _s._pd_seq ) {
+      if( !_pd_seq )  _pd_seq = new FloatList;
+      *_pd_seq = *_s._pd_seq;
+    } else if( _pd_seq ) {
+      delete _pd_seq;
+      _pd_seq = 0;
+    }
+    return *this;
+  }
+  inline FloatSeq& operator [] (_CORBA_ULong _s) {
+    return (*_pd_seq)[_s];
+  }
+
+
+
+  inline FloatList* operator -> () { return _pd_seq; }
+  inline const FloatList* operator -> () const { return _pd_seq; }
+#if defined(__GNUG__)
+  inline operator FloatList& () const { return *_pd_seq; }
+#else
+  inline operator const FloatList& () const { return *_pd_seq; }
+  inline operator FloatList& () { return *_pd_seq; }
+#endif
+    
+  inline const FloatList& in() const { return *_pd_seq; }
+  inline FloatList&       inout()    { return *_pd_seq; }
+  inline FloatList*&      out() {
+    if( _pd_seq ) { delete _pd_seq; _pd_seq = 0; }
+    return _pd_seq;
+  }
+  inline FloatList* _retn() { FloatList* tmp = _pd_seq; _pd_seq = 0; return tmp; }
+    
+  friend class FloatList_out;
+  
+private:
+  FloatList* _pd_seq;
+};
+
+class FloatList_out {
+public:
+  inline FloatList_out(FloatList*& _s) : _data(_s) { _data = 0; }
+  inline FloatList_out(FloatList_var& _s)
+    : _data(_s._pd_seq) { _s = (FloatList*) 0; }
+  inline FloatList_out(const FloatList_out& _s) : _data(_s._data) {}
+  inline FloatList_out& operator = (const FloatList_out& _s) {
+    _data = _s._data;
+    return *this;
+  }
+  inline FloatList_out& operator = (FloatList* _s) {
+    _data = _s;
+    return *this;
+  }
+  inline operator FloatList*&()  { return _data; }
+  inline FloatList*& ptr()       { return _data; }
+  inline FloatList* operator->() { return _data; }
+
+  inline FloatSeq& operator [] (_CORBA_ULong _i) {
+    return (*_data)[_i];
+  }
+
+
+
+  FloatList*& _data;
+
+private:
+  FloatList_out();
+  FloatList_out& operator=(const FloatList_var&);
 };
 
 _CORBA_MODULE SpreadSheet
@@ -382,9 +566,9 @@ _CORBA_MODULE_BEG
     char* get_string(const char* l, const char* c, const char* sn);
     void set_value(const char* l, const char* c, const char* sn, ::CORBA::Float v);
     StringList* get_string_range(const char* l1, const char* c1, const char* l2, const char* c2, const char* sn);
-    void set_value_range(const char* l, const char* c, const char* sn, const ::ValueList& v);
+    void set_value_range(const char* l, const char* c, const char* sn, const ::FloatList v);
     void set_string(const char* l, const char* c, const char* sn, const char* v);
-    void set_string_range(const char* l, const char* c, const char* sn, const ::StringList& v);
+    void set_string_range(const char* l, const char* c, const char* sn, const ::StringList v);
 
     inline _objref_mSpreadSheet()  { _PR_setobj(0); }  // nil
     _objref_mSpreadSheet(omniIOR*, omniIdentity*);
@@ -421,9 +605,9 @@ _CORBA_MODULE_BEG
     virtual char* get_string(const char* l, const char* c, const char* sn) = 0;
     virtual void set_value(const char* l, const char* c, const char* sn, ::CORBA::Float v) = 0;
     virtual StringList* get_string_range(const char* l1, const char* c1, const char* l2, const char* c2, const char* sn) = 0;
-    virtual void set_value_range(const char* l, const char* c, const char* sn, ::ValueList v) = 0;
+    virtual void set_value_range(const char* l, const char* c, const char* sn, const ::FloatList v) = 0;
     virtual void set_string(const char* l, const char* c, const char* sn, const char* v) = 0;
-    virtual void set_string_range(const char* l, const char* c, const char* sn, ::StringList v) = 0;
+    virtual void set_string_range(const char* l, const char* c, const char* sn, const ::StringList v) = 0;
     
   public:  // Really protected, workaround for xlC
     virtual _CORBA_Boolean _dispatch(omniCallHandle&);
@@ -472,25 +656,25 @@ _CORBA_MODULE_END
 #undef _core_attr
 #undef _dyn_attr
 
-extern void operator<<=(::CORBA::Any& _a, const StringLine& _s);
-extern void operator<<=(::CORBA::Any& _a, StringLine* _sp);
-extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, StringLine*& _sp);
-extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const StringLine*& _sp);
+void operator<<=(::CORBA::Any& _a, const StringSeq& _s);
+void operator<<=(::CORBA::Any& _a, StringSeq* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, StringSeq*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const StringSeq*& _sp);
 
 void operator<<=(::CORBA::Any& _a, const StringList& _s);
 void operator<<=(::CORBA::Any& _a, StringList* _sp);
 _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, StringList*& _sp);
 _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const StringList*& _sp);
 
-extern void operator<<=(::CORBA::Any& _a, const ValueLine& _s);
-extern void operator<<=(::CORBA::Any& _a, ValueLine* _sp);
-extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, ValueLine*& _sp);
-extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const ValueLine*& _sp);
+void operator<<=(::CORBA::Any& _a, const FloatSeq& _s);
+void operator<<=(::CORBA::Any& _a, FloatSeq* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, FloatSeq*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const FloatSeq*& _sp);
 
-void operator<<=(::CORBA::Any& _a, const ValueList& _s);
-void operator<<=(::CORBA::Any& _a, ValueList* _sp);
-_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, ValueList*& _sp);
-_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const ValueList*& _sp);
+void operator<<=(::CORBA::Any& _a, const FloatList& _s);
+void operator<<=(::CORBA::Any& _a, FloatList* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, FloatList*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const FloatList*& _sp);
 
 void operator<<=(::CORBA::Any& _a, SpreadSheet::mSpreadSheet_ptr _s);
 void operator<<=(::CORBA::Any& _a, SpreadSheet::mSpreadSheet_ptr* _s);
