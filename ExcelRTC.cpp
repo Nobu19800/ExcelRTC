@@ -17,7 +17,7 @@ void MyModuleInit(RTC::Manager* manager)
   ExcelRTCInit(manager);
   RTC::RtcBase* comp;
 
-  comp = manager->createComponent("ExcelRTC");
+  comp = manager->createComponent("ExcelControl");
 
   if (comp==NULL)
   {
