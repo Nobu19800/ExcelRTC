@@ -15,9 +15,9 @@ ExcelRTComponent *tertc;
 
 static const char* excelrtc_spec[] =
   {
-    "implementation_id", "ExcelRTC",
-    "type_name",         "ExcelRTC",
-    "description",       "Excel Component",
+    "implementation_id", "ExcelControl",
+    "type_name",         "ExcelControl",
+    "description",       "Excel Control Component",
     "version",           "0.0.2",
     "vendor",            "Miyamoto Nobuhiko",
     "category",          "Category",
