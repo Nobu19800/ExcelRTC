@@ -61,10 +61,12 @@ public:
 	*@brief コンストラクタ
 	* @param mp データポートオブジェクト
 	* @param sv データ格納用コンテナ
+	* @param mrtc
 	*/
-	DataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv){
+	DataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelRTComponent *mrtc){
 		m_port = mp;
 		m_data = &sv;
+		m_rtc = mrtc;
 	}
 	/**
 	*@brief デストラクタ
@@ -93,10 +95,13 @@ public:
 	  m_port->_mutex.lock();
 	  m_data->push_back(tmp);
 	  m_port->_mutex.unlock();
+
+	  m_rtc->updateAPort(m_port);
        
   };
   MyPortBase *m_port;	/**<　@brief  */
   std::vector<std::vector<T2>> *m_data; /**<　@brief  */
+  ExcelRTComponent *m_rtc; /**<　@brief  */
   
 };
 
@@ -114,10 +119,12 @@ public:
 	*@brief コンストラクタ
 	* @param mp データポートオブジェクト
 	* @param sv データ格納用コンテナ
+	* @param mrtc
 	*/
-	SeqDataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv){
+	SeqDataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelRTComponent *mrtc){
 		m_port = mp;
 		m_data = &sv;
+		m_rtc = mrtc;
 	}
 	/**
 	*@brief デストラクタ
@@ -145,9 +152,12 @@ public:
 	m_port->_mutex.lock();
 	m_data->push_back(tmp);
 	m_port->_mutex.unlock();
+
+	m_rtc->updateAPort(m_port);
   };
   MyPortBase *m_port; /**<　@brief  */
   std::vector<std::vector<T2>> *m_data; /**<　@brief  */
+  ExcelRTComponent *m_rtc; /**<　@brief  */
   
 };
 
@@ -305,7 +315,7 @@ public:
 		mexc = m_mexc;
 
 		
-		inIn->addConnectorDataListener(ON_BUFFER_WRITE, new DataListener<T,T2>(this, buff));
+		inIn->addConnectorDataListener(ON_BUFFER_WRITE, new DataListener<T,T2>(this, buff, mexc));
 		
 	}
 	/**
@@ -415,7 +425,7 @@ public:
 		mexc = m_mexc;
 
 		
-		inIn->addConnectorDataListener(ON_BUFFER_WRITE, new SeqDataListener<T,T2>(this, buff));
+		inIn->addConnectorDataListener(ON_BUFFER_WRITE, new SeqDataListener<T,T2>(this, buff, mexc));
 
 
 	}
@@ -751,6 +761,11 @@ class ExcelRTComponent
    *@brief
    */
    void update_cellName();
+
+   /**
+   *@brief
+   */
+   void updateAPort(MyPortBase* ip);
 
    
    /**
@@ -1130,6 +1145,8 @@ class ExcelRTComponent
 	int Red;	/**<　@brief  */
 	int Green;	/**<　@brief  */
 	int Blue;	/**<　@brief  */
+
+	coil::Mutex _mutex; /**<　@brief  */
 
 
  private:

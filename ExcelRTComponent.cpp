@@ -251,7 +251,10 @@ void ExcelRTComponent::update_cellName()
 RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
 {
 	if(actionLock == 1)
+	{
 		myExcel::Obj->xlApplication->ScreenUpdating = false;
+		_mutex.lock();
+	}
 
 	myExcel::Obj->SetColor(Red, Green, Blue);
 
@@ -289,49 +292,65 @@ RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
 	}
 
 	if(actionLock == 1)
+	{
 		myExcel::Obj->xlApplication->ScreenUpdating = true;
+		_mutex.unlock();
+	}
 	
 
-	for(int i=0;i < OutPorts.size();i++)
-	{
-		if(OutPorts[i]->attachPort.size() > 0)
-		{
-			bool in = true;
-			for(int j=0;j < OutPorts[i]->attachPort.size();j++)
-			{
-				MyPortBase *mpb = GetInPort(OutPorts[i]->attachPort[j]);
-				if(mpb != NULL)
-				{
-					if(mpb->isNew() == false)
-					{
-						in = false;
-					}
-				}
-			}
-
-			if(in)
-			{
-				for(int j=0;j < OutPorts[i]->attachPort.size();j++)
-				{
-					MyPortBase *mpb = GetInPort(OutPorts[i]->attachPort[j]);
-					if(mpb != NULL)
-					{
-						mpb->PutData(false);
-					}
-				}
-				OutPorts[i]->PutData(false);
-			}
-			
-			
-
-		}
-	}
+	
 	
 	
 
   return RTC::RTC_OK;
 }
 
+void ExcelRTComponent::updateAPort(MyPortBase* ip)
+{
+	for(int i=0;i < ip->attachPort.size();i++)
+	{
+		MyPortBase *op = GetOutPort(ip->attachPort[i]);
+		if(op)
+		{
+			if(op->attachPort.size() > 0)
+			{
+				bool in = true;
+				for(int j=0;j < op->attachPort.size();j++)
+				{
+					MyPortBase *mpb = GetInPort(op->attachPort[j]);
+					if(mpb != NULL)
+					{
+						if(mpb->isNew() == false)
+						{
+							in = false;
+						}
+					}
+				}
+
+				if(in)
+				{
+					_mutex.lock();
+	
+	
+					for(int j=0;j < op->attachPort.size();j++)
+					{
+						MyPortBase *mpb = GetInPort(op->attachPort[j]);
+						if(mpb != NULL)
+						{
+							mpb->PutData(false);
+						}
+					}
+					op->PutData(false);
+
+					_mutex.unlock();
+				}
+			
+			
+
+			}
+		}
+	}
+}
 
 
 void ExcelRTComponent::DelDPort(std::vector<std::string> pt)
