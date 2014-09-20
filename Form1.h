@@ -1,3 +1,8 @@
+// -*-C++-*-
+/*!
+ * @file  Form1.h
+ *
+ */
 #pragma once
 
 #include <vector>
@@ -25,9 +30,16 @@ namespace ExcelRTC {
 	///          デザイナと、このフォームに関連付けられたローカライズ済みリソースとが、
 	///          正しく相互に利用できなくなります。
 	/// </summary>
+	/**
+	* @class Form1
+	*@brief
+	*/
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
+		/**
+		*@brief コンストラクタ
+		*/
 		Form1(void)
 		{
 			InitializeComponent();
@@ -41,37 +53,89 @@ namespace ExcelRTC {
 
 			
 		}
-		//ツリーを表示する関数
+		
+		/**
+		*@brief ツリーを表示する関数
+		*/
 		void SetTree();
-		//ツリーにオブジェクトを追加する関数
+		
+		/**
+		*@brief ツリーにオブジェクトを追加する関数
+		* @param to
+		* @param tn
+		*/
 		void AddTree(TreeObject *to, System::Windows::Forms::TreeNode^ tn);
-		//初期設定を行う関数
+		
+		/**
+		*@brief 初期設定を行う関数
+		*/
 		void InitFunc();
-		//データポートを作成する関数
+		
+		/**
+		*@brief データポートを作成する関数
+		*/
 		void CreatePort();
-		//データポートを削除する関数
+		
+		/**
+		*@brief データポートを削除する関数
+		*/
 		void DeletePort();
-		//データポートのパラメータをGUIに設定する関数
+		
+		/**
+		*@brief データポートのパラメータをGUIに設定する関数
+		*/
 		void SetPortParam();
-		//更新した列番号を初期化する関数
+		
+		/**
+		*@brief 更新した列番号を初期化する関数
+		*/
 		void ResetPort();
-		//全てのデータポートの更新した列番号を初期化する関数
+		
+		/**
+		*@brief 全てのデータポートの更新した列番号を初期化する関数
+		*/
 		void ResetAllPort();
-		//Excelファイルを開く関数
+		
+		/**
+		*@brief Excelファイルを開く関数
+		*/
 		void OpenFile();
-		//インポートのリストを更新する関数
+		
+		/**
+		*@brief インポートのリストを更新する関数
+		*/
 		void UpdateInPortList();
-		//関連付けしたインポートのリストを更新する関数
+		
+		/**
+		*@brief 関連付けしたインポートのリストを更新する関数
+		*/
 		void UpdateAttachList();
-		//データポートを関連付けする関数
+		
+		/**
+		*@brief データポートを関連付けする関数
+		*/
 		void AttachInPort();
-		//データポートの関連付けを解除する関数
+		
+		/**
+		*@brief データポートの関連付けを解除する関数
+		*/
 		void DetachInPort();
-		//作成したデータポートのリストを更新する関数
+		
+		/**
+		*@brief 作成したデータポートのリストを更新する関数
+		*/
 		void UpdatePortList();
-		//GUIの値を更新する関数
+		
+		/**
+		*@brief GUIの値を更新する関数
+		* @param m_low
+		* @param m_col
+		* @param m_len
+		* @param m_sn
+		* @param m_state
+		*/
 		void SetPortParamEx(std::string m_low, int m_col, std::string m_len, std::string m_sn, bool m_state);
-		private: System::String^ currentDirectory;
+		private: System::String^ currentDirectory; /**<　@brief  */
 		public:
 		System::Windows::Forms::TreeNode^ m_node;
 	private: System::Windows::Forms::ComboBox^  InPortcomboBox;

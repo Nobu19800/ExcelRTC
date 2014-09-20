@@ -1,3 +1,8 @@
+// -*-C++-*-
+/*!
+ * @file  ExcelRTComponent.h
+ *
+ */
 #ifndef EXCELRTCOMPONENT_H
 #define EXCELRTCOMPONENT_H
 
@@ -43,21 +48,37 @@ int rtc_get_rtclist(RTC::CorbaNaming &naming,std::vector<OtherPort> &rtclist, Tr
 
 
 
-//インポートがデータを受けた時のコールバック
+/**
+ * @class DataListener
+*@brief インポートがデータを受けた時のコールバック
+*/
 template <class T, class T2>
 class DataListener
   : public ConnectorDataListenerT<T>
 {
 public:
+	/**
+	*@brief コンストラクタ
+	* @param mp データポートオブジェクト
+	* @param sv データ格納用コンテナ
+	*/
 	DataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv){
 		m_port = mp;
 		m_data = &sv;
 	}
+	/**
+	*@brief デストラクタ
+	*/
   virtual ~DataListener()
   {
   
   }
 
+  /**
+	*@brief
+	* @param info
+	* @param data
+	*/
   virtual void operator()(const ConnectorInfo& info,
                           const T& data)
   {
@@ -74,27 +95,43 @@ public:
 	  m_port->_mutex.unlock();
        
   };
-  MyPortBase *m_port;
-  std::vector<std::vector<T2>> *m_data;
+  MyPortBase *m_port;	/**<　@brief  */
+  std::vector<std::vector<T2>> *m_data; /**<　@brief  */
   
 };
 
 
-//シーケンス型のインポートがデータを受け取ったときのコールバック
+/**
+ * @class SeqDataListener
+*@brief シーケンス型のインポートがデータを受け取ったときのコールバック
+*/
 template <class T, class T2>
 class SeqDataListener
   : public ConnectorDataListenerT<T>
 {
 public:
+	/**
+	*@brief コンストラクタ
+	* @param mp データポートオブジェクト
+	* @param sv データ格納用コンテナ
+	*/
 	SeqDataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv){
 		m_port = mp;
 		m_data = &sv;
 	}
+	/**
+	*@brief デストラクタ
+	*/
   virtual ~SeqDataListener()
   {
   
   }
 
+  /**
+	*@brief
+	* @param info
+	* @param data
+	*/
   virtual void operator()(const ConnectorInfo& info,
                           const T& data)
   {
@@ -109,38 +146,62 @@ public:
 	m_data->push_back(tmp);
 	m_port->_mutex.unlock();
   };
-  MyPortBase *m_port;
-  std::vector<std::vector<T2>> *m_data;
+  MyPortBase *m_port; /**<　@brief  */
+  std::vector<std::vector<T2>> *m_data; /**<　@brief  */
   
 };
 
 
-//他のRTCのデータポートのクラス
+
+/**
+ * @class OtherPort
+*@brief 他のRTCのデータポートのクラス
+*/
 class OtherPort
 {
 	public:
+		/**
+		*@brief コンストラクタ
+		* @param p
+		* @param s
+		*/
 		OtherPort(PortService_var p, std::vector<std::string> s)
 		{
 			pb = p;
 			buff = s;
 			mpb = NULL;
 		};
-		PortService_var pb;
-		std::vector<std::string> buff;
-		MyPortBase *mpb;
+		PortService_var pb; /**<　@brief  */
+		std::vector<std::string> buff; /**<　@brief  */
+		MyPortBase *mpb; /**<　@brief  */
 };
 
 
-//ExcelRTCのデータポートのクラス
+
+/**
+ * @class MyPortBase
+*@brief ExcelRTCのデータポートのクラス
+*/
 class MyPortBase
 {
 public:
+	/**
+	*@brief デストラクタ
+	*/
 	virtual ~MyPortBase()
 	{
 		delete pb;
 	}
 
-	//GUIで入力した値を設定する関数
+	
+	/**
+	*@brief GUIで入力した値を設定する関数
+	* @param c
+	* @param l
+	* @param sn
+	* @param leng
+	* @param mstate
+	*/
 	virtual void SetExcelParam(int c, std::string l, std::string sn, std::string leng, bool mstate)
 	{
 		col = c;
@@ -150,32 +211,49 @@ public:
 		num = 0;
 		state = mstate;
 	}
+
+	/**
+	*@brief データを取得したかを判定する関数
+	*/
 	virtual bool isNew()
 	{
 		return false;
 	}
+	/**
+	*@brief 受けたデータをセルに書き込む関数
+	* @param moption
+	*/
 	virtual void PutData(bool moption)
 	{
 
 	}
+	/**
+	*@brief データポートと関連付けしたセルに名前を入力
+	*/
+	virtual void update_cellName()
+	{
+		
+		myExcel::Obj->SetCellStringSingle(col, low, sheetName, name);
+	}
 
-	std::string name;
-	
-	int col;
-	std::string low;
-	std::string length;
-	int sheetnum;
-	
-	std::string sheetName;
-	int num;
-	OtherPort *mop;
-	PortBase *pb;
-	std::string data_type;
-	std::vector<std::string> attachPort; 
 
-	bool state;
-	ExcelRTComponent *mexc;
-	coil::Mutex _mutex;
+	std::string name; /**<　@brief  */
+	
+	int col; /**<　@brief  */
+	std::string low; /**<　@brief  */
+	std::string length; /**<　@brief  */
+	int sheetnum; /**<　@brief  */
+	
+	std::string sheetName; /**<　@brief  */
+	int num; /**<　@brief  */
+	OtherPort *mop; /**<　@brief  */
+	PortBase *pb; /**<　@brief  */
+	std::string data_type; /**<　@brief  */
+	std::vector<std::string> attachPort;  /**<　@brief  */
+
+	bool state; /**<　@brief  */
+	ExcelRTComponent *mexc; /**<　@brief  */
+	coil::Mutex _mutex; /**<　@brief  */
 
 	
 	
@@ -191,11 +269,23 @@ public:
 	}*/
 };
 
-//インポートのクラス
+
+/**
+ * @class MyInPort
+*@brief インポートのクラス
+*/
 template <class T, class T2>
 class MyInPort : public MyPortBase
 {
 public:
+	/**
+	*@brief コンストラクタ
+	* @param id
+	* @param ip
+	* @param n
+	* @param dt
+	* @param m_mexc
+	*/
 	MyInPort(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelRTComponent *m_mexc){
 		In = id;
 		inIn = ip;
@@ -217,17 +307,29 @@ public:
 		inIn->addConnectorDataListener(ON_BUFFER_WRITE, new DataListener<T,T2>(this, buff));
 		
 	}
+	/**
+	*@brief デストラクタ
+	*/
 	~MyInPort()
 	{
 		//delete inIn;
 		//delete In;
 	}
-	//データを取得したかを判定する関数
+	
+	/**
+	*@brief データを取得したかを判定する関数
+	*/
 	virtual bool isNew()
 	{
 		return inIn->isNew();
 	}
-	//受けたデータをセルに書き込む関数
+
+	
+	
+	/**
+	*@brief 受けたデータをセルに書き込む関数
+	* @param moption
+	*/
 	virtual void PutData(bool moption)
 	{
 		
@@ -271,17 +373,29 @@ public:
 		
 	}
 
-	T *In;
-	RTC::InPort<T> *inIn;
-	std::vector<std::vector<T2>> buff;
+	T *In; /**<　@brief  */
+	RTC::InPort<T> *inIn; /**<　@brief  */
+	std::vector<std::vector<T2>> buff; /**<　@brief  */
 	
 };
 
-//シーケンス型のインポートのクラス
+
+/**
+ * @class MyInPortSeq
+*@brief シーケンス型のインポートのクラス
+*/
 template <class T, class T2>
 class MyInPortSeq : public MyPortBase
 {
 public:
+	/**
+	*@brief コンストラクタ
+	* @param id
+	* @param ip
+	* @param n
+	* @param dt
+	* @param m_mexc
+	*/
 	MyInPortSeq(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelRTComponent *m_mexc){
 		In = id;
 		inIn = ip;
@@ -304,17 +418,33 @@ public:
 
 
 	}
+	/**
+	*@brief デストラクタ
+	*/
 	~MyInPortSeq()
 	{
 		//delete inIn;
 		//delete In;
 	}
-	//データを取得したかを判定する関数
+	
+	/**
+	*@brief データを取得したかを判定する関数
+	*/
 	virtual bool isNew()
 	{
 		return inIn->isNew();
 	}
-	//受けたデータをセルに書き込む関数
+
+	
+		
+
+		
+		
+	
+	/**
+	*@brief 受けたデータをセルに書き込む関数
+	* @param moption
+	*/
 	virtual void PutData(bool moption)
 	{
 		std::vector<std::vector<T2>> v;
@@ -359,18 +489,30 @@ public:
 		
 	}
 
-	T *In;
-	RTC::InPort<T> *inIn;
-	std::vector<std::vector<T2>> buff;
+	T *In; /**<　@brief  */
+	RTC::InPort<T> *inIn; /**<　@brief  */
+	std::vector<std::vector<T2>> buff; /**<　@brief  */
 	
 };
 
 
-//アウトポートのクラス
+
+/**
+ * @class MyOutPort
+*@brief アウトポートのクラス
+*/
 template <class T, class T2>
 class MyOutPort : public MyPortBase
 {
 public:
+	/**
+	*@brief コンストラクタ
+	* @param od
+	* @param op
+	* @param n
+	* @param dt
+	* @param m_mexc
+	*/
 	MyOutPort(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelRTComponent *m_mexc){
 		Out = od;
 		outOut = op;
@@ -391,12 +533,19 @@ public:
 
 		
 	}
+	/**
+	*@brief デストラクタ
+	*/
 	~MyOutPort()
 	{
 		//delete outOut;
 		//delete Out;
 	}
-	//セルの値をデータポートから出力する関数
+	
+	/**
+	*@brief セルの値をデータポートから出力する関数
+	* @param moption
+	*/
 	virtual void PutData(bool moption)
 	{
 				
@@ -409,15 +558,27 @@ public:
 		
 		outOut->write();
 	}
-	T *Out;
-	RTC::OutPort<T> *outOut;
+	T *Out; /**<　@brief  */
+	RTC::OutPort<T> *outOut; /**<　@brief  */
 };
 
-//シーケンス型のアウトポートのクラス
+
+/**
+ * @class MyOutPortSeq
+*@brief シーケンス型のアウトポートのクラス
+*/
 template <class T, class T2>
 class MyOutPortSeq : public MyPortBase
 {
 public:
+	/**
+	*@brief コンストラクタ
+	* @param od
+	* @param op
+	* @param n
+	* @param dt
+	* @param m_mexc
+	*/
 	MyOutPortSeq(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelRTComponent *m_mexc){
 		Out = od;
 		outOut = op;
@@ -438,12 +599,21 @@ public:
 
 		
 	}
+	/**
+	*@brief デストラクタ
+	*/
 	~MyOutPortSeq()
 	{
 		//delete outOut;
 		//delete Out;
 	}
-	//セルの値をデータポートから出力する関数
+
+
+	
+	/**
+	*@brief セルの値をデータポートから出力する関数
+	* @param moption
+	*/
 	virtual void PutData(bool moption)
 	{
 		int t_l = convertStrToVal(low);
@@ -464,52 +634,129 @@ public:
 		
 		outOut->write();
 	}
-	T *Out;
-	RTC::OutPort<T> *outOut;
+	T *Out; /**<　@brief  */
+	RTC::OutPort<T> *outOut; /**<　@brief  */
 };
 
+
+/**
+*@brief データポートを接続
+* @param p1
+* @param p2
+*/
 void portConnect(PortService_ptr p1, PortService_var p2);
 
 
-//Excelを操作するRTコンポーネント
+
+/**
+ * @class ExcelRTComponent
+*@brief Excelを操作するRTコンポーネント
+*/
 class ExcelRTComponent
   : public RTC::DataFlowComponentBase
 {
  public:
-
+  
+	/**
+	*@brief コンストラクタ
+	* @param manager
+	*/
   ExcelRTComponent(RTC::Manager* manager);
 
+  /**
+	*@brief デストラクタ
+	*/
   ~ExcelRTComponent();
 
-   //初期化処理用コールバック関数
+   
+  /**
+  *@brief 初期化処理用コールバック関数
+  * @return 
+  */
    virtual RTC::ReturnCode_t onInitialize();
 
-   //周期処理用コールバック関数
+   
+   /**
+   *@brief 周期処理用コールバック関数
+   * @param ec_id
+   * @return 
+   */
    virtual RTC::ReturnCode_t onExecute(RTC::UniqueId ec_id);
    
-   //不活性化時のコールバック関数
+   
+   /**
+   *@brief 不活性化時のコールバック関数
+   * @param ec_id
+   * @return 
+   */
    virtual RTC::ReturnCode_t onDeactivated(RTC::UniqueId ec_id);
 
+   /**
+   *@brief 終了処理のコールバック関数
+   * @return 
+   */
    virtual RTC::ReturnCode_t onFinalize();
 
-   //データポートを作成する関数
+   
+   /**
+   *@brief データポートを作成する関数
+   * @param op
+   * @param c
+   * @param l
+   * @param sn
+   * @param leng
+   * @param mstate
+   * @return 
+   */
    MyPortBase* CreatePort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate);
-   //データポートを削除する関数
+   
+   /**
+   *@brief データポートを削除する関数
+   * @param op
+   */
    void DeleteOtherPort(OtherPort &op);
-   //全てのデータポートを削除する関数
+   /**
+   *@brief 全てのデータポートを削除する関数
+   */
    void DeleteAllPort();
-   //RTCの情報を保存用シートに書き込む関数
+   
+   /**
+   *@brief RTCの情報を保存用シートに書き込む関数
+   */
    void Save();
-   //RTCの情報をほ場用シートより読み込む関数
+   
+   /**
+   *@brief RTCの情報をほ場用シートより読み込む関数
+   */
    void Load();
-   //データを書き込む列を初期化する
+   
+   /**
+   *@brief データを書き込む列を初期化する
+   * @param mpb
+   */
    void ResetPort(MyPortBase* mpb);
-   //全てのデータを書き込む列を初期化する
+   
+   /**
+   *@brief 全てのデータを書き込む列を初期化する
+   */
    void ResetAllPort();
-   //コンフィギュレーションパラメータが変更されたときに呼び出される関数
+   
+   /**
+   *@brief コンフィギュレーションパラメータが変更されたときに呼び出される関数
+   */
    void ConfigUpdate();
 
-   //セルに値を書き込み関数
+   /**
+   *@brief
+   */
+   void update_cellName();
+
+   
+   /**
+   *@brief セルに値を書き込む関数
+   * @param dt
+   * @param pb
+   */
     template <typename T>
    void SetCellData(std::vector<std::vector<T>> dt, MyPortBase *pb)
 	{
@@ -517,7 +764,12 @@ class ExcelRTComponent
 		myExcel::Obj->SetCellValue<T>(pb->col+pb->num, pb->low, pb->sheetName, pb->state, dt);
 		
 	}
-   //セルの値を取得する関数
+   
+   /**
+   *@brief セルの値を取得する関数
+   * @param pb
+   * @return 
+   */
     template <typename T>
 	std::vector<T> GetCellData(MyPortBase *pb)
 	{
@@ -525,7 +777,18 @@ class ExcelRTComponent
 		
 		return td;
 	}
-	//シーケンス型のデータポートを作成する関数
+	
+	/**
+	*@brief シーケンス型のデータポートを作成する関数
+	* @param op
+	* @param tdt
+	* @param c
+	* @param l
+	* @param sn
+	* @param leng
+	* @param mstate
+	* @return 
+	*/
 	template <typename T, typename T2> MyPortBase* crPortSeq(OtherPort &op, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
 		string PortType = NVUtil::toString(op.pb->get_port_profile()->properties,"port.port_type");
@@ -574,7 +837,18 @@ class ExcelRTComponent
 		}
 		return NULL;
 	}
-	//データポートを作成する関数
+	
+	/**
+	*@brief データポートを作成する関数
+	* @param op
+	* @param tdt
+	* @param c
+	* @param l
+	* @param sn
+	* @param leng
+	* @param mstate
+	* @return 
+	*/
    template <typename T, typename T2> MyPortBase* crPort(OtherPort &op, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
 	   string PortType = NVUtil::toString(op.pb->get_port_profile()->properties,"port.port_type");
@@ -624,7 +898,19 @@ class ExcelRTComponent
 		}
 		return NULL;
    }
-   //コンフィギュレーションパラメータによりシーケンス型のデータポートを作成する関数
+   
+   /**
+   *@brief コンフィギュレーションパラメータによりシーケンス型のデータポートを作成する関数
+    * @param tname
+	* @param PortType
+	* @param tdt
+	* @param c
+	* @param l
+	* @param sn
+	* @param leng
+	* @param mstate
+	* @return 
+   */
    template <typename T, typename T2> MyPortBase* ConfcrPortSeq(std::string tname, std::string PortType, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
 		
@@ -669,7 +955,19 @@ class ExcelRTComponent
 		}
 		return NULL;
 	}
-	//コンフィギュレーションパラメータによりデータポートを作成する関数
+	
+   /**
+   *@brief コンフィギュレーションパラメータによりデータポートを作成する関数
+    * @param tname
+	* @param PortType
+	* @param tdt
+	* @param c
+	* @param l
+	* @param sn
+	* @param leng
+	* @param mstate
+    * @return 
+   */
    template <typename T, typename T2> MyPortBase* ConfcrPort(std::string tname, std::string PortType, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
 	  
@@ -721,57 +1019,112 @@ class ExcelRTComponent
 
    
    
-   //データポートの作成、値の設定を行う関数
+   
+   /**
+   *@brief データポートの作成、値の設定を行う関数
+    * @param pt
+	* @param c
+	* @param l
+	* @param sn
+	* @param leng
+	* @param mstate
+	* @param msflag
+	* @return 
+   */
    MyPortBase* SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag);
-   //データポートを削除する関数
+   
+   /**
+   *@brief データポートを削除する関数
+   * @param pt
+   */
    void DelDPort(std::vector<std::string> pt);
-   //データポートを取得する関数
+   
+   /**
+   *@brief データポートを取得する関数
+   * @param pt
+   * @return 
+   */
    MyPortBase* GetDPort(std::vector<std::string> pt);
    
-   //データポートを関連付ける関数
+   
+   /**
+   *@brief データポートを関連付ける関数
+   * @param mpb
+   * @param n
+   */
    void AttachPort(MyPortBase *mpb, std::string n);
-   //データポートの関連付けを解除する関数
+   
+   /**
+   *@brief データポートの関連付けを解除する関数
+   * @param mpb
+   * @param n
+   */
    void DetachPort(MyPortBase *mpb, std::string n);
-   //インポートを取得する関数
+   
+   /**
+   *@brief インポートを取得する関数
+   * @param n
+   * @return 
+   */
    MyPortBase *GetInPort(std::string n);
-   //アウトポートを取得する関数
+   
+   /**
+   *@brief アウトポートを取得する関数
+   * @param n
+   * @return 
+   */
    MyPortBase *GetOutPort(std::string n);
-   //コンフィギュレーションパラメータで設定したデータポートを取得する関数
+   
+   /**
+   *@brief コンフィギュレーションパラメータで設定したアウトポートを取得する関数
+   * @param n
+   * @return 
+   */
    MyPortBase *GetConfOutPort(std::string n);
+   /**
+   *@brief コンフィギュレーションパラメータで設定したインポートを取得する関数
+   * @param n
+   * @return 
+   */
    MyPortBase *GetConfInPort(std::string n);
 
-   //RTCのデータポートのツリーを取得する関数
+   
+   /**
+   *@brief RTCのデータポートのツリーを取得する関数
+   * @param IP_adress
+   * @return 
+   */
    TreeObject* GetRTCTree(std::string IP_adress);
 
-   std::vector<MyPortBase*> InPorts;
-   std::vector<MyPortBase*> OutPorts;
+   std::vector<MyPortBase*> InPorts;	/**<　@brief  */
+   std::vector<MyPortBase*> OutPorts;	/**<　@brief  */
 
-   std::vector<MyPortBase*> ConfInPorts;
-   std::vector<MyPortBase*> ConfOutPorts;
+   std::vector<MyPortBase*> ConfInPorts;	/**<　@brief  */
+   std::vector<MyPortBase*> ConfOutPorts;	/**<　@brief  */
 
-   RTC::Manager* m_manager;
+   RTC::Manager* m_manager;	/**<　@brief  */
 
-   std::vector<OtherPort> rtclist;
+   std::vector<OtherPort> rtclist;	/**<　@brief  */
 
-   RTC::CorbaPort m_SpreadSheetPort;
-   mSpreadSheetSVC_impl m_spreadsheet;
+   RTC::CorbaPort m_SpreadSheetPort;	/**<　@brief  */
+   mSpreadSheetSVC_impl m_spreadsheet;	/**<　@brief  */
 
    
    
 
  protected:
-	std::string file_path;
-	std::string conf_data_type;
-	std::string conf_port_type;
-	int conf_column;
-	std::string conf_start_row;
-	std::string conf_end_row;
-	std::string conf_sheetname;
+	std::string file_path;	/**<　@brief  */
+	std::string conf_data_type;	/**<　@brief  */
+	std::string conf_port_type;	/**<　@brief  */
+	int conf_column;	/**<　@brief  */
+	std::string conf_start_row;	/**<　@brief  */
+	std::string conf_end_row;	/**<　@brief  */
+	std::string conf_sheetname;	/**<　@brief  */
 
-	int actionLock;
-	int Red;
-	int Green;
-	int Blue;
+	int actionLock;	/**<　@brief  */
+	int Red;	/**<　@brief  */
+	int Green;	/**<　@brief  */
+	int Blue;	/**<　@brief  */
 
 
  private:

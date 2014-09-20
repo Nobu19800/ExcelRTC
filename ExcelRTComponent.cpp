@@ -60,22 +60,34 @@ static const char* excelrtc_spec[] =
   };
 
 
-//コンフィギュレーションパラメータが更新されたときのコールバック
+
+/**
+ * @class MyConfigUpdateParam
+*@brief コンフィギュレーションパラメータが更新されたときのコールバック
+*/
 class MyConfigUpdateParam
     : public RTC::ConfigurationSetListener
 {
 public:
+	/**
+	*@brief コンストラクタ
+	* @param e_rtc
+	*/
     MyConfigUpdateParam(ExcelRTComponent *e_rtc)
     {
 		m_rtc = e_rtc;
     }
+	/**
+	*@brief 
+	* @param config_set
+	*/
     void operator()(const coil::Properties& config_set)
 	{
 		
 		m_rtc->ConfigUpdate();
 		
     }
-	ExcelRTComponent *m_rtc;
+	ExcelRTComponent *m_rtc; /**<　@brief  */
 
 };
 
@@ -203,7 +215,35 @@ RTC::ReturnCode_t ExcelRTComponent::onFinalize()
   return RTC::RTC_OK;
 }
 
+void ExcelRTComponent::update_cellName()
+{
+	for(int i=0;i < ConfInPorts.size();i++)
+	{
+		ConfInPorts[i]->update_cellName();
+		
+	}
 
+	for(int i=0;i < ConfOutPorts.size();i++)
+	{
+		ConfOutPorts[i]->update_cellName();
+
+	}
+
+
+	for(int i=0;i < InPorts.size();i++)
+	{
+		InPorts[i]->update_cellName();
+		
+		
+	}
+
+	for(int i=0;i < OutPorts.size();i++)
+	{
+		
+		OutPorts[i]->update_cellName();
+
+	}
+}
 
 
 
@@ -291,6 +331,7 @@ RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
 
   return RTC::RTC_OK;
 }
+
 
 
 void ExcelRTComponent::DelDPort(std::vector<std::string> pt)
@@ -713,6 +754,7 @@ void ExcelRTComponent::DeleteAllPort()
 }
 void ExcelRTComponent::Save()
 {
+	update_cellName();
 	std::vector<MyPortBase*>tf;
 	for(int i=0;i < InPorts.size();i++)
 	{

@@ -65,6 +65,20 @@ void myExcel::ResetCellColor(int c, std::string l, std::string sn, std::string l
 	}
 }
 
+void myExcel::SetCellStringSingle(int c, std::string l, std::string sn, std::string val)
+{
+	int t_l = convertStrToVal(l);
+	Excel::Worksheet^ws = GetWorksheet(sn);
+	if(ws != nullptr)
+	{
+		if(c > 0 && t_l > 0)
+		{
+			Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[c,t_l]);
+			c1->Value2 = gcnew System::String(val.c_str());
+		}
+	}
+}
+
 void myExcel::SaveRTC(std::vector<std::string> sf)
 {
 	Excel::Worksheet^ws = GetWorksheet("•Û‘¶—p");

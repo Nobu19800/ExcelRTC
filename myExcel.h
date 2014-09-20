@@ -1,3 +1,8 @@
+// -*-C++-*-
+/*!
+ * @file  myExcel.h
+ *
+ */
 #ifndef MYEXCEL_H
 #define MYEXCEL_H
 
@@ -11,23 +16,67 @@ using namespace Microsoft::Office::Interop::Excel;
 #include "MyObject.h"
 
 
-//Excelを操作するクラス
+
+/**
+* @class myExcel
+*@brief Excelを操作するクラス
+*/
 
 ref class myExcel
 {
 public:
+	/**
+	*@brief コンストラクタ
+	*/
 	myExcel();
-	static myExcel^ Obj;
-	//名前からワークシートを取得する関数
+	static myExcel^ Obj;	/**<　@brief  */
+	
+	/**
+	*@brief 名前からワークシートを取得する関数
+	* @param sn
+	* @return 
+	*/
 	Excel::Worksheet^ GetWorksheet(std::string sn);
-	//保存用ワークシートに書き込む関数
+	
+	/**
+	*@brief 保存用ワークシートに書き込む関数
+	* @param sf
+	*/
 	void SaveRTC(std::vector<std::string> sf);
-	//データポートの情報を保存用ワークシートから読み込む関数
+	
+	/**
+	*@brief データポートの情報を保存用ワークシートから読み込む関数
+	* @return 
+	*/
 	std::vector<std::string> LoadRTC();
-	//セルの色を無色にする関数
+	
+	/**
+	*@brief セルの色を無色にする関数
+	* @param c
+	* @param l
+	* @param sn
+	* @param leng
+	*/
 	void ResetCellColor(int c, std::string l, std::string sn, std::string leng);
 	
-	//単一のセルの値を変更する関数
+
+	/**
+	*@brief 単一のセルの文字列を変更する関数
+	* @param c
+	* @param l
+	* @param sn
+	* @param val
+	*/
+	
+	void SetCellStringSingle(int c, std::string l, std::string sn, std::string val);
+	
+	/**
+	*@brief 単一のセルの値を変更する関数
+	* @param c
+	* @param l
+	* @param sn
+	* @param val
+	*/
 	template <typename T>
 	void SetCellValueSingle(int c, std::string l, std::string sn, T val)
 	{
@@ -43,7 +92,14 @@ public:
 		}
 	}
 
-	//単一のセルの値を取得する関数
+	
+	/**
+	*@brief 単一のセルの値を取得する関数
+	* @param c
+	* @param l
+	* @param sn
+	* @return 
+	*/
 	std::string GetCellValueSingle(int c, std::string l, std::string sn)
 	{
 		int t_l = convertStrToVal(l);
@@ -59,7 +115,15 @@ public:
 		}
 		return "error";
 	}
-	//1つ以上のセルの値を変更する関数
+	
+	/**
+	*@brief 1つ以上のセルの値を変更する関数
+	* @param c
+	* @param l
+	* @param sn
+	* @param state
+	* @param v
+	*/
 	template <typename T>
 	void SetCellValue(int c, std::string l, std::string sn, bool state, std::vector<std::vector<T>> v)
 	{
@@ -110,7 +174,15 @@ public:
 
 	
 	
-	//1つ以上のセルの値を取得する関数
+	
+	/**
+	*@brief 1つ以上のセルの値を取得する関数
+	* @param c
+	* @param l
+	* @param sn
+	* @param state
+	* @return 
+	*/
 	template <typename T>
 	std::vector<T> GetCellValue(int c, std::string l, std::string sn, std::string leng)
 	{
@@ -206,22 +278,35 @@ public:
 
 		return v;
 	}
-	//Excelファイルを開く関数
+	
+	/**
+	*@brief Excelファイルを開く関数
+	* @param fn
+	*/
 	void Open(System::String^ fn);
-	//COMオブジェクトを解放する関数
+	
+	/**
+	*@brief COMオブジェクトを解放する関数
+	*/
 	void Close();
 
+	/**
+	*@brief
+	* @param r
+	* @param g
+	* @param b
+	*/
 	void SetColor(int r, int g, int b);
 
-	int red, green, blue;
+	int red, green, blue; /**<　@brief  */
 
-	System::String^ filename;
-	Excel::Application^ xlApplication;
-	Excel::Workbooks^ xlWorkbooks;
-	Excel::Workbook^ xlWorkbook;
-	Excel::Sheets^ xlWorksheets;
+	System::String^ filename; /**<　@brief  */
+	Excel::Application^ xlApplication; /**<　@brief  */
+	Excel::Workbooks^ xlWorkbooks; /**<　@brief  */
+	Excel::Workbook^ xlWorkbook; /**<　@brief  */
+	Excel::Sheets^ xlWorksheets; /**<　@brief  */
 
-	System::Collections::Generic::List<Excel::Worksheet^>^ xlWorksheet;
+	System::Collections::Generic::List<Excel::Worksheet^>^ xlWorksheet; /**<　@brief  */
 
 };
 
