@@ -754,7 +754,7 @@ void ExcelRTComponent::DeleteAllPort()
 }
 void ExcelRTComponent::Save()
 {
-	update_cellName();
+	//update_cellName();
 	std::vector<MyPortBase*>tf;
 	for(int i=0;i < InPorts.size();i++)
 	{

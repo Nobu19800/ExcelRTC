@@ -195,7 +195,19 @@ public:
 		if(ws != nullptr)
 		{
 			int t_l = convertStrToVal(l);
-			int t_leng = convertStrToVal(leng);
+			int t_leng = t_l;
+			
+			try{
+				t_leng = convertStrToVal(leng);		
+			}
+			catch(...)
+			{
+				t_leng = t_l;
+			}
+			if(t_l > t_leng)
+				t_leng = t_l;
+			
+			
 
 			
 

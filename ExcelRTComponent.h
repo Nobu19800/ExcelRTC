@@ -210,6 +210,7 @@ public:
 		length = leng;
 		num = 0;
 		state = mstate;
+		update_cellName();
 	}
 
 	/**
@@ -809,6 +810,7 @@ class ExcelRTComponent
 			
 			mip->SetExcelParam(c,l,sn,leng,mstate);
 			OutPorts.push_back(mip);
+			
 			portConnect(m_outOut->getPortRef(), op.pb);
 
 			op.mpb = mip;
@@ -829,6 +831,7 @@ class ExcelRTComponent
 
 			mip->SetExcelParam(c,l,sn,leng,mstate);
 			InPorts.push_back(mip);
+			
 			portConnect(m_inIn->getPortRef(), op.pb);
 
 			op.mpb = mip;
@@ -869,6 +872,7 @@ class ExcelRTComponent
 			
 			mip->SetExcelParam(c,l,sn,leng,mstate);
 			OutPorts.push_back(mip);
+			
 			portConnect(m_outOut->getPortRef(), op.pb);
 
 			op.mpb = mip;
@@ -890,6 +894,7 @@ class ExcelRTComponent
 
 			mip->SetExcelParam(c,l,sn,leng,mstate);
 			InPorts.push_back(mip);
+			
 			portConnect(m_inIn->getPortRef(), op.pb);
 
 			op.mpb = mip;
