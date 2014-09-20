@@ -1,3 +1,24 @@
+// -*-C++-*-
+/*!
+ * @file  ExcelRTComponent.cpp
+ * @brief
+ *
+ */
+
+#include "stdafx.h"
+#include "Form1.h"
+#include <rtm/Manager.h>
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+#include "ExcelRTComponent.h"
+
+using namespace ExcelRTC;
+
+
+
+
+
 #include "stdafx.h"
 #include "ExcelRTComponent.h"
 

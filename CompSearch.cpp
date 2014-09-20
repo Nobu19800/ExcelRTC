@@ -1,3 +1,10 @@
+// -*-C++-*-
+/*!
+ * @file  CompSearch.cpp
+ * @brief
+ *
+ */
+
 #include "stdafx.h"
 #include "ExcelRTComponent.h"
 

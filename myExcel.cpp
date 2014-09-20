@@ -1,3 +1,9 @@
+/*!
+ * @file  myExcel.cpp
+ * @brief
+ *
+ */
+
 #include "stdafx.h"
 #include "myExcel.h"
 #include "MyObject.h"

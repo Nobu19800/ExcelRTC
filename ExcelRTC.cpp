@@ -1,4 +1,9 @@
-// ExcelRTC.cpp : メイン プロジェクト ファイルです。
+// -*-C++-*-
+/*!
+ * @file  ExcelRTC.cpp
+ * @brief
+ *
+ */
 
 #include "stdafx.h"
 #include "Form1.h"

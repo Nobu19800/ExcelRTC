@@ -1,3 +1,9 @@
+/*!
+ * @file  MyObject.cpp
+ * @brief
+ *
+ */
+
 #include "stdafx.h"
 
 #include "MyObject.h"
