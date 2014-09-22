@@ -12,9 +12,9 @@
 
 
 
-ExcelTask::ExcelTask()
+ExcelTask::ExcelTask(ExcelControl *m_rtc)
 {
-	
+	mrtc = m_rtc;
 }
 
 
@@ -41,6 +41,8 @@ int ExcelTask::svc()
     getProperty(prop, "excel.filename", filePath);
     myExcel::Obj->Open(gcnew System::String(filePath.c_str()));
 	myExcel::Obj->filename = "";
+
+	mrtc->Load();
 	return 0;
 }
 

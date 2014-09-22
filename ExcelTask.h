@@ -16,8 +16,10 @@
 #include <rtm/Manager.h>
 #include <rtm/PeriodicExecutionContext.h>
 
+#include "ExcelControl.h"
 
 
+class ExcelControl;
 /*!
  * @class ExcelTask
  * @brief 
@@ -30,12 +32,13 @@ public:
 		*@brief コンストラクタ
 		* @param manager
 		*/
-		ExcelTask();
+		ExcelTask(ExcelControl *m_rtc);
 		/**
 		*@brief 
 		*/
 		virtual int svc();
 		
+		ExcelControl *mrtc;	/**<　@brief  */
 
 
 };

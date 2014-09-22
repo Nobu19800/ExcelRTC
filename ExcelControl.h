@@ -3,8 +3,8 @@
  * @file  ExcelControl.h
  *
  */
-#ifndef EXCELRTCOMPONENT_H
-#define EXCELRTCOMPONENT_H
+#ifndef EXCELCONTROL_H
+#define EXCELCONTROL_H
 
 #include <rtm/Manager.h>
 #include <rtm/DataFlowComponentBase.h>
@@ -32,17 +32,19 @@ using namespace RTC;
 #include "ExcelTask.h"
 
 
-
-class ExcelRTComponent;
+class ExcelTask;
+class ExcelControl;
 class MyPortBase;
 class OtherPort;
 class MyOnUpdate;
 
 
 
+
 void ListRecursive(CosNaming::NamingContext_ptr context,std::vector<OtherPort> &rtclist,std::string &name, TreeObject *to);
 
 int rtc_get_rtclist(RTC::CorbaNaming &naming,std::vector<OtherPort> &rtclist, TreeObject *to, std::string IP_adress);
+
 
 
 
@@ -64,7 +66,7 @@ public:
 	* @param sv データ格納用コンテナ
 	* @param mrtc
 	*/
-	DataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelRTComponent *mrtc){
+	DataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelControl *mrtc){
 		m_port = mp;
 		m_data = &sv;
 		m_rtc = mrtc;
@@ -102,7 +104,7 @@ public:
   };
   MyPortBase *m_port;	/**<　@brief  */
   std::vector<std::vector<T2>> *m_data; /**<　@brief  */
-  ExcelRTComponent *m_rtc; /**<　@brief  */
+  ExcelControl *m_rtc; /**<　@brief  */
   
 };
 
@@ -122,7 +124,7 @@ public:
 	* @param sv データ格納用コンテナ
 	* @param mrtc
 	*/
-	SeqDataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelRTComponent *mrtc){
+	SeqDataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelControl *mrtc){
 		m_port = mp;
 		m_data = &sv;
 		m_rtc = mrtc;
@@ -158,7 +160,7 @@ public:
   };
   MyPortBase *m_port; /**<　@brief  */
   std::vector<std::vector<T2>> *m_data; /**<　@brief  */
-  ExcelRTComponent *m_rtc; /**<　@brief  */
+  ExcelControl *m_rtc; /**<　@brief  */
   
 };
 
@@ -221,7 +223,7 @@ public:
 		length = leng;
 		num = 0;
 		state = mstate;
-		update_cellName();
+		//update_cellName();
 	}
 
 	/**
@@ -264,7 +266,7 @@ public:
 	std::vector<std::string> attachPort;  /**<　@brief  */
 
 	bool state; /**<　@brief  */
-	ExcelRTComponent *mexc; /**<　@brief  */
+	ExcelControl *mexc; /**<　@brief  */
 	coil::Mutex _mutex; /**<　@brief  */
 
 	
@@ -298,7 +300,7 @@ public:
 	* @param dt
 	* @param m_mexc
 	*/
-	MyInPort(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelRTComponent *m_mexc){
+	MyInPort(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelControl *m_mexc){
 		In = id;
 		inIn = ip;
 		name = n;
@@ -408,7 +410,7 @@ public:
 	* @param dt
 	* @param m_mexc
 	*/
-	MyInPortSeq(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelRTComponent *m_mexc){
+	MyInPortSeq(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelControl *m_mexc){
 		In = id;
 		inIn = ip;
 		name = n;
@@ -525,7 +527,7 @@ public:
 	* @param dt
 	* @param m_mexc
 	*/
-	MyOutPort(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelRTComponent *m_mexc){
+	MyOutPort(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelControl *m_mexc){
 		Out = od;
 		outOut = op;
 		name = n;
@@ -591,7 +593,7 @@ public:
 	* @param dt
 	* @param m_mexc
 	*/
-	MyOutPortSeq(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelRTComponent *m_mexc){
+	MyOutPortSeq(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelControl *m_mexc){
 		Out = od;
 		outOut = op;
 		name = n;
@@ -661,10 +663,10 @@ void portConnect(PortService_ptr p1, PortService_var p2);
 
 
 /**
- * @class ExcelRTComponent
+ * @class ExcelControl
 *@brief Excelを操作するRTコンポーネント
 */
-class ExcelRTComponent
+class ExcelControl
   : public RTC::DataFlowComponentBase
 {
  public:
@@ -673,12 +675,12 @@ class ExcelRTComponent
 	*@brief コンストラクタ
 	* @param manager
 	*/
-  ExcelRTComponent(RTC::Manager* manager);
+  ExcelControl(RTC::Manager* manager);
 
   /**
 	*@brief デストラクタ
 	*/
-  ~ExcelRTComponent();
+  ~ExcelControl();
 
    
   /**
@@ -1154,6 +1156,36 @@ class ExcelRTComponent
 
  private:
 
+
+};
+
+/**
+ * @class MyConfigUpdateParam
+*@brief コンフィギュレーションパラメータが更新されたときのコールバック
+*/
+class MyConfigUpdateParam
+    : public RTC::ConfigurationSetListener
+{
+public:
+	/**
+	*@brief コンストラクタ
+	* @param e_rtc
+	*/
+    MyConfigUpdateParam(ExcelControl *e_rtc)
+    {
+		m_rtc = e_rtc;
+    }
+	/**
+	*@brief 
+	* @param config_set
+	*/
+    void operator()(const coil::Properties& config_set)
+	{
+		
+		m_rtc->ConfigUpdate();
+		
+    }
+	ExcelControl *m_rtc; /**<　@brief  */
 
 };
 

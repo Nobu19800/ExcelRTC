@@ -10,7 +10,7 @@
 
 #include "ExcelControl.h"
 
-extern ExcelRTComponent *tertc;
+extern ExcelControl *tertc;
 
 
 
@@ -36,6 +36,8 @@ void ExcelRTC::Form1::SetTree()
 	LowcheckBox->Checked = true;
 
 	tertc->Load();
+	
+	UpdatePortList();
 	
 	
 }
@@ -336,6 +338,8 @@ void ExcelRTC::Form1::InitFunc()
 	if(tertc)
 	{
 		tertc->Load();
+		
+		UpdatePortList();
 	}
 }
 
@@ -352,6 +356,8 @@ void ExcelRTC::Form1::OpenFile()
 		 myExcel::Obj->Open(openFileDialog1->FileName);
 		 currentDirectory = System::IO::Path::GetDirectoryName(openFileDialog1->FileName);
 		 tertc->Load();
+		 
+		 UpdatePortList();
 	 }
 }
 

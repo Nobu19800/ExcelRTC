@@ -32,7 +32,7 @@ using namespace ExcelRTC;
 using namespace std;
 
 
-ExcelRTComponent *tertc;
+ExcelControl *tertc;
 
 static const char* excelrtc_spec[] =
   {
@@ -82,35 +82,7 @@ static const char* excelrtc_spec[] =
 
 
 
-/**
- * @class MyConfigUpdateParam
-*@brief コンフィギュレーションパラメータが更新されたときのコールバック
-*/
-class MyConfigUpdateParam
-    : public RTC::ConfigurationSetListener
-{
-public:
-	/**
-	*@brief コンストラクタ
-	* @param e_rtc
-	*/
-    MyConfigUpdateParam(ExcelRTComponent *e_rtc)
-    {
-		m_rtc = e_rtc;
-    }
-	/**
-	*@brief 
-	* @param config_set
-	*/
-    void operator()(const coil::Properties& config_set)
-	{
-		
-		m_rtc->ConfigUpdate();
-		
-    }
-	ExcelRTComponent *m_rtc; /**<　@brief  */
 
-};
 
 
 
@@ -133,7 +105,7 @@ void SetTree(TreeObject *to)
 
 
 
-ExcelRTComponent::ExcelRTComponent(RTC::Manager* manager)
+ExcelControl::ExcelControl(RTC::Manager* manager)
   : RTC::DataFlowComponentBase(manager),
   m_SpreadSheetPort("SpreadSheet")
 
@@ -153,18 +125,18 @@ ExcelRTComponent::ExcelRTComponent(RTC::Manager* manager)
 		CreatePort(rtclist[i]);
 	}*/
 
-	et = new ExcelTask();
+	et = new ExcelTask(this);
 	et->activate();
 	
 
 	
 }
 
-ExcelRTComponent::~ExcelRTComponent()
+ExcelControl::~ExcelControl()
 {
 }
 
-TreeObject* ExcelRTComponent::GetRTCTree(string IP_adress)
+TreeObject* ExcelControl::GetRTCTree(string IP_adress)
 {
 	try
 	{
@@ -190,7 +162,7 @@ TreeObject* ExcelRTComponent::GetRTCTree(string IP_adress)
 	
 }
 
-RTC::ReturnCode_t ExcelRTComponent::onInitialize()
+RTC::ReturnCode_t ExcelControl::onInitialize()
 {
 	//myExcel::Obj = gcnew myExcel();
   
@@ -224,7 +196,7 @@ RTC::ReturnCode_t ExcelRTComponent::onInitialize()
 }
 
 
-RTC::ReturnCode_t ExcelRTComponent::onDeactivated(RTC::UniqueId ec_id)
+RTC::ReturnCode_t ExcelControl::onDeactivated(RTC::UniqueId ec_id)
 {
 	ResetAllPort();
 
@@ -232,13 +204,13 @@ RTC::ReturnCode_t ExcelRTComponent::onDeactivated(RTC::UniqueId ec_id)
 }
 
 
-RTC::ReturnCode_t ExcelRTComponent::onFinalize()
+RTC::ReturnCode_t ExcelControl::onFinalize()
 {
   myExcel::Obj->Close();
   return RTC::RTC_OK;
 }
 
-void ExcelRTComponent::update_cellName()
+void ExcelControl::update_cellName()
 {
 	for(int i=0;i < ConfInPorts.size();i++)
 	{
@@ -271,7 +243,7 @@ void ExcelRTComponent::update_cellName()
 
 
 
-RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
+RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
 {
 	if(actionLock == 1)
 	{
@@ -328,7 +300,7 @@ RTC::ReturnCode_t ExcelRTComponent::onExecute(RTC::UniqueId ec_id)
   return RTC::RTC_OK;
 }
 
-void ExcelRTComponent::updateAPort(MyPortBase* ip)
+void ExcelControl::updateAPort(MyPortBase* ip)
 {
 	for(int i=0;i < ip->attachPort.size();i++)
 	{
@@ -376,7 +348,7 @@ void ExcelRTComponent::updateAPort(MyPortBase* ip)
 }
 
 
-void ExcelRTComponent::DelDPort(std::vector<std::string> pt)
+void ExcelControl::DelDPort(std::vector<std::string> pt)
 {
 	for(int i=0;i < rtclist.size();i++)
 	{
@@ -388,7 +360,7 @@ void ExcelRTComponent::DelDPort(std::vector<std::string> pt)
 	}
 }
 
-void ExcelRTComponent::ConfigUpdate()
+void ExcelControl::ConfigUpdate()
 {
 
 	this->m_configsets.update();
@@ -571,7 +543,7 @@ void ExcelRTComponent::ConfigUpdate()
 	
 }
 
-MyPortBase* ExcelRTComponent::GetDPort(std::vector<std::string> pt)
+MyPortBase* ExcelControl::GetDPort(std::vector<std::string> pt)
 {
 	for(int i=0;i < rtclist.size();i++)
 	{
@@ -584,7 +556,7 @@ MyPortBase* ExcelRTComponent::GetDPort(std::vector<std::string> pt)
 	return NULL;
 }
 
-MyPortBase* ExcelRTComponent::SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag)
+MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag)
 {
 	/*for(int i=0;i < pt.size();i++)
 	{
@@ -608,15 +580,28 @@ MyPortBase* ExcelRTComponent::SetDPort(std::vector<std::string> pt, int c, std::
 			tmp += gcnew System::String(rtclist[i].buff[rtclist[i].buff.size()-1].c_str());
 			tmp += "と通信するデータポートを作成しました。";
 
+			MyPortBase* m_pb = CreatePort(rtclist[i], c, l, sn, leng, mstate);
 			if(msflag)
+			{
 				System::Windows::Forms::MessageBox::Show(tmp);
+				m_pb->update_cellName();
+				
+			}
 
-			return CreatePort(rtclist[i], c, l, sn, leng, mstate);
+
+			return m_pb;
 		}
 		else if(rtclist[i].buff == pt && rtclist[i].mpb != NULL)
 		{
 			rtclist[i].mpb->SetExcelParam(c, l, sn, leng, mstate);
-			return rtclist[i].mpb;
+
+			MyPortBase* m_pb = rtclist[i].mpb;
+			if(msflag)
+			{
+				m_pb->update_cellName();
+				
+			}
+			return m_pb;
 		}
 		
 		/*for(int j=0;j < pt.size();j++)
@@ -634,7 +619,7 @@ MyPortBase* ExcelRTComponent::SetDPort(std::vector<std::string> pt, int c, std::
 	return NULL;
 }
 
-void ExcelRTComponent::DeleteOtherPort(OtherPort &op)
+void ExcelControl::DeleteOtherPort(OtherPort &op)
 {
 	
 
@@ -658,7 +643,7 @@ void ExcelRTComponent::DeleteOtherPort(OtherPort &op)
 	
 }
 
-void ExcelRTComponent::AttachPort(MyPortBase *mpb, std::string n)
+void ExcelControl::AttachPort(MyPortBase *mpb, std::string n)
 {
 	
 	MyPortBase *ip = GetInPort(n);
@@ -686,7 +671,7 @@ void ExcelRTComponent::AttachPort(MyPortBase *mpb, std::string n)
 
 	Save();
 }
-void ExcelRTComponent::DetachPort(MyPortBase *mpb, std::string n)
+void ExcelControl::DetachPort(MyPortBase *mpb, std::string n)
 {
 	MyPortBase *ip = GetInPort(n);
 
@@ -720,7 +705,7 @@ void ExcelRTComponent::DetachPort(MyPortBase *mpb, std::string n)
 	Save();
 }
 
-MyPortBase *ExcelRTComponent::GetInPort(std::string n)
+MyPortBase *ExcelControl::GetInPort(std::string n)
 {
 	for(int i=0;i < InPorts.size();i++)
 	{
@@ -732,7 +717,7 @@ MyPortBase *ExcelRTComponent::GetInPort(std::string n)
 	return NULL;
 }
 
-MyPortBase *ExcelRTComponent::GetOutPort(std::string n)
+MyPortBase *ExcelControl::GetOutPort(std::string n)
 {
 	for(int i=0;i < OutPorts.size();i++)
 	{
@@ -743,7 +728,7 @@ MyPortBase *ExcelRTComponent::GetOutPort(std::string n)
 	}
 	return NULL;
 }
-MyPortBase *ExcelRTComponent::GetConfInPort(std::string n)
+MyPortBase *ExcelControl::GetConfInPort(std::string n)
 {
 	for(int i=0;i < ConfInPorts.size();i++)
 	{
@@ -756,7 +741,7 @@ MyPortBase *ExcelRTComponent::GetConfInPort(std::string n)
 	return NULL;
 }
 
-MyPortBase *ExcelRTComponent::GetConfOutPort(std::string n)
+MyPortBase *ExcelControl::GetConfOutPort(std::string n)
 {
 	
 	for(int i=0;i < ConfOutPorts.size();i++)
@@ -771,7 +756,7 @@ MyPortBase *ExcelRTComponent::GetConfOutPort(std::string n)
 
 
 
-void ExcelRTComponent::DeleteAllPort()
+void ExcelControl::DeleteAllPort()
 {
 	for(int i=0;i < InPorts.size();i++)
 	{
@@ -794,7 +779,7 @@ void ExcelRTComponent::DeleteAllPort()
 	InPorts.clear();
 	OutPorts.clear();
 }
-void ExcelRTComponent::Save()
+void ExcelControl::Save()
 {
 	//update_cellName();
 	std::vector<MyPortBase*>tf;
@@ -835,62 +820,66 @@ void ExcelRTComponent::Save()
 
 	myExcel::Obj->SaveRTC(v);
 }
-void ExcelRTComponent::Load()
+void ExcelControl::Load()
 {
-	std::vector<std::string> lw = myExcel::Obj->LoadRTC();
-	
-
-	
-
-	if(lw.size() > 0)
+	if(myExcel::Obj)
 	{
+		std::vector<std::string> lw = myExcel::Obj->LoadRTC();
+	
+
+	
+
+		if(lw.size() > 0)
+		{
 		
-		for(int i=0;i < lw.size();i++){
+			for(int i=0;i < lw.size();i++){
 			
-			if(lw[i] != ""){
+				if(lw[i] != ""){
 				
 				
-				vector<string> confs = split(lw[i], "#");
+					vector<string> confs = split(lw[i], "#");
 				
-				if(confs.size() > 4)
-				{
-					
-					vector<string> mpath = split(confs[0], "/");
-					int col = string2binary<int>(confs[1],10);
-					std::string low = confs[2];
-					string sheetname = confs[3];
-					std::string len = confs[4];
-					bool mstate = true;
-					if(confs[5] == "0")
-						mstate = false;
-
-					if(mpath.size() > 1 && i==0)
+					if(confs.size() > 4)
 					{
-						GetRTCTree(mpath[0]);
-					}
-					MyPortBase *mpb = SetDPort(mpath, col, low, sheetname, len, mstate, false);
-
-					vector<string> atrtc = split(confs[6], "/");
 					
-					for(int j=0;j < atrtc.size();j++)
-					{
-						if(atrtc[j] != "")
+						vector<string> mpath = split(confs[0], "/");
+						int col = string2binary<int>(confs[1],10);
+						std::string low = confs[2];
+						string sheetname = confs[3];
+						std::string len = confs[4];
+						bool mstate = true;
+						if(confs[5] == "0")
+							mstate = false;
+
+						if(mpath.size() > 1 && i==0)
 						{
-							mpb->attachPort.push_back(atrtc[j]);
+							GetRTCTree(mpath[0]);
+						}
+						MyPortBase *mpb = SetDPort(mpath, col, low, sheetname, len, mstate, false);
+
+						vector<string> atrtc = split(confs[6], "/");
+					
+						for(int j=0;j < atrtc.size();j++)
+						{
+							if(atrtc[j] != "")
+							{
+								mpb->attachPort.push_back(atrtc[j]);
+							}
 						}
 					}
-				}
 				
+				}
 			}
 		}
 	}
+	
 }
 
-void ExcelRTComponent::ResetPort(MyPortBase* mpb)
+void ExcelControl::ResetPort(MyPortBase* mpb)
 {
 	mpb->num = 0;
 }
-void ExcelRTComponent::ResetAllPort()
+void ExcelControl::ResetAllPort()
 {
 	for(int i=0;i < InPorts.size();i++)
 	{
@@ -928,7 +917,7 @@ void ExcelRTComponent::ResetAllPort()
 	}
 }
 
-MyPortBase* ExcelRTComponent::CreatePort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate)
+MyPortBase* ExcelControl::CreatePort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate)
 {
 	
 	
@@ -1071,8 +1060,8 @@ extern "C"
   {
     coil::Properties profile(excelrtc_spec);
     manager->registerFactory(profile,
-                             RTC::Create<ExcelRTComponent>,
-                             RTC::Delete<ExcelRTComponent>);
+                             RTC::Create<ExcelControl>,
+                             RTC::Delete<ExcelControl>);
   }
   
 };
