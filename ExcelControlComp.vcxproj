@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9DAA373C-50F3-49D7-A2BF-048CE1FEB5A4}</ProjectGuid>
+    <ProjectGuid>{198F24DC-D610-4C33-9729-3BBC88B0C538}</ProjectGuid>
     <RootNamespace>ExcelRTC</RootNamespace>
     <Keyword>ManagedCProj</Keyword>
   </PropertyGroup>
@@ -45,6 +45,8 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ExcelRTC</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ExcelRTC</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -130,8 +132,9 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="CompSearch.cpp" />
-    <ClCompile Include="ExcelRTC.cpp" />
-    <ClCompile Include="ExcelRTComponent.cpp" />
+    <ClCompile Include="ExcelControlComp.cpp" />
+    <ClCompile Include="ExcelControl.cpp" />
+    <ClCompile Include="ExcelTask.cpp" />
     <ClCompile Include="FormControl.cpp" />
     <ClCompile Include="myExcel.cpp" />
     <ClCompile Include="MyObject.cpp" />
@@ -143,7 +146,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ExcelRTComponent.h" />
+    <ClInclude Include="ExcelControl.h" />
+    <ClInclude Include="ExcelTask.h" />
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>

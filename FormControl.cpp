@@ -8,7 +8,7 @@
 #include "Form1.h"
 #include <sstream>
 
-#include "ExcelRTComponent.h"
+#include "ExcelControl.h"
 
 extern ExcelRTComponent *tertc;
 

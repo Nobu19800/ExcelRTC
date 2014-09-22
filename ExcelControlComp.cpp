@@ -1,6 +1,6 @@
 // -*-C++-*-
 /*!
- * @file  ExcelRTC.cpp
+ * @file  ExcelControlComp.cpp
  * @brief
  *
  */
@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
-#include "ExcelRTComponent.h"
+#include "ExcelControl.h"
 
 using namespace ExcelRTC;
 
@@ -37,18 +37,7 @@ void MyModuleInit(RTC::Manager* manager)
   return;
 }
 
-template <class T>
-void getProperty(coil::Properties& prop, const char* key, T& value)
-{
-if (prop.findNode(key) != 0)
-  {
-    T tmp;
-    if (coil::stringTo(tmp, prop[key].c_str()))
-      {
-        value = tmp;
-      }
-  }
-}
+
 
 
 [STAThreadAttribute]
@@ -73,12 +62,7 @@ int main(array<System::String ^> ^args)
 	manager->runManager(true);
 
 
-	myExcel::Obj = gcnew myExcel();
-	std::string filePath = "";
-    coil::Properties& prop(::RTC::Manager::instance().getConfig());
-    getProperty(prop, "excel.filename", filePath);
-    myExcel::Obj->Open(gcnew System::String(filePath.c_str()));
-	myExcel::Obj->filename = "";
+	
 
 
 	// メイン ウィンドウを作成して、実行します

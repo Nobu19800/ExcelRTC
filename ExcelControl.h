@@ -1,6 +1,6 @@
 // -*-C++-*-
 /*!
- * @file  ExcelRTComponent.h
+ * @file  ExcelControl.h
  *
  */
 #ifndef EXCELRTCOMPONENT_H
@@ -29,6 +29,7 @@
 using namespace RTC;
 
 #include "SpreadSheetSVC_impl.h"
+#include "ExcelTask.h"
 
 
 
@@ -1147,6 +1148,8 @@ class ExcelRTComponent
 	int Blue;	/**<@@brief  */
 
 	coil::Mutex _mutex; /**<@@brief  */
+
+	ExcelTask *et;
 
 
  private:

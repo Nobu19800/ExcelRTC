@@ -1,6 +1,6 @@
 // -*-C++-*-
 /*!
- * @file  ExcelRTComponent.cpp
+ * @file  ExcelControl.cpp
  * @brief
  *
  */
@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
-#include "ExcelRTComponent.h"
+#include "ExcelControl.h"
 
 using namespace ExcelRTC;
 
@@ -20,7 +20,7 @@ using namespace ExcelRTC;
 
 
 #include "stdafx.h"
-#include "ExcelRTComponent.h"
+#include "ExcelControl.h"
 
 #include <iostream>
 #include <fstream>
@@ -153,6 +153,8 @@ ExcelRTComponent::ExcelRTComponent(RTC::Manager* manager)
 		CreatePort(rtclist[i]);
 	}*/
 
+	et = new ExcelTask();
+	et->activate();
 	
 
 	

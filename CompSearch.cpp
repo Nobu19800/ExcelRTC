@@ -6,7 +6,7 @@
  */
 
 #include "stdafx.h"
-#include "ExcelRTComponent.h"
+#include "ExcelControl.h"
 
 #include <iostream>
 #include <fstream>
