@@ -6,14 +6,16 @@
  */
 
 #include "stdafx.h"
-#include "Form1.h"
 #include <rtm/Manager.h>
 #include <iostream>
 #include <string>
 #include <stdlib.h>
 #include "ExcelControl.h"
 
-using namespace ExcelRTC;
+
+#ifdef CREATE_EXE_EXCELRTC
+	using namespace ExcelRTC;
+#endif
 
 
 
@@ -150,7 +152,9 @@ TreeObject* ExcelControl::GetRTCTree(string IP_adress)
 	}
 	catch(...)
 	{
+#ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show("ネーミングサービスへの接続に失敗しました");
+#endif
 		return NULL;
 	}
 	
@@ -583,7 +587,9 @@ MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::stri
 			MyPortBase* m_pb = CreatePort(rtclist[i], c, l, sn, leng, mstate);
 			if(msflag)
 			{
+#ifdef CREATE_EXE_EXCELRTC
 				System::Windows::Forms::MessageBox::Show(tmp);
+#endif
 				m_pb->update_cellName();
 				
 			}
@@ -637,9 +643,9 @@ void ExcelControl::DeleteOtherPort(OtherPort &op)
 	op.mpb = NULL;
 
 	Save();
-
+#ifdef CREATE_EXE_EXCELRTC
 	System::Windows::Forms::MessageBox::Show("削除しました");
-
+#endif
 	
 }
 
@@ -658,15 +664,21 @@ void ExcelControl::AttachPort(MyPortBase *mpb, std::string n)
 		tmp += "と";
 		tmp += gcnew System::String(mpb->name.c_str());
 		tmp += "を関連付けしました";
+#ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show(tmp);
+#endif
 	}
 	else if(GetInPort(mpb->name) != NULL)
 	{
+#ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show("インポートの名前が正しくありません");
+#endif
 	}
 	else
 	{
+#ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show("アウトポートを選択してください");
+#endif
 	}
 
 	Save();
@@ -681,7 +693,9 @@ void ExcelControl::DetachPort(MyPortBase *mpb, std::string n)
 		tmp += "と";
 		tmp += gcnew System::String(mpb->name.c_str());
 		tmp += "の関連付けを解除しました";
+#ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show(tmp);
+#endif
 
 	
 		std::vector<std::string>::iterator end_it = remove( ip->attachPort.begin(), ip->attachPort.end(), mpb->name );
@@ -695,11 +709,15 @@ void ExcelControl::DetachPort(MyPortBase *mpb, std::string n)
 	}
 	else if(GetInPort(mpb->name) != NULL)
 	{
+#ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show("アウトポートを選択してください");
+#endif
 	}
 	else
 	{
+#ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show("インポートの名前が正しくありません");
+#endif
 	}
 
 	Save();

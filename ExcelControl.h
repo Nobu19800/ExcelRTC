@@ -24,7 +24,12 @@
 #include <rtm/CorbaConsumer.h>
 
 #include "MyObject.h"
-#include "Form1.h"
+#ifdef CREATE_EXE_EXCELRTC
+	#include "Form1.h"
+#else
+	#include "myExcel.h"
+#endif
+
 
 using namespace RTC;
 
