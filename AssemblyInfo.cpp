@@ -16,7 +16,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("Toshiba")];
 [assembly:AssemblyProductAttribute("ExcelRTC")];
-[assembly:AssemblyCopyrightAttribute("Copyright (c) Toshiba 2014")];
+[assembly:AssemblyCopyrightAttribute("")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 
