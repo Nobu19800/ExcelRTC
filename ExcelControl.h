@@ -1197,7 +1197,7 @@ public:
 
 extern "C"
 {
-  DLL_EXPORT void ExcelRTCInit(RTC::Manager* manager);
+  DLL_EXPORT void ExcelControlInit(RTC::Manager* manager);
 };
 
 #endif

@@ -567,8 +567,10 @@ MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::stri
 		std::cout << pt[i] << std::endl;
 	}*/
 	
+	
 	for(int i=0;i < rtclist.size();i++)
 	{
+		
 		
 		/*for(int j=0;j < rtclist[i].buff.size();j++)
 		{
@@ -579,6 +581,7 @@ MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::stri
 
 		if(rtclist[i].buff == pt && rtclist[i].mpb == NULL)
 		{
+			
 			System::String^ tmp = gcnew System::String(rtclist[i].buff[rtclist[i].buff.size()-2].c_str());
 			tmp += "‚Ì";
 			tmp += gcnew System::String(rtclist[i].buff[rtclist[i].buff.size()-1].c_str());
@@ -599,6 +602,7 @@ MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::stri
 		}
 		else if(rtclist[i].buff == pt && rtclist[i].mpb != NULL)
 		{
+			
 			rtclist[i].mpb->SetExcelParam(c, l, sn, leng, mstate);
 
 			MyPortBase* m_pb = rtclist[i].mpb;
@@ -840,8 +844,10 @@ void ExcelControl::Save()
 }
 void ExcelControl::Load()
 {
+	
 	if(myExcel::Obj)
 	{
+		
 		std::vector<std::string> lw = myExcel::Obj->LoadRTC();
 	
 
@@ -854,7 +860,7 @@ void ExcelControl::Load()
 			
 				if(lw[i] != ""){
 				
-				
+					
 					vector<string> confs = split(lw[i], "#");
 				
 					if(confs.size() > 4)
@@ -872,16 +878,21 @@ void ExcelControl::Load()
 						if(mpath.size() > 1 && i==0)
 						{
 							GetRTCTree(mpath[0]);
+							
 						}
+						
 						MyPortBase *mpb = SetDPort(mpath, col, low, sheetname, len, mstate, false);
-
-						vector<string> atrtc = split(confs[6], "/");
-					
-						for(int j=0;j < atrtc.size();j++)
+						
+						if(mpb)
 						{
-							if(atrtc[j] != "")
+							vector<string> atrtc = split(confs[6], "/");
+					
+							for(int j=0;j < atrtc.size();j++)
 							{
-								mpb->attachPort.push_back(atrtc[j]);
+								if(atrtc[j] != "")
+								{
+									mpb->attachPort.push_back(atrtc[j]);
+								}
 							}
 						}
 					}
@@ -1074,7 +1085,7 @@ MyPortBase* ExcelControl::CreatePort(OtherPort &op, int c, std::string l, std::s
 extern "C"
 {
  
-  void ExcelRTCInit(RTC::Manager* manager)
+  void ExcelControlInit(RTC::Manager* manager)
   {
     coil::Properties profile(excelrtc_spec);
     manager->registerFactory(profile,

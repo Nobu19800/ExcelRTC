@@ -18,26 +18,30 @@ void ExcelRTC::Form1::SetTree()
 {
 	this->RTCtreeView->Nodes->Clear();
 	TreeObject *to = tertc->GetRTCTree(MarshalString(NamingServertextBox->Text));
-	m_node = this->RTCtreeView->Nodes->Add("/");
 	
-	AddTree(to, this->RTCtreeView->Nodes[0]);
-
-
-	this->SheetcomboBox->Items->Clear();
-	for(int i=0;i < myExcel::Obj->xlWorksheet->Count;i++)
+	if(to)
 	{
-		this->SheetcomboBox->Items->Add(myExcel::Obj->xlWorksheet[i]->Name);
-	}
-	this->SheetcomboBox->Text = myExcel::Obj->xlWorksheet[0]->Name;
+		m_node = this->RTCtreeView->Nodes->Add("/");
 	
-	LawtextBox->Text = "A";
-	ColtextBox->Text = "1";
-	LentextBox->Text = "A";
-	LowcheckBox->Checked = true;
+		AddTree(to, this->RTCtreeView->Nodes[0]);
 
-	tertc->Load();
+
+		this->SheetcomboBox->Items->Clear();
+		for(int i=0;i < myExcel::Obj->xlWorksheet->Count;i++)
+		{
+			this->SheetcomboBox->Items->Add(myExcel::Obj->xlWorksheet[i]->Name);
+		}
+		this->SheetcomboBox->Text = myExcel::Obj->xlWorksheet[0]->Name;
 	
-	UpdatePortList();
+		LawtextBox->Text = "A";
+		ColtextBox->Text = "1";
+		LentextBox->Text = "A";
+		LowcheckBox->Checked = true;
+
+		tertc->Load();
+	
+		UpdatePortList();
+	}
 	
 	
 }

@@ -135,6 +135,7 @@ std::vector<std::string> myExcel::LoadRTC()
 
 void myExcel::Open(System::String^ fn)
 {
+	
 	if(filename == fn)
 	{
 		return;
@@ -205,14 +206,14 @@ void myExcel::Open(System::String^ fn)
 	 {
 
 	 }
-
+	 
 	 Excel::Worksheet^ws = GetWorksheet("•Û‘¶—p");
 	 if(ws == nullptr)
 	 {
 		 xlWorksheets->Add(System::Reflection::Missing::Value,xlWorksheet[xlWorksheet->Count-1],System::Reflection::Missing::Value,System::Reflection::Missing::Value);
-		 Worksheet^ ws = static_cast<Worksheet^>(xlWorksheets->Item[xlWorksheets->Count]);
-		 ws->Name = "•Û‘¶—p";
-		 xlWorksheet->Add(ws);
+		 Worksheet^ wsp = static_cast<Worksheet^>(xlWorksheets->Item[xlWorksheets->Count]);
+		 wsp->Name = "•Û‘¶—p";
+		 xlWorksheet->Add(wsp);
 		 xlWorksheets->Select(System::Reflection::Missing::Value);
 
 		 //Excel::Range^c1 = safe_cast<Excel::Range^>(ws->Cells[1,1]);

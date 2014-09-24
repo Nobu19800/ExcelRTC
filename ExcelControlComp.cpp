@@ -19,7 +19,7 @@ using namespace ExcelRTC;
 
 void MyModuleInit(RTC::Manager* manager)
 {
-  ExcelRTCInit(manager);
+  ExcelControlInit(manager);
   RTC::RtcBase* comp;
 
   comp = manager->createComponent("ExcelControl");
