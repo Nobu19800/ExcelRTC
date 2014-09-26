@@ -170,7 +170,7 @@ RTC::ReturnCode_t ExcelControl::onInitialize()
 {
 	//myExcel::Obj = gcnew myExcel();
   
-  this->addConfigurationSetListener(ON_SET_CONFIG_SET, new MyConfigUpdateParam(this));
+  
 
 
   bindParameter("file_path", file_path, "NewFile");
@@ -184,6 +184,14 @@ RTC::ReturnCode_t ExcelControl::onInitialize()
   bindParameter("Red", Red, "255");
   bindParameter("Green", Green, "255");
   bindParameter("Blue", Blue, "0");
+
+  std::string filePath = "";
+  coil::Properties& prop(::RTC::Manager::instance().getConfig());
+  getProperty(prop, "excel.filename", filePath);
+  SetFilePath(filePath);
+
+
+  this->addConfigurationSetListener(ON_SET_CONFIG_SET, new MyConfigUpdateParam(this));
   
 
   
@@ -199,6 +207,28 @@ RTC::ReturnCode_t ExcelControl::onInitialize()
   return RTC::RTC_OK;
 }
 
+
+void ExcelControl::SetFilePath(std::string FP)
+{
+	
+	
+
+	//std::string file_key = "file_path";
+
+	//file_path = FP;
+	
+	
+
+	coil::Properties file_confSet("default");// = this->m_configsets.getConfigurationSet("default");
+	file_confSet.setProperty("file_path", FP.c_str());
+	this->m_configsets.setConfigurationSetValues(file_confSet);
+	this->m_configsets.activateConfigurationSet("default");
+	//bindParameter("file_path", file_path, "NewFile");
+
+
+	this->m_configsets.update("default", "file_path");
+	
+}
 
 RTC::ReturnCode_t ExcelControl::onDeactivated(RTC::UniqueId ec_id)
 {
@@ -367,7 +397,7 @@ void ExcelControl::DelDPort(std::vector<std::string> pt)
 void ExcelControl::ConfigUpdate()
 {
 
-	this->m_configsets.update();
+	this->m_configsets.update("default", "file_path");
 	std::string sfn = Replace(file_path, "/", "\\");
 	System::String ^tfn = gcnew System::String(sfn.c_str());
 	//System::Console::WriteLine(tfn);
@@ -397,7 +427,7 @@ void ExcelControl::ConfigUpdate()
 		if(this->m_configsets.haveConfig(dn.c_str()))
 		{
 			this->m_configsets.activateConfigurationSet(dn.c_str());
-			this->m_configsets.update();
+			this->m_configsets.update(dn.c_str());
 
 			std::string tdt = "DataInPort";
 

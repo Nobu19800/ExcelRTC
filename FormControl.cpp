@@ -356,10 +356,12 @@ void ExcelRTC::Form1::OpenFile()
 
 	 if(openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 	 {
-		 
+		 std::string filePath = MarshalString(openFileDialog1->FileName);
+		 filePath = Replace(filePath, "\\", "/");
+		 tertc->SetFilePath(filePath);
 		 myExcel::Obj->Open(openFileDialog1->FileName);
 		 currentDirectory = System::IO::Path::GetDirectoryName(openFileDialog1->FileName);
-		 tertc->Load();
+		 //tertc->Load();
 		 
 		 UpdatePortList();
 	 }

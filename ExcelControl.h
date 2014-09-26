@@ -1124,6 +1124,12 @@ class ExcelControl
    */
    TreeObject* GetRTCTree(std::string IP_adress);
 
+   /**
+   *@brief ファイル名のコンフィギュレーションパラメータ変更の関数
+   * @param FP
+   */
+   void SetFilePath(std::string FP);
+
    std::vector<MyPortBase*> InPorts;	/**<　@brief  */
    std::vector<MyPortBase*> OutPorts;	/**<　@brief  */
 
@@ -1137,6 +1143,7 @@ class ExcelControl
    RTC::CorbaPort m_SpreadSheetPort;	/**<　@brief  */
    mSpreadSheetSVC_impl m_spreadsheet;	/**<　@brief  */
 
+
    
    
 
@@ -1148,6 +1155,9 @@ class ExcelControl
 	std::string conf_start_row;	/**<　@brief  */
 	std::string conf_end_row;	/**<　@brief  */
 	std::string conf_sheetname;	/**<　@brief  */
+
+	
+	
 
 	int actionLock;	/**<　@brief  */
 	int Red;	/**<　@brief  */
@@ -1193,6 +1203,19 @@ public:
 	ExcelControl *m_rtc; /**<　@brief  */
 
 };
+
+template <class T>
+void getProperty(coil::Properties& prop, const char* key, T& value)
+{
+if (prop.findNode(key) != 0)
+  {
+    T tmp;
+    if (coil::stringTo(tmp, prop[key].c_str()))
+      {
+        value = tmp;
+      }
+  }
+}
 
 
 extern "C"

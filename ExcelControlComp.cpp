@@ -48,8 +48,24 @@ int main(array<System::String ^> ^args)
 	System::Windows::Forms::Application::SetCompatibleTextRenderingDefault(false);
 
 	RTC::Manager* manager;
-	char* argv[] = {""};
-	int argc = 0;
+
+
+	
+	int argc = args->Length;
+	char** argv = new char*[argc];
+	for(int i=0;i < argc;i++)
+	{
+		argv[i] = (char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(args[i]).ToPointer();
+		/*array<unsigned char>^ b = System::Text::Encoding::UTF8->GetBytes(args[i]);
+		argv[i] = new char[b->Length];
+		for(int j=0;j < b->Length;j++)
+		{
+			argv[i][j] = b[j];
+		}*/
+		//argv[i] = const_cast<char*>(MarshalString(args[i]).c_str());
+		//std::cout << argv[i] << std::endl;
+		
+	}
 	manager = RTC::Manager::init(argc, argv);
 
 	
