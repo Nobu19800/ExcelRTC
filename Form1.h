@@ -1,7 +1,7 @@
 // -*-C++-*-
 /*!
  * @file  Form1.h
- *
+ * @brief フォーム
  */
 #pragma once
 
@@ -61,8 +61,8 @@ namespace ExcelRTC {
 		
 		/**
 		*@brief ツリーにオブジェクトを追加する関数
-		* @param to
-		* @param tn
+		* @param to ツリーオブジェクト
+		* @param tn ツリーノード
 		*/
 		void AddTree(TreeObject *to, System::Windows::Forms::TreeNode^ tn);
 		
@@ -128,11 +128,11 @@ namespace ExcelRTC {
 		
 		/**
 		*@brief GUIの値を更新する関数
-		* @param m_low
-		* @param m_col
-		* @param m_len
-		* @param m_sn
-		* @param m_state
+		* @param m_low 行番号
+		* @param m_col 列番号
+		* @param m_len 行の範囲
+		* @param m_sn シート名
+		* @param m_state 列を移動する場合はTrue
 		*/
 		void SetPortParamEx(std::string m_low, int m_col, std::string m_len, std::string m_sn, bool m_state);
 		private: System::String^ currentDirectory; /**<　@brief  */

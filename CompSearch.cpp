@@ -1,7 +1,7 @@
 // -*-C++-*-
 /*!
  * @file  CompSearch.cpp
- * @brief
+ * @brief データポートの検索
  *
  */
 

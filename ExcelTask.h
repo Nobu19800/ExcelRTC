@@ -1,7 +1,7 @@
 // -*- C++ -*-
 /*!
  * @file  ExcelTask.h
- *
+ * @brief Excelの起動、COMの参照をするタスク
  * $Id$
  */
 
@@ -22,7 +22,7 @@
 class ExcelControl;
 /*!
  * @class ExcelTask
- * @brief 
+ * @brief Excelの起動、COMの参照をするスレッド
  *
  */
 class ExcelTask : public virtual coil::Task
@@ -30,11 +30,10 @@ class ExcelTask : public virtual coil::Task
 public:
 		/**
 		*@brief コンストラクタ
-		* @param manager
 		*/
 		ExcelTask(ExcelControl *m_rtc);
 		/**
-		*@brief 
+		*@brief スレッドを実行
 		*/
 		virtual int svc();
 		

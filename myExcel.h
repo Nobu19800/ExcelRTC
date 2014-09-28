@@ -1,7 +1,7 @@
 // -*-C++-*-
 /*!
  * @file  myExcel.h
- *
+ * @brief Excelの操作
  */
 #ifndef MYEXCEL_H
 #define MYEXCEL_H
@@ -33,49 +33,49 @@ public:
 	
 	/**
 	*@brief 名前からワークシートを取得する関数
-	* @param sn
-	* @return 
+	* @param sn シート名
+	* @return シートオブジェクト
 	*/
 	Excel::Worksheet^ GetWorksheet(std::string sn);
 	
 	/**
 	*@brief 保存用ワークシートに書き込む関数
-	* @param sf
+	* @param sf 書き込む文字列
 	*/
 	void SaveRTC(std::vector<std::string> sf);
 	
 	/**
 	*@brief データポートの情報を保存用ワークシートから読み込む関数
-	* @return 
+	* @return 読み込んだ文字列
 	*/
 	std::vector<std::string> LoadRTC();
 	
 	/**
 	*@brief セルの色を無色にする関数
-	* @param c
-	* @param l
-	* @param sn
-	* @param leng
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param leng 行の範囲
 	*/
 	void ResetCellColor(int c, std::string l, std::string sn, std::string leng);
 	
 
 	/**
 	*@brief 単一のセルの文字列を変更する関数
-	* @param c
-	* @param l
-	* @param sn
-	* @param val
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param val 入力する文字列
 	*/
 	
 	void SetCellStringSingle(int c, std::string l, std::string sn, std::string val);
 	
 	/**
 	*@brief 単一のセルの値を変更する関数
-	* @param c
-	* @param l
-	* @param sn
-	* @param val
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param val 入力する値
 	*/
 	template <typename T>
 	void SetCellValueSingle(int c, std::string l, std::string sn, T val)
@@ -95,10 +95,10 @@ public:
 	
 	/**
 	*@brief 単一のセルの値を取得する関数
-	* @param c
-	* @param l
-	* @param sn
-	* @return 
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @return セルの値
 	*/
 	std::string GetCellValueSingle(int c, std::string l, std::string sn)
 	{
@@ -118,11 +118,11 @@ public:
 	
 	/**
 	*@brief 1つ以上のセルの値を変更する関数
-	* @param c
-	* @param l
-	* @param sn
-	* @param state
-	* @param v
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param state 列を移動する場合はTrue
+	* @param v  入力する値
 	*/
 	template <typename T>
 	void SetCellValue(int c, std::string l, std::string sn, bool state, std::vector<std::vector<T>> v)
@@ -177,11 +177,11 @@ public:
 	
 	/**
 	*@brief 1つ以上のセルの値を取得する関数
-	* @param c
-	* @param l
-	* @param sn
-	* @param state
-	* @return 
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param state 列を移動する場合はTrue
+	* @return 取得した値
 	*/
 	template <typename T>
 	std::vector<T> GetCellValue(int c, std::string l, std::string sn, std::string leng)
@@ -293,7 +293,7 @@ public:
 	
 	/**
 	*@brief Excelファイルを開く関数
-	* @param fn
+	* @param fn ファイル名
 	*/
 	void Open(System::String^ fn);
 	
@@ -303,10 +303,10 @@ public:
 	void Close();
 
 	/**
-	*@brief
-	* @param r
-	* @param g
-	* @param b
+	*@brief データ取得中のセルの背景の色を設定
+	* @param r 背景の色(R)
+	* @param g 背景の色(G)
+	* @param b 背景の色(B)
 	*/
 	void SetColor(int r, int g, int b);
 

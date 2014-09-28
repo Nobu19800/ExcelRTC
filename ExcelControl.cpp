@@ -1,7 +1,7 @@
 // -*-C++-*-
 /*!
  * @file  ExcelControl.cpp
- * @brief
+ * @brief ExcelControlComponent
  *
  */
 

@@ -1,7 +1,7 @@
 // -*-C++-*-
 /*!
  * @file  ExcelControl.h
- *
+ * @brief ExcelControlComponent
  */
 #ifndef EXCELCONTROL_H
 #define EXCELCONTROL_H
@@ -69,7 +69,7 @@ public:
 	*@brief コンストラクタ
 	* @param mp データポートオブジェクト
 	* @param sv データ格納用コンテナ
-	* @param mrtc
+	* @param mrtc ExcelRTC
 	*/
 	DataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelControl *mrtc){
 		m_port = mp;
@@ -86,8 +86,8 @@ public:
 
   /**
 	*@brief
-	* @param info
-	* @param data
+	* @param info コネクタの情報
+	* @param data データ
 	*/
   virtual void operator()(const ConnectorInfo& info,
                           const T& data)
@@ -127,7 +127,7 @@ public:
 	*@brief コンストラクタ
 	* @param mp データポートオブジェクト
 	* @param sv データ格納用コンテナ
-	* @param mrtc
+	* @param mrtc OOoExcelRTC
 	*/
 	SeqDataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelControl *mrtc){
 		m_port = mp;
@@ -144,8 +144,8 @@ public:
 
   /**
 	*@brief
-	* @param info
-	* @param data
+	* @param info コネクタの情報
+	* @param data データ
 	*/
   virtual void operator()(const ConnectorInfo& info,
                           const T& data)
@@ -180,8 +180,8 @@ class OtherPort
 	public:
 		/**
 		*@brief コンストラクタ
-		* @param p
-		* @param s
+		* @param p データポートオブジェクト
+		* @param s パス
 		*/
 		OtherPort(PortService_var p, std::vector<std::string> s)
 		{
@@ -214,11 +214,11 @@ public:
 	
 	/**
 	*@brief GUIで入力した値を設定する関数
-	* @param c
-	* @param l
-	* @param sn
-	* @param leng
-	* @param mstate
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param leng 行の範囲
+	* @param mstate 列を移動する場合はTrue
 	*/
 	virtual void SetExcelParam(int c, std::string l, std::string sn, std::string leng, bool mstate)
 	{
@@ -240,7 +240,7 @@ public:
 	}
 	/**
 	*@brief 受けたデータをセルに書き込む関数
-	* @param moption
+	* @param moption Trueの場合はバッファのデータをまとめて処理する。Falseの場合は1回だけデータを読み込む。
 	*/
 	virtual void PutData(bool moption)
 	{
@@ -299,11 +299,11 @@ class MyInPort : public MyPortBase
 public:
 	/**
 	*@brief コンストラクタ
-	* @param id
-	* @param ip
-	* @param n
-	* @param dt
-	* @param m_mexc
+	* @param id データオブジェクト
+	* @param ip データポートオブジェクト
+	* @param n 名称
+	* @param dt データ型
+	* @param m_mexc ExcelRTC
 	*/
 	MyInPort(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelControl *m_mexc){
 		In = id;
@@ -347,7 +347,7 @@ public:
 	
 	/**
 	*@brief 受けたデータをセルに書き込む関数
-	* @param moption
+	* @param moption Trueの場合はバッファのデータをまとめて処理する。Falseの場合は1回だけデータを読み込む。
 	*/
 	virtual void PutData(bool moption)
 	{
@@ -409,11 +409,11 @@ class MyInPortSeq : public MyPortBase
 public:
 	/**
 	*@brief コンストラクタ
-	* @param id
-	* @param ip
-	* @param n
-	* @param dt
-	* @param m_mexc
+	* @param id データオブジェクト
+	* @param ip データポートオブジェクト
+	* @param n 名称
+	* @param dt データ型
+	* @param m_mexc ExcelRTC
 	*/
 	MyInPortSeq(T *id, RTC::InPort<T> *ip, std::string n, std::string dt, ExcelControl *m_mexc){
 		In = id;
@@ -462,7 +462,7 @@ public:
 	
 	/**
 	*@brief 受けたデータをセルに書き込む関数
-	* @param moption
+	* @param moption Trueの場合はバッファのデータをまとめて処理する。Falseの場合は1回だけデータを読み込む。
 	*/
 	virtual void PutData(bool moption)
 	{
@@ -526,11 +526,11 @@ class MyOutPort : public MyPortBase
 public:
 	/**
 	*@brief コンストラクタ
-	* @param od
-	* @param op
-	* @param n
-	* @param dt
-	* @param m_mexc
+	* @param id データオブジェクト
+	* @param ip データポートオブジェクト
+	* @param n 名称
+	* @param dt データ型
+	* @param m_mexc ExcelRTC
 	*/
 	MyOutPort(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelControl *m_mexc){
 		Out = od;
@@ -563,7 +563,7 @@ public:
 	
 	/**
 	*@brief セルの値をデータポートから出力する関数
-	* @param moption
+	* @param moption Trueの場合はバッファのデータをまとめて処理する。Falseの場合は1回だけデータを読み込む。
 	*/
 	virtual void PutData(bool moption)
 	{
@@ -592,11 +592,11 @@ class MyOutPortSeq : public MyPortBase
 public:
 	/**
 	*@brief コンストラクタ
-	* @param od
-	* @param op
-	* @param n
-	* @param dt
-	* @param m_mexc
+	* @param id データオブジェクト
+	* @param ip データポートオブジェクト
+	* @param n 名称
+	* @param dt データ型
+	* @param m_mexc ExcelRTC
 	*/
 	MyOutPortSeq(T *od, RTC::OutPort<T> *op, std::string n, std::string dt, ExcelControl *m_mexc){
 		Out = od;
@@ -631,7 +631,7 @@ public:
 	
 	/**
 	*@brief セルの値をデータポートから出力する関数
-	* @param moption
+	* @param moption Trueの場合はバッファのデータをまとめて処理する。Falseの場合は1回だけデータを読み込む。
 	*/
 	virtual void PutData(bool moption)
 	{
@@ -660,8 +660,8 @@ public:
 
 /**
 *@brief データポートを接続
-* @param p1
-* @param p2
+* @param p1 接続するデータポート
+* @param p2 接続するデータポート
 */
 void portConnect(PortService_ptr p1, PortService_var p2);
 
@@ -678,7 +678,7 @@ class ExcelControl
   
 	/**
 	*@brief コンストラクタ
-	* @param manager
+	* @param manager マネージャオブジェクト
 	*/
   ExcelControl(RTC::Manager* manager);
 
@@ -690,48 +690,48 @@ class ExcelControl
    
   /**
   *@brief 初期化処理用コールバック関数
-  * @return 
+  * @return RTC::ReturnCode_t
   */
    virtual RTC::ReturnCode_t onInitialize();
 
    
    /**
    *@brief 周期処理用コールバック関数
-   * @param ec_id
-   * @return 
+   * @param ec_id target ExecutionContext Id
+   * @return RTC::ReturnCode_t
    */
    virtual RTC::ReturnCode_t onExecute(RTC::UniqueId ec_id);
    
    
    /**
    *@brief 不活性化時のコールバック関数
-   * @param ec_id
-   * @return 
+   * @param ec_id target ExecutionContext Id
+   * @return RTC::ReturnCode_t
    */
    virtual RTC::ReturnCode_t onDeactivated(RTC::UniqueId ec_id);
 
    /**
    *@brief 終了処理のコールバック関数
-   * @return 
+   * @return RTC::ReturnCode_t
    */
    virtual RTC::ReturnCode_t onFinalize();
 
    
    /**
    *@brief データポートを作成する関数
-   * @param op
-   * @param c
-   * @param l
-   * @param sn
-   * @param leng
-   * @param mstate
-   * @return 
+   * @param op 接続するデータポート
+   * @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param leng 行の範囲
+	* @param mstate 列を移動する場合はTrue
+   * @return 作成したデータポート
    */
    MyPortBase* CreatePort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate);
    
    /**
    *@brief データポートを削除する関数
-   * @param op
+   * @param op 削除するデータポート
    */
    void DeleteOtherPort(OtherPort &op);
    /**
@@ -751,7 +751,7 @@ class ExcelControl
    
    /**
    *@brief データを書き込む列を初期化する
-   * @param mpb
+   * @param mpb データポートオブジェクト
    */
    void ResetPort(MyPortBase* mpb);
    
@@ -766,20 +766,20 @@ class ExcelControl
    void ConfigUpdate();
 
    /**
-   *@brief
+   *@brief セルの名前を記入
    */
    void update_cellName();
 
    /**
-   *@brief
+   *@brief 関連付けしたデータポートの処理
    */
    void updateAPort(MyPortBase* ip);
 
    
    /**
    *@brief セルに値を書き込む関数
-   * @param dt
-   * @param pb
+   * @param dt 書き込むデータ
+   * @param pb データポートオブジェクト
    */
     template <typename T>
    void SetCellData(std::vector<std::vector<T>> dt, MyPortBase *pb)
@@ -791,8 +791,8 @@ class ExcelControl
    
    /**
    *@brief セルの値を取得する関数
-   * @param pb
-   * @return 
+   * @param pb データポートオブジェクト
+   * @return 取得したデータ
    */
     template <typename T>
 	std::vector<T> GetCellData(MyPortBase *pb)
@@ -804,14 +804,14 @@ class ExcelControl
 	
 	/**
 	*@brief シーケンス型のデータポートを作成する関数
-	* @param op
-	* @param tdt
-	* @param c
-	* @param l
-	* @param sn
-	* @param leng
-	* @param mstate
-	* @return 
+	* @param op 接続するデータポート
+	* @param tdt データ型
+    * @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param leng 行の範囲
+	* @param mstate 列を移動する場合はTrue
+	* @return データポートオブジェクト
 	*/
 	template <typename T, typename T2> MyPortBase* crPortSeq(OtherPort &op, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
@@ -866,14 +866,14 @@ class ExcelControl
 	
 	/**
 	*@brief データポートを作成する関数
-	* @param op
-	* @param tdt
-	* @param c
-	* @param l
-	* @param sn
-	* @param leng
-	* @param mstate
-	* @return 
+	* @param op 接続するデータポート
+	* @param tdt データ型
+    * @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param leng 行の範囲
+	* @param mstate 列を移動する場合はTrue
+	* @return データポートオブジェクト
 	*/
    template <typename T, typename T2> MyPortBase* crPort(OtherPort &op, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
@@ -929,15 +929,15 @@ class ExcelControl
    
    /**
    *@brief コンフィギュレーションパラメータによりシーケンス型のデータポートを作成する関数
-    * @param tname
-	* @param PortType
-	* @param tdt
-	* @param c
-	* @param l
-	* @param sn
-	* @param leng
-	* @param mstate
-	* @return 
+    * @param tname 名称
+	* @param PortType データポートのタイプ
+	* @param tdt データ型
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param leng 行の範囲
+	* @param mstate 列を移動する場合はTrue
+	* @return データポートオブジェクト
    */
    template <typename T, typename T2> MyPortBase* ConfcrPortSeq(std::string tname, std::string PortType, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
@@ -986,15 +986,15 @@ class ExcelControl
 	
    /**
    *@brief コンフィギュレーションパラメータによりデータポートを作成する関数
-    * @param tname
-	* @param PortType
-	* @param tdt
-	* @param c
-	* @param l
-	* @param sn
-	* @param leng
-	* @param mstate
-    * @return 
+    * @param tname 名称
+	* @param PortType データポートのタイプ
+	* @param tdt データ型
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param leng 行の範囲
+	* @param mstate 列を移動する場合はTrue
+	* @return データポートオブジェクト
    */
    template <typename T, typename T2> MyPortBase* ConfcrPort(std::string tname, std::string PortType, std::string tdt, int c, std::string l, std::string sn, std::string leng, bool mstate)
    {
@@ -1050,83 +1050,83 @@ class ExcelControl
    
    /**
    *@brief データポートの作成、値の設定を行う関数
-    * @param pt
-	* @param c
-	* @param l
-	* @param sn
-	* @param leng
-	* @param mstate
-	* @param msflag
-	* @return 
+    * @param pt 接続するデータポートのパス
+	* @param c 列番号
+	* @param l 行番号
+	* @param sn シート名
+	* @param leng 行の範囲
+	* @param mstate 列を移動する場合はTrue
+	* @param msflag Trueの場合はメッセージボックスの表示とセルに名前の書き込みを行う
+	* @return データポートオブジェクト  
    */
    MyPortBase* SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag);
    
    /**
    *@brief データポートを削除する関数
-   * @param pt
+   * @param pt 削除するデータポートのパス
    */
    void DelDPort(std::vector<std::string> pt);
    
    /**
    *@brief データポートを取得する関数
-   * @param pt
-   * @return 
+   * @param pt 取得するデータポートのパス
+   * @return データポートオブジェクト
    */
    MyPortBase* GetDPort(std::vector<std::string> pt);
    
    
    /**
    *@brief データポートを関連付ける関数
-   * @param mpb
-   * @param n
+   * @param mpb 関連付けるアウトポート
+   * @param n 関連付けるインポートの名前
    */
    void AttachPort(MyPortBase *mpb, std::string n);
    
    /**
    *@brief データポートの関連付けを解除する関数
-   * @param mpb
-   * @param n
+   * @param mpb 関連付けを解除するアウトポート
+   * @param n 関連付けを解除するインポートの名前
    */
    void DetachPort(MyPortBase *mpb, std::string n);
    
    /**
    *@brief インポートを取得する関数
-   * @param n
-   * @return 
+   * @param n インポートの名前
+   * @return データポートオブジェクト
    */
    MyPortBase *GetInPort(std::string n);
    
    /**
    *@brief アウトポートを取得する関数
-   * @param n
-   * @return 
+   * @param n アウトポートの名前
+   * @return データポートオブジェクト
    */
    MyPortBase *GetOutPort(std::string n);
    
    /**
    *@brief コンフィギュレーションパラメータで設定したアウトポートを取得する関数
-   * @param n
-   * @return 
+   * @param n アウトポートの名前
+   * @return データポートオブジェクト
    */
    MyPortBase *GetConfOutPort(std::string n);
    /**
    *@brief コンフィギュレーションパラメータで設定したインポートを取得する関数
-   * @param n
-   * @return 
+   * @param n インポートの名前
+   * @return データポートオブジェクト
    */
    MyPortBase *GetConfInPort(std::string n);
 
    
    /**
    *@brief RTCのデータポートのツリーを取得する関数
-   * @param IP_adress
-   * @return 
+   * @param IP_adress ネームサーバの名前
+   * @return ツリーオブジェクト
    */
    TreeObject* GetRTCTree(std::string IP_adress);
 
    /**
    *@brief ファイル名のコンフィギュレーションパラメータ変更の関数
-   * @param FP
+   * @param FP ファイル名
    */
    void SetFilePath(std::string FP);
 
@@ -1184,7 +1184,7 @@ class MyConfigUpdateParam
 public:
 	/**
 	*@brief コンストラクタ
-	* @param e_rtc
+	* @param e_rtc ExcelRTC
 	*/
     MyConfigUpdateParam(ExcelControl *e_rtc)
     {
@@ -1192,7 +1192,7 @@ public:
     }
 	/**
 	*@brief 
-	* @param config_set
+	* @param config_set 
 	*/
     void operator()(const coil::Properties& config_set)
 	{

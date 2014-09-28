@@ -1,6 +1,6 @@
 /*!
  * @file  myExcel.cpp
- * @brief
+ * @brief Excel‚Ì‘€ì
  *
  */
 

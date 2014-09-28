@@ -1,7 +1,7 @@
 // -*-C++-*-
 /*!
  * @file  MyObject.h
- *
+ * @brief 文字列の操作等
  */
 #ifndef MYOBJECT_H
 #define MYOBJECT_H
@@ -13,9 +13,9 @@
 
 
 /**
-*@brief セルの番号(アルファベット)を数値に変換する関数
-* @param m_str
-* @return 
+*@brief セルの番号を数値に変換する関数
+* @param m_str セルの番号(アルファベット)
+* @return 対応する数値
 */
 int convertStrToVal(std::string m_str);
 
@@ -23,10 +23,10 @@ int convertStrToVal(std::string m_str);
 
 /**
 *@brief 文字を置換する関数
-* @param String1
-* @param String2
-* @param String3
-* @return 
+* @param String1 変換元の文字列
+* @param String2 置換前の文字
+* @param String3 置換後の文字
+* @return 変換後の文字列
 */
 std::string Replace( std::string String1, std::string String2, std::string String3 );
 
@@ -41,7 +41,7 @@ class TreeObject
 public:
 	/**
 	*@brief コンストラクタ
-	* @param n
+	* @param n ツリー名
 	*/
 	TreeObject(std::string n)
 	{
@@ -54,26 +54,26 @@ public:
 
 /**
 *@brief System::Stringをstd::stringに変換する関数
-* @param s
-* @return 
+* @param s 変換前の文字列
+* @return 変換後の文字列
 */
 std::string MarshalString ( System::String ^ s);
 
 
 /**
 *@brief 文字列を特定の文字で分割する関数
-* @param str
-* @param delim
-* @return 
+* @param str 分割前の文字列
+* @param delim 分割する文字
+* @return
 */
 std::vector<std::string> split(const std::string &str, const std::string &delim);
 
 
 /**
 *@brief 文字列を数値に変換する関数
-* @param text
-* @param base
-* @return 
+* @param text 変換後の文字列
+* @param base 底
+* @return 変換後の数値
 */
 template<typename T>
 T string2binary(const std::string& text, int base) {

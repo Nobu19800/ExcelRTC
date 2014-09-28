@@ -1,7 +1,7 @@
 // -*-C++-*-
 /*!
  * @file  ExcelTask.cpp
- * @brief
+ * @brief Excelの起動、COMの参照をするスレッド
  *
  */
 

@@ -1,6 +1,6 @@
 /*!
  * @file  MyObject.cpp
- * @brief
+ * @brief •¶š—ñ‚Ì‘€ì“™
  *
  */
 
