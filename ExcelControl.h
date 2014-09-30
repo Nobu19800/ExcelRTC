@@ -770,8 +770,11 @@ class ExcelControl
    */
    void update_cellName();
 
+
+  
    /**
    *@brief 関連付けしたデータポートの処理
+   * @param ip インポート
    */
    void updateAPort(MyPortBase* ip);
 
@@ -1155,6 +1158,8 @@ class ExcelControl
 	std::string conf_start_row;	/**<　@brief  */
 	std::string conf_end_row;	/**<　@brief  */
 	std::string conf_sheetname;	/**<　@brief  */
+	int c_move;
+	std::string Attach_Port;
 
 	
 	

@@ -60,6 +60,8 @@ static const char* excelrtc_spec[] =
 	"conf.dataport0.start_row", "A",
 	"conf.dataport0.end_row", "A",
 	"conf.dataport0.sheetname", "Sheet1",
+	"conf.dataport0.c_move", "1",
+    "conf.dataport0.Attach_Port", "None",
 	"conf.__widget__.actionLock", "radio",
     "conf.__widget__.Red", "spin",
     "conf.__widget__.Green", "spin",
@@ -71,6 +73,8 @@ static const char* excelrtc_spec[] =
 	"conf.__widget__.end_row", "text",
 	"conf.__widget__.sheetname", "text",
 	"conf.__widget__.data_type", "radio",
+	"conf.__widget__.c_move", "radio",
+    "conf.__widget__.Attach_Port", "text",
 	"conf.__constraints__.actionLock", "(0,1)",
     "conf.__constraints__.Red", "0<=x<=255",
     "conf.__constraints__.Green", "0<=x<=255",
@@ -79,6 +83,7 @@ static const char* excelrtc_spec[] =
 	"conf.__constraints__.column", "1<=x<=1000",
 	"conf.__constraints__.port_type", "(DataInPort,DataOutPort)",
 	"conf.__constraints__.data_type", "(TimedDouble,TimedLong,TimedFloat,TimedShort,TimedULong,TimedUShort,TimedChar,TimedWChar,TimedBoolean,TimedOctet,TimedString,TimedWString,TimedDoubleSeq,TimedLongSeq,TimedFloatSeq,TimedShortSeq,TimedULongSeq,TimedUShortSeq,TimedCharSeq,TimedWCharSeq,TimedOctetSeq,TimedStringSeq,TimedWStringSeq)",
+	"conf.__constraints__.c_move", "(0,1)",
 	""
   };
 
@@ -184,6 +189,8 @@ RTC::ReturnCode_t ExcelControl::onInitialize()
   bindParameter("Red", Red, "255");
   bindParameter("Green", Green, "255");
   bindParameter("Blue", Blue, "0");
+  bindParameter("c_move", c_move, "1");
+  bindParameter("Attach_Port", Attach_Port, "None");
 
   std::string filePath = "";
   coil::Properties& prop(::RTC::Manager::instance().getConfig());
@@ -289,13 +296,19 @@ RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
 
 	for(int i=0;i < ConfInPorts.size();i++)
 	{
-		ConfInPorts[i]->PutData(true);
+		if(ConfInPorts[i]->attachPort.size() == 0)
+		{
+			ConfInPorts[i]->PutData(true);
+		}
 		
 	}
 
 	for(int i=0;i < ConfOutPorts.size();i++)
 	{
-		ConfOutPorts[i]->PutData(true);
+		if(ConfOutPorts[i]->attachPort.size() == 0)
+		{
+			ConfOutPorts[i]->PutData(true);
+		}
 
 	}
 
@@ -339,6 +352,12 @@ void ExcelControl::updateAPort(MyPortBase* ip)
 	for(int i=0;i < ip->attachPort.size();i++)
 	{
 		MyPortBase *op = GetOutPort(ip->attachPort[i]);
+		if(op == NULL)
+		{
+			op = GetConfOutPort(ip->attachPort[i]);
+		}
+
+
 		if(op)
 		{
 			if(op->attachPort.size() > 0)
@@ -347,6 +366,11 @@ void ExcelControl::updateAPort(MyPortBase* ip)
 				for(int j=0;j < op->attachPort.size();j++)
 				{
 					MyPortBase *mpb = GetInPort(op->attachPort[j]);
+					if(mpb == NULL)
+					{
+						mpb = GetConfInPort(op->attachPort[j]);
+					}
+
 					if(mpb != NULL)
 					{
 						if(mpb->isNew() == false)
@@ -364,6 +388,11 @@ void ExcelControl::updateAPort(MyPortBase* ip)
 					for(int j=0;j < op->attachPort.size();j++)
 					{
 						MyPortBase *mpb = GetInPort(op->attachPort[j]);
+						if(mpb == NULL)
+						{
+							mpb = GetConfInPort(op->attachPort[j]);
+						}
+
 						if(mpb != NULL)
 						{
 							mpb->PutData(false);
@@ -440,9 +469,25 @@ void ExcelControl::ConfigUpdate()
 					tmp = GetConfOutPort(dn);
 					tdt = "DataOutPort";
 				}
+				bool t_c_move = true;
+				if(c_move == 0)
+				{
+					t_c_move = false;
+				}
+				std::vector<std::string> t_Attach_Port;
+				std::istringstream stream( Attach_Port );
+				std::string token;
+				while( std::getline( stream, token, ',' ) )
+				{
+					if(token != "None" && token != "")
+					{
+						t_Attach_Port.push_back(token);
+					}
+				}
 				if(tmp && tmp->data_type == conf_data_type && conf_port_type == tdt)
 				{
-					tmp->SetExcelParam(conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+					tmp->SetExcelParam(conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+					tmp->attachPort = t_Attach_Port;
 				}
 				else
 				{
@@ -461,113 +506,135 @@ void ExcelControl::ConfigUpdate()
 					
 					if(conf_data_type == "TimedDouble")
 					{
-						
-						ConfcrPort<RTC::TimedDouble, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedDouble, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedLong")
 					{
-						ConfcrPort<RTC::TimedLong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedLong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					
 
 					else if(conf_data_type == "TimedFloat")
 					{
 						
-						ConfcrPort<RTC::TimedFloat, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedFloat, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedShort")
 					{
 						
-						ConfcrPort<RTC::TimedShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedULong")
 					{
-						ConfcrPort<RTC::TimedULong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedULong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					
 					else if(conf_data_type == "TimedUShort")
 					{
-						ConfcrPort<RTC::TimedUShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedUShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedChar")
 					{
-						ConfcrPort<RTC::TimedChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedWChar")
 					{
-						//ConfcrPort<RTC::TimedWChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						//MyPortBase* t_cp = ConfcrPort<RTC::TimedWChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedBoolean")
 					{
-						ConfcrPort<RTC::TimedBoolean, bool>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedBoolean, bool>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedOctet")
 					{
 						
-						ConfcrPort<RTC::TimedOctet, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPort<RTC::TimedOctet, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedString")
 					{
 						
-						//ConfcrPort<RTC::TimedString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						//MyPortBase* t_cp = ConfcrPort<RTC::TimedString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedWString")
 					{
 						
-						//ConfcrPort<RTC::TimedWString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						//MyPortBase* t_cp = ConfcrPort<RTC::TimedWString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_Attach_Port;
 					}
 					
 
 					else if(conf_data_type == "TimedDoubleSeq")
 					{
 						
-						ConfcrPortSeq<RTC::TimedDoubleSeq, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedDoubleSeq, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedLongSeq")
 					{
-						ConfcrPortSeq<RTC::TimedLongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedLongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 
 					else if(conf_data_type == "TimedFloatSeq")
 					{
-						ConfcrPortSeq<RTC::TimedFloatSeq, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedFloatSeq, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					
 					else if(conf_data_type == "TimedShortSeq")
 					{
-						ConfcrPortSeq<RTC::TimedShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedULongSeq")
 					{
 						
-						ConfcrPortSeq<RTC::TimedULongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedULongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedUShortSeq")
 					{
-						ConfcrPortSeq<RTC::TimedUShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedUShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedCharSeq")
 					{
-						ConfcrPortSeq<RTC::TimedCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 					else if(conf_data_type == "TimedWCharSeq")
 					{
-						//ConfcrPortSeq<RTC::TimedWCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						//MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedWCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_Attach_Port;
 					}
 					
 					else if(conf_data_type == "TimedOctetSeq")
 					{
-						ConfcrPortSeq<RTC::TimedOctetSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedOctetSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_Attach_Port;
 					}
 
 					else if(conf_data_type == "TimedStringSeq")
 					{
-						//ConfcrPortSeq<RTC::TimedStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						//MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_Attach_Port;
 					}
 
 					else if(conf_data_type == "TimedWStringSeq")
 					{
-						//ConfcrPortSeq<RTC::TimedWStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, true);
+						//MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedWStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_Attach_Port;
 					}
 				}	
 					
