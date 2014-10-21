@@ -127,7 +127,7 @@ public:
 	*@brief コンストラクタ
 	* @param mp データポートオブジェクト
 	* @param sv データ格納用コンテナ
-	* @param mrtc OOoExcelRTC
+	* @param mrtc ExcelRTC
 	*/
 	SeqDataListener(MyPortBase *mp, std::vector<std::vector<T2>> &sv, ExcelControl *mrtc){
 		m_port = mp;
