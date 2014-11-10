@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "MyObject.h"
+#include "SubFunction.h"
 
 
 
@@ -51,9 +51,9 @@ static const char* excelrtc_spec[] =
     "lang_type",         "compile",
 	"conf.default.file_path", "NewFile",
 	"conf.default.actionLock", "0",
-    "conf.default.Red", "255",
-    "conf.default.Green", "255",
-    "conf.default.Blue", "0",
+    "conf.default.red", "255",
+    "conf.default.green", "255",
+    "conf.default.blue", "0",
 	"conf.dataport0.port_type", "DataInPort",
 	"conf.dataport0.data_type", "TimedFloat",
 	"conf.dataport0.column", "1",
@@ -61,11 +61,11 @@ static const char* excelrtc_spec[] =
 	"conf.dataport0.end_row", "A",
 	"conf.dataport0.sheetname", "Sheet1",
 	"conf.dataport0.c_move", "1",
-    "conf.dataport0.Attach_Port", "None",
+    "conf.dataport0.attach_Port", "None",
 	"conf.__widget__.actionLock", "radio",
-    "conf.__widget__.Red", "spin",
-    "conf.__widget__.Green", "spin",
-    "conf.__widget__.Blue", "spin",
+    "conf.__widget__.red", "spin",
+    "conf.__widget__.green", "spin",
+    "conf.__widget__.blue", "spin",
 	"conf.__widget__.file_path", "text",
 	"conf.__widget__.port_type", "radio",
 	"conf.__widget__.column", "spin",
@@ -74,11 +74,11 @@ static const char* excelrtc_spec[] =
 	"conf.__widget__.sheetname", "text",
 	"conf.__widget__.data_type", "radio",
 	"conf.__widget__.c_move", "radio",
-    "conf.__widget__.Attach_Port", "text",
+    "conf.__widget__.attach_Port", "text",
 	"conf.__constraints__.actionLock", "(0,1)",
-    "conf.__constraints__.Red", "0<=x<=255",
-    "conf.__constraints__.Green", "0<=x<=255",
-    "conf.__constraints__.Blue", "0<=x<=255",
+    "conf.__constraints__.red", "0<=x<=255",
+    "conf.__constraints__.green", "0<=x<=255",
+    "conf.__constraints__.blue", "0<=x<=255",
     "conf.__constraints__.column", "1<=x<=1000",
 	"conf.__constraints__.column", "1<=x<=1000",
 	"conf.__constraints__.port_type", "(DataInPort,DataOutPort)",
@@ -114,7 +114,8 @@ void SetTree(TreeObject *to)
 
 ExcelControl::ExcelControl(RTC::Manager* manager)
   : RTC::DataFlowComponentBase(manager),
-  m_SpreadSheetPort("SpreadSheet")
+  m_SpreadSheetPort("SpreadSheet"),
+  m_spreadsheet()
 
 {
 	tertc = this;
@@ -129,7 +130,7 @@ ExcelControl::ExcelControl(RTC::Manager* manager)
 
 	/*for(int i=0;i < rtclist.size();i++)
 	{
-		CreatePort(rtclist[i]);
+		createPort(rtclist[i]);
 	}*/
 
 	et = new ExcelTask(this);
@@ -143,13 +144,13 @@ ExcelControl::~ExcelControl()
 {
 }
 
-TreeObject* ExcelControl::GetRTCTree(string IP_adress)
+TreeObject* ExcelControl::getRTCTree(string IP_adress)
 {
 	try
 	{
 		RTC::CorbaNaming namingserver(m_manager->getORB(), IP_adress.c_str());
 		rtclist.clear();
-		DeleteAllPort();
+		deleteAllPort();
 		TreeObject *to = new TreeObject(IP_adress);
 		rtc_get_rtclist(namingserver,rtclist,to,IP_adress);
 
@@ -173,7 +174,7 @@ TreeObject* ExcelControl::GetRTCTree(string IP_adress)
 
 RTC::ReturnCode_t ExcelControl::onInitialize()
 {
-	//myExcel::Obj = gcnew myExcel();
+	//ExcelObject::Obj = gcnew ExcelObject();
   
   
 
@@ -186,19 +187,19 @@ RTC::ReturnCode_t ExcelControl::onInitialize()
   bindParameter("end_row", conf_end_row, "A");
   bindParameter("sheetname", conf_sheetname, "Sheet1");
   bindParameter("actionLock", actionLock, "0");
-  bindParameter("Red", Red, "255");
-  bindParameter("Green", Green, "255");
-  bindParameter("Blue", Blue, "0");
+  bindParameter("red", red, "255");
+  bindParameter("green", green, "255");
+  bindParameter("blue", blue, "0");
   bindParameter("c_move", c_move, "1");
-  bindParameter("Attach_Port", Attach_Port, "None");
+  bindParameter("attach_Port", attach_Port, "None");
 
   std::string filePath = "";
   coil::Properties& prop(::RTC::Manager::instance().getConfig());
   getProperty(prop, "excel.filename", filePath);
-  SetFilePath(filePath);
+  setFilePath(filePath);
 
 
-  this->addConfigurationSetListener(ON_SET_CONFIG_SET, new MyConfigUpdateParam(this));
+  this->addConfigurationSetListener(ON_SET_CONFIG_SET, new ExcelConfigUpdateParam(this));
   
 
   
@@ -215,7 +216,7 @@ RTC::ReturnCode_t ExcelControl::onInitialize()
 }
 
 
-void ExcelControl::SetFilePath(std::string FP)
+void ExcelControl::setFilePath(std::string FP)
 {
 	
 	
@@ -239,7 +240,7 @@ void ExcelControl::SetFilePath(std::string FP)
 
 RTC::ReturnCode_t ExcelControl::onDeactivated(RTC::UniqueId ec_id)
 {
-	ResetAllPort();
+	resetAllPort();
 
 	return RTC::RTC_OK;
 }
@@ -247,7 +248,7 @@ RTC::ReturnCode_t ExcelControl::onDeactivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t ExcelControl::onFinalize()
 {
-  myExcel::Obj->Close();
+  ExcelObject::Obj->Close();
   return RTC::RTC_OK;
 }
 
@@ -288,17 +289,17 @@ RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
 {
 	if(actionLock == 1)
 	{
-		myExcel::Obj->xlApplication->ScreenUpdating = false;
+		ExcelObject::Obj->xlApplication->ScreenUpdating = false;
 		_mutex.lock();
 	}
 
-	myExcel::Obj->SetColor(Red, Green, Blue);
+	ExcelObject::Obj->setColor(red, green, blue);
 
 	for(int i=0;i < ConfInPorts.size();i++)
 	{
 		if(ConfInPorts[i]->attachPort.size() == 0)
 		{
-			ConfInPorts[i]->PutData(true);
+			ConfInPorts[i]->putData(true);
 		}
 		
 	}
@@ -307,7 +308,7 @@ RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
 	{
 		if(ConfOutPorts[i]->attachPort.size() == 0)
 		{
-			ConfOutPorts[i]->PutData(true);
+			ConfOutPorts[i]->putData(true);
 		}
 
 	}
@@ -317,7 +318,7 @@ RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
 	{
 		if(InPorts[i]->attachPort.size() == 0)
 		{
-			InPorts[i]->PutData(true);
+			InPorts[i]->putData(true);
 			
 		}
 		
@@ -328,14 +329,14 @@ RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
 	{
 		if(OutPorts[i]->attachPort.size() == 0)
 		{
-			OutPorts[i]->PutData(true);
+			OutPorts[i]->putData(true);
 			
 		}
 	}
 
 	if(actionLock == 1)
 	{
-		myExcel::Obj->xlApplication->ScreenUpdating = true;
+		ExcelObject::Obj->xlApplication->ScreenUpdating = true;
 		_mutex.unlock();
 	}
 	
@@ -347,14 +348,14 @@ RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
   return RTC::RTC_OK;
 }
 
-void ExcelControl::updateAPort(MyPortBase* ip)
+void ExcelControl::updateAPort(ExcelPortBase* ip)
 {
 	for(int i=0;i < ip->attachPort.size();i++)
 	{
-		MyPortBase *op = GetOutPort(ip->attachPort[i]);
+		ExcelPortBase *op = getOutPort(ip->attachPort[i]);
 		if(op == NULL)
 		{
-			op = GetConfOutPort(ip->attachPort[i]);
+			op = getConfOutPort(ip->attachPort[i]);
 		}
 
 
@@ -365,10 +366,10 @@ void ExcelControl::updateAPort(MyPortBase* ip)
 				bool in = true;
 				for(int j=0;j < op->attachPort.size();j++)
 				{
-					MyPortBase *mpb = GetInPort(op->attachPort[j]);
+					ExcelPortBase *mpb = getInPort(op->attachPort[j]);
 					if(mpb == NULL)
 					{
-						mpb = GetConfInPort(op->attachPort[j]);
+						mpb = getConfInPort(op->attachPort[j]);
 					}
 
 					if(mpb != NULL)
@@ -387,18 +388,18 @@ void ExcelControl::updateAPort(MyPortBase* ip)
 	
 					for(int j=0;j < op->attachPort.size();j++)
 					{
-						MyPortBase *mpb = GetInPort(op->attachPort[j]);
+						ExcelPortBase *mpb = getInPort(op->attachPort[j]);
 						if(mpb == NULL)
 						{
-							mpb = GetConfInPort(op->attachPort[j]);
+							mpb = getConfInPort(op->attachPort[j]);
 						}
 
 						if(mpb != NULL)
 						{
-							mpb->PutData(false);
+							mpb->putData(false);
 						}
 					}
-					op->PutData(false);
+					op->putData(false);
 
 					_mutex.unlock();
 				}
@@ -411,19 +412,19 @@ void ExcelControl::updateAPort(MyPortBase* ip)
 }
 
 
-void ExcelControl::DelDPort(std::vector<std::string> pt)
+void ExcelControl::delDPort(std::vector<std::string> pt)
 {
 	for(int i=0;i < rtclist.size();i++)
 	{
 		if(rtclist[i].buff == pt && rtclist[i].mpb != NULL)
 		{
-			DeleteOtherPort(rtclist[i]);
+			deleteOtherPort(rtclist[i]);
 		}
 
 	}
 }
 
-void ExcelControl::ConfigUpdate()
+void ExcelControl::configUpdate()
 {
 
 	this->m_configsets.update("default", "file_path");
@@ -433,14 +434,14 @@ void ExcelControl::ConfigUpdate()
 	
 	if(sfn ==  "NewFile")
 	{
-		myExcel::Obj->Open("");
-		Load();
+		ExcelObject::Obj->Open("");
+		load();
 	}
-	else if(myExcel::Obj->filename != tfn)
+	else if(ExcelObject::Obj->filename != tfn)
 	{
 		
-		myExcel::Obj->Open(tfn);
-		Load();
+		ExcelObject::Obj->Open(tfn);
+		load();
 		 
 		
 	}
@@ -463,10 +464,10 @@ void ExcelControl::ConfigUpdate()
 			if(conf_column > 0 && conf_start_row.size() > 0)
 			{
 
-				MyPortBase* tmp = GetConfInPort(dn);
+				ExcelPortBase* tmp = getConfInPort(dn);
 				if(tmp == NULL)
 				{
-					tmp = GetConfOutPort(dn);
+					tmp = getConfOutPort(dn);
 					tdt = "DataOutPort";
 				}
 				bool t_c_move = true;
@@ -474,20 +475,20 @@ void ExcelControl::ConfigUpdate()
 				{
 					t_c_move = false;
 				}
-				std::vector<std::string> t_Attach_Port;
-				std::istringstream stream( Attach_Port );
+				std::vector<std::string> t_attach_Port;
+				std::istringstream stream( attach_Port );
 				std::string token;
 				while( std::getline( stream, token, ',' ) )
 				{
 					if(token != "None" && token != "")
 					{
-						t_Attach_Port.push_back(token);
+						t_attach_Port.push_back(token);
 					}
 				}
 				if(tmp && tmp->data_type == conf_data_type && conf_port_type == tdt)
 				{
-					tmp->SetExcelParam(conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-					tmp->attachPort = t_Attach_Port;
+					tmp->setParam(conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+					tmp->attachPort = t_attach_Port;
 				}
 				else
 				{
@@ -496,145 +497,145 @@ void ExcelControl::ConfigUpdate()
 						tmp->pb->disconnect_all();
 						removePort(*tmp->pb);
 						
-						std::vector<MyPortBase*>::iterator end_it = remove( ConfInPorts.begin(), ConfInPorts.end(), tmp );
+						std::vector<ExcelPortBase*>::iterator end_it = remove( ConfInPorts.begin(), ConfInPorts.end(), tmp );
 						ConfInPorts.erase( end_it, ConfInPorts.end() );
 
-						std::vector<MyPortBase*>::iterator end_it2 = remove( ConfOutPorts.begin(), ConfOutPorts.end(), tmp );
+						std::vector<ExcelPortBase*>::iterator end_it2 = remove( ConfOutPorts.begin(), ConfOutPorts.end(), tmp );
 						ConfOutPorts.erase( end_it2, ConfOutPorts.end() );
 					}
 					
 					
 					if(conf_data_type == "TimedDouble")
 					{
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedDouble, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedDouble, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedLong")
 					{
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedLong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedLong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					
 
 					else if(conf_data_type == "TimedFloat")
 					{
 						
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedFloat, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedFloat, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedShort")
 					{
 						
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedULong")
 					{
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedULong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedULong, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					
 					else if(conf_data_type == "TimedUShort")
 					{
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedUShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedUShort, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedChar")
 					{
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedWChar")
 					{
-						//MyPortBase* t_cp = ConfcrPort<RTC::TimedWChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						//t_cp->attachPort = t_Attach_Port;
+						//ExcelPortBase* t_cp = confcrPort<RTC::TimedWChar, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedBoolean")
 					{
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedBoolean, bool>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedBoolean, bool>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedOctet")
 					{
 						
-						MyPortBase* t_cp = ConfcrPort<RTC::TimedOctet, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPort<RTC::TimedOctet, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedString")
 					{
 						
-						//MyPortBase* t_cp = ConfcrPort<RTC::TimedString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						//t_cp->attachPort = t_Attach_Port;
+						//ExcelPortBase* t_cp = confcrPort<RTC::TimedString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedWString")
 					{
 						
-						//MyPortBase* t_cp = ConfcrPort<RTC::TimedWString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						//t_cp->attachPort = t_Attach_Port;
+						//ExcelPortBase* t_cp = confcrPort<RTC::TimedWString, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_attach_Port;
 					}
 					
 
 					else if(conf_data_type == "TimedDoubleSeq")
 					{
 						
-						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedDoubleSeq, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedDoubleSeq, double>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedLongSeq")
 					{
-						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedLongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedLongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 
 					else if(conf_data_type == "TimedFloatSeq")
 					{
-						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedFloatSeq, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedFloatSeq, float>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					
 					else if(conf_data_type == "TimedShortSeq")
 					{
-						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedULongSeq")
 					{
 						
-						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedULongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedULongSeq, long>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedUShortSeq")
 					{
-						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedUShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedUShortSeq, short>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedCharSeq")
 					{
-						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 					else if(conf_data_type == "TimedWCharSeq")
 					{
-						//MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedWCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						//t_cp->attachPort = t_Attach_Port;
+						//ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedWCharSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_attach_Port;
 					}
 					
 					else if(conf_data_type == "TimedOctetSeq")
 					{
-						MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedOctetSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						t_cp->attachPort = t_Attach_Port;
+						ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedOctetSeq, char>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						t_cp->attachPort = t_attach_Port;
 					}
 
 					else if(conf_data_type == "TimedStringSeq")
 					{
-						//MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						//t_cp->attachPort = t_Attach_Port;
+						//ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_attach_Port;
 					}
 
 					else if(conf_data_type == "TimedWStringSeq")
 					{
-						//MyPortBase* t_cp = ConfcrPortSeq<RTC::TimedWStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
-						//t_cp->attachPort = t_Attach_Port;
+						//ExcelPortBase* t_cp = confcrPortSeq<RTC::TimedWStringSeq, char*>(dn, conf_port_type, conf_data_type, conf_column, conf_start_row, conf_sheetname, conf_end_row, t_c_move);
+						//t_cp->attachPort = t_attach_Port;
 					}
 				}	
 					
@@ -644,7 +645,7 @@ void ExcelControl::ConfigUpdate()
 	
 }
 
-MyPortBase* ExcelControl::GetDPort(std::vector<std::string> pt)
+ExcelPortBase* ExcelControl::getDPort(std::vector<std::string> pt)
 {
 	for(int i=0;i < rtclist.size();i++)
 	{
@@ -657,7 +658,7 @@ MyPortBase* ExcelControl::GetDPort(std::vector<std::string> pt)
 	return NULL;
 }
 
-MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag)
+ExcelPortBase* ExcelControl::setDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag)
 {
 	/*for(int i=0;i < pt.size();i++)
 	{
@@ -684,7 +685,7 @@ MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::stri
 			tmp += gcnew System::String(rtclist[i].buff[rtclist[i].buff.size()-1].c_str());
 			tmp += "と通信するデータポートを作成しました。";
 
-			MyPortBase* m_pb = CreatePort(rtclist[i], c, l, sn, leng, mstate);
+			ExcelPortBase* m_pb = createPort(rtclist[i], c, l, sn, leng, mstate);
 			if(msflag)
 			{
 #ifdef CREATE_EXE_EXCELRTC
@@ -700,9 +701,9 @@ MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::stri
 		else if(rtclist[i].buff == pt && rtclist[i].mpb != NULL)
 		{
 			
-			rtclist[i].mpb->SetExcelParam(c, l, sn, leng, mstate);
+			rtclist[i].mpb->setParam(c, l, sn, leng, mstate);
 
-			MyPortBase* m_pb = rtclist[i].mpb;
+			ExcelPortBase* m_pb = rtclist[i].mpb;
 			if(msflag)
 			{
 				m_pb->update_cellName();
@@ -726,7 +727,7 @@ MyPortBase* ExcelControl::SetDPort(std::vector<std::string> pt, int c, std::stri
 	return NULL;
 }
 
-void ExcelControl::DeleteOtherPort(OtherPort &op)
+void ExcelControl::deleteOtherPort(OtherPort &op)
 {
 	
 
@@ -734,28 +735,28 @@ void ExcelControl::DeleteOtherPort(OtherPort &op)
 	removePort(*op.mpb->pb);
 
 	
-	std::vector<MyPortBase*>::iterator end_it = remove( InPorts.begin(), InPorts.end(), op.mpb );
+	std::vector<ExcelPortBase*>::iterator end_it = remove( InPorts.begin(), InPorts.end(), op.mpb );
 	InPorts.erase( end_it, InPorts.end() );
 
-	std::vector<MyPortBase*>::iterator end_it2 = remove( OutPorts.begin(), OutPorts.end(), op.mpb );
+	std::vector<ExcelPortBase*>::iterator end_it2 = remove( OutPorts.begin(), OutPorts.end(), op.mpb );
 	OutPorts.erase( end_it2, OutPorts.end() );
 
 	delete op.mpb;
 	op.mpb = NULL;
 
-	Save();
+	save();
 #ifdef CREATE_EXE_EXCELRTC
 	System::Windows::Forms::MessageBox::Show("削除しました");
 #endif
 	
 }
 
-void ExcelControl::AttachPort(MyPortBase *mpb, std::string n)
+void ExcelControl::attachPort(ExcelPortBase *mpb, std::string n)
 {
 	
-	MyPortBase *ip = GetInPort(n);
+	ExcelPortBase *ip = getInPort(n);
 
-	if(ip != NULL && GetInPort(mpb->name) == NULL)
+	if(ip != NULL && getInPort(mpb->name) == NULL)
 	{
 		
 		ip->attachPort.push_back(mpb->name);
@@ -769,7 +770,7 @@ void ExcelControl::AttachPort(MyPortBase *mpb, std::string n)
 		System::Windows::Forms::MessageBox::Show(tmp);
 #endif
 	}
-	else if(GetInPort(mpb->name) != NULL)
+	else if(getInPort(mpb->name) != NULL)
 	{
 #ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show("インポートの名前が正しくありません");
@@ -782,13 +783,13 @@ void ExcelControl::AttachPort(MyPortBase *mpb, std::string n)
 #endif
 	}
 
-	Save();
+	save();
 }
-void ExcelControl::DetachPort(MyPortBase *mpb, std::string n)
+void ExcelControl::detachPort(ExcelPortBase *mpb, std::string n)
 {
-	MyPortBase *ip = GetInPort(n);
+	ExcelPortBase *ip = getInPort(n);
 
-	if(ip != NULL && GetInPort(mpb->name) == NULL)
+	if(ip != NULL && getInPort(mpb->name) == NULL)
 	{
 		System::String^ tmp = gcnew System::String(n.c_str());
 		tmp += "と";
@@ -808,7 +809,7 @@ void ExcelControl::DetachPort(MyPortBase *mpb, std::string n)
 		
 
 	}
-	else if(GetInPort(mpb->name) != NULL)
+	else if(getInPort(mpb->name) != NULL)
 	{
 #ifdef CREATE_EXE_EXCELRTC
 		System::Windows::Forms::MessageBox::Show("アウトポートを選択してください");
@@ -821,10 +822,10 @@ void ExcelControl::DetachPort(MyPortBase *mpb, std::string n)
 #endif
 	}
 
-	Save();
+	save();
 }
 
-MyPortBase *ExcelControl::GetInPort(std::string n)
+ExcelPortBase *ExcelControl::getInPort(std::string n)
 {
 	for(int i=0;i < InPorts.size();i++)
 	{
@@ -836,7 +837,7 @@ MyPortBase *ExcelControl::GetInPort(std::string n)
 	return NULL;
 }
 
-MyPortBase *ExcelControl::GetOutPort(std::string n)
+ExcelPortBase *ExcelControl::getOutPort(std::string n)
 {
 	for(int i=0;i < OutPorts.size();i++)
 	{
@@ -847,7 +848,7 @@ MyPortBase *ExcelControl::GetOutPort(std::string n)
 	}
 	return NULL;
 }
-MyPortBase *ExcelControl::GetConfInPort(std::string n)
+ExcelPortBase *ExcelControl::getConfInPort(std::string n)
 {
 	for(int i=0;i < ConfInPorts.size();i++)
 	{
@@ -860,7 +861,7 @@ MyPortBase *ExcelControl::GetConfInPort(std::string n)
 	return NULL;
 }
 
-MyPortBase *ExcelControl::GetConfOutPort(std::string n)
+ExcelPortBase *ExcelControl::getConfOutPort(std::string n)
 {
 	
 	for(int i=0;i < ConfOutPorts.size();i++)
@@ -875,7 +876,7 @@ MyPortBase *ExcelControl::GetConfOutPort(std::string n)
 
 
 
-void ExcelControl::DeleteAllPort()
+void ExcelControl::deleteAllPort()
 {
 	for(int i=0;i < InPorts.size();i++)
 	{
@@ -898,10 +899,10 @@ void ExcelControl::DeleteAllPort()
 	InPorts.clear();
 	OutPorts.clear();
 }
-void ExcelControl::Save()
+void ExcelControl::save()
 {
 	//update_cellName();
-	std::vector<MyPortBase*>tf;
+	std::vector<ExcelPortBase*>tf;
 	for(int i=0;i < InPorts.size();i++)
 	{
 		tf.push_back(InPorts[i]);
@@ -937,15 +938,15 @@ void ExcelControl::Save()
 		v.push_back(sw);
 	}
 
-	myExcel::Obj->SaveRTC(v);
+	ExcelObject::Obj->saveRTC(v);
 }
-void ExcelControl::Load()
+void ExcelControl::load()
 {
 	
-	if(myExcel::Obj)
+	if(ExcelObject::Obj)
 	{
 		
-		std::vector<std::string> lw = myExcel::Obj->LoadRTC();
+		std::vector<std::string> lw = ExcelObject::Obj->loadRTC();
 	
 
 	
@@ -974,11 +975,11 @@ void ExcelControl::Load()
 
 						if(mpath.size() > 1 && i==0)
 						{
-							GetRTCTree(mpath[0]);
+							getRTCTree(mpath[0]);
 							
 						}
 						
-						MyPortBase *mpb = SetDPort(mpath, col, low, sheetname, len, mstate, false);
+						ExcelPortBase *mpb = setDPort(mpath, col, low, sheetname, len, mstate, false);
 						
 						if(mpb)
 						{
@@ -1001,11 +1002,11 @@ void ExcelControl::Load()
 	
 }
 
-void ExcelControl::ResetPort(MyPortBase* mpb)
+void ExcelControl::resetPort(ExcelPortBase* mpb)
 {
 	mpb->num = 0;
 }
-void ExcelControl::ResetAllPort()
+void ExcelControl::resetAllPort()
 {
 	for(int i=0;i < InPorts.size();i++)
 	{
@@ -1018,7 +1019,7 @@ void ExcelControl::ResetAllPort()
 	for(int i=0;i < OutPorts.size();i++)
 	{
 		if(OutPorts[i]->num > 0)
-			myExcel::Obj->ResetCellColor(OutPorts[i]->col+OutPorts[i]->num-1, OutPorts[i]->low, OutPorts[i]->sheetName, OutPorts[i]->length);
+			ExcelObject::Obj->resetCellColor(OutPorts[i]->col+OutPorts[i]->num-1, OutPorts[i]->low, OutPorts[i]->sheetName, OutPorts[i]->length);
 
 		OutPorts[i]->num = 0;
 		
@@ -1036,14 +1037,14 @@ void ExcelControl::ResetAllPort()
 	for(int i=0;i < ConfOutPorts.size();i++)
 	{
 		if(ConfOutPorts[i]->num > 0)
-			myExcel::Obj->ResetCellColor(ConfOutPorts[i]->col+ConfOutPorts[i]->num-1, ConfOutPorts[i]->low, ConfOutPorts[i]->sheetName, ConfOutPorts[i]->length);
+			ExcelObject::Obj->resetCellColor(ConfOutPorts[i]->col+ConfOutPorts[i]->num-1, ConfOutPorts[i]->low, ConfOutPorts[i]->sheetName, ConfOutPorts[i]->length);
 
 		ConfOutPorts[i]->num = 0;
 		
 	}
 }
 
-MyPortBase* ExcelControl::CreatePort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate)
+ExcelPortBase* ExcelControl::createPort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate)
 {
 	
 	
@@ -1058,7 +1059,7 @@ MyPortBase* ExcelControl::CreatePort(OtherPort &op, int c, std::string l, std::s
 
 	tdt = Replace(tdt, "RTC/", "");
 
-	MyPortBase* mpb = NULL;
+	ExcelPortBase* mpb = NULL;
 	
 
 	if(tdt == "TimedDouble")

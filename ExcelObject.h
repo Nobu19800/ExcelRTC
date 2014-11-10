@@ -1,10 +1,10 @@
 // -*-C++-*-
 /*!
- * @file  myExcel.h
+ * @file  ExcelObject.h
  * @brief Excelの操作
  */
-#ifndef MYEXCEL_H
-#define MYEXCEL_H
+#ifndef ExcelObject_H
+#define ExcelObject_H
 
 using namespace Microsoft::Office::Interop::Excel;
 #define Excel   Microsoft::Office::Interop::Excel
@@ -13,42 +13,42 @@ using namespace Microsoft::Office::Interop::Excel;
 #include <string>
 #include <vector>
 
-#include "MyObject.h"
+#include "SubFunction.h"
 
 
 
 /**
-* @class myExcel
+* @class ExcelObject
 *@brief Excelを操作するクラス
 */
 
-ref class myExcel
+ref class ExcelObject
 {
 public:
 	/**
 	*@brief コンストラクタ
 	*/
-	myExcel();
-	static myExcel^ Obj;	/**<　@brief  */
+	ExcelObject();
+	static ExcelObject^ Obj;	/**<　@brief  */
 	
 	/**
 	*@brief 名前からワークシートを取得する関数
 	* @param sn シート名
 	* @return シートオブジェクト
 	*/
-	Excel::Worksheet^ GetWorksheet(std::string sn);
+	Excel::Worksheet^ getWorksheet(std::string sn);
 	
 	/**
 	*@brief 保存用ワークシートに書き込む関数
 	* @param sf 書き込む文字列
 	*/
-	void SaveRTC(std::vector<std::string> sf);
+	void saveRTC(std::vector<std::string> sf);
 	
 	/**
 	*@brief データポートの情報を保存用ワークシートから読み込む関数
 	* @return 読み込んだ文字列
 	*/
-	std::vector<std::string> LoadRTC();
+	std::vector<std::string> loadRTC();
 	
 	/**
 	*@brief セルの色を無色にする関数
@@ -57,7 +57,7 @@ public:
 	* @param sn シート名
 	* @param leng 行の範囲
 	*/
-	void ResetCellColor(int c, std::string l, std::string sn, std::string leng);
+	void resetCellColor(int c, std::string l, std::string sn, std::string leng);
 	
 
 	/**
@@ -68,7 +68,7 @@ public:
 	* @param val 入力する文字列
 	*/
 	
-	void SetCellStringSingle(int c, std::string l, std::string sn, std::string val);
+	void setCellStringSingle(int c, std::string l, std::string sn, std::string val);
 	
 	/**
 	*@brief 単一のセルの値を変更する関数
@@ -78,10 +78,10 @@ public:
 	* @param val 入力する値
 	*/
 	template <typename T>
-	void SetCellValueSingle(int c, std::string l, std::string sn, T val)
+	void setCellValueSingle(int c, std::string l, std::string sn, T val)
 	{
 		int t_l = convertStrToVal(l);
-		Excel::Worksheet^ws = GetWorksheet(sn);
+		Excel::Worksheet^ws = getWorksheet(sn);
 		if(ws != nullptr)
 		{
 			if(c > 0 && t_l > 0)
@@ -100,10 +100,10 @@ public:
 	* @param sn シート名
 	* @return セルの値
 	*/
-	std::string GetCellValueSingle(int c, std::string l, std::string sn)
+	std::string getCellValueSingle(int c, std::string l, std::string sn)
 	{
 		int t_l = convertStrToVal(l);
-		Excel::Worksheet^ws = GetWorksheet(sn);
+		Excel::Worksheet^ws = getWorksheet(sn);
 		if(ws != nullptr)
 		{
 			if(c > 0 && t_l > 0)
@@ -125,9 +125,9 @@ public:
 	* @param v  入力する値
 	*/
 	template <typename T>
-	void SetCellValue(int c, std::string l, std::string sn, bool state, std::vector<std::vector<T>> v)
+	void setCellValue(int c, std::string l, std::string sn, bool state, std::vector<std::vector<T>> v)
 	{
-		Excel::Worksheet^ws = GetWorksheet(sn);
+		Excel::Worksheet^ws = getWorksheet(sn);
 
 		
 		if(ws != nullptr)
@@ -184,9 +184,9 @@ public:
 	* @return 取得した値
 	*/
 	template <typename T>
-	std::vector<T> GetCellValue(int c, std::string l, std::string sn, std::string leng)
+	std::vector<T> getCellValue(int c, std::string l, std::string sn, std::string leng)
 	{
-		Excel::Worksheet^ws = GetWorksheet(sn);
+		Excel::Worksheet^ws = getWorksheet(sn);
 
 		std::vector<T> v;
 
@@ -308,7 +308,7 @@ public:
 	* @param g 背景の色(G)
 	* @param b 背景の色(B)
 	*/
-	void SetColor(int r, int g, int b);
+	void setColor(int r, int g, int b);
 
 	int red, green, blue; /**<　@brief  */
 

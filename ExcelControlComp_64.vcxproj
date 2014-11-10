@@ -137,8 +137,8 @@
     <ClCompile Include="ExcelControl.cpp" />
     <ClCompile Include="ExcelTask.cpp" />
     <ClCompile Include="FormControl.cpp" />
-    <ClCompile Include="myExcel.cpp" />
-    <ClCompile Include="MyObject.cpp" />
+    <ClCompile Include="ExcelObject.cpp" />
+    <ClCompile Include="SubFunction.cpp" />
     <ClCompile Include="SpreadSheetSK.cc" />
     <ClCompile Include="SpreadSheetSVC_impl.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -152,8 +152,8 @@
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="myExcel.h" />
-    <ClInclude Include="MyObject.h" />
+    <ClInclude Include="ExcelObject.h" />
+    <ClInclude Include="SubFunction.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SpreadSheetSkel.h" />
     <ClInclude Include="SpreadSheetStub.h" />

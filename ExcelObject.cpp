@@ -1,16 +1,16 @@
 /*!
- * @file  myExcel.cpp
+ * @file  ExcelObject.cpp
  * @brief Excelの操作
  *
  */
 
 #include "stdafx.h"
-#include "myExcel.h"
-#include "MyObject.h"
+#include "ExcelObject.h"
+#include "SubFunction.h"
 #include <iostream>
 
 
-myExcel::myExcel()
+ExcelObject::ExcelObject()
 {
 	xlApplication = nullptr;
 	xlWorkbooks = nullptr;
@@ -26,14 +26,14 @@ myExcel::myExcel()
 	blue = 0;
 }
 
-void myExcel::SetColor(int r, int g, int b)
+void ExcelObject::setColor(int r, int g, int b)
 {
 	red = r;
 	green = g;
 	blue = b;
 }
 
-Excel::Worksheet^ myExcel::GetWorksheet(std::string sn)
+Excel::Worksheet^ ExcelObject::getWorksheet(std::string sn)
 {
 	for(int i=0;i < xlWorksheet->Count;i++)
 	{
@@ -47,9 +47,9 @@ Excel::Worksheet^ myExcel::GetWorksheet(std::string sn)
 	return nullptr;
 }
 
-void myExcel::ResetCellColor(int c, std::string l, std::string sn, std::string len)
+void ExcelObject::resetCellColor(int c, std::string l, std::string sn, std::string len)
 {
-	Excel::Worksheet^ws = GetWorksheet(sn);
+	Excel::Worksheet^ws = getWorksheet(sn);
 	if(ws != nullptr)
 	{
 		int t_l = convertStrToVal(l);
@@ -71,10 +71,10 @@ void myExcel::ResetCellColor(int c, std::string l, std::string sn, std::string l
 	}
 }
 
-void myExcel::SetCellStringSingle(int c, std::string l, std::string sn, std::string val)
+void ExcelObject::setCellStringSingle(int c, std::string l, std::string sn, std::string val)
 {
 	int t_l = convertStrToVal(l);
-	Excel::Worksheet^ws = GetWorksheet(sn);
+	Excel::Worksheet^ws = getWorksheet(sn);
 	if(ws != nullptr)
 	{
 		if(c > 0 && t_l > 0)
@@ -85,9 +85,9 @@ void myExcel::SetCellStringSingle(int c, std::string l, std::string sn, std::str
 	}
 }
 
-void myExcel::SaveRTC(std::vector<std::string> sf)
+void ExcelObject::saveRTC(std::vector<std::string> sf)
 {
-	Excel::Worksheet^ws = GetWorksheet("保存用");
+	Excel::Worksheet^ws = getWorksheet("保存用");
 
 	if(ws != nullptr)
 	{
@@ -98,9 +98,9 @@ void myExcel::SaveRTC(std::vector<std::string> sf)
 		}
 	}
 }
-std::vector<std::string> myExcel::LoadRTC()
+std::vector<std::string> ExcelObject::loadRTC()
 {
-	Excel::Worksheet^ws = GetWorksheet("保存用");
+	Excel::Worksheet^ws = getWorksheet("保存用");
 	std::vector<std::string> v;
 
 	if(ws != nullptr)
@@ -133,7 +133,7 @@ std::vector<std::string> myExcel::LoadRTC()
 
 
 
-void myExcel::Open(System::String^ fn)
+void ExcelObject::Open(System::String^ fn)
 {
 	
 	if(filename == fn)
@@ -207,7 +207,7 @@ void myExcel::Open(System::String^ fn)
 
 	 }
 	 
-	 Excel::Worksheet^ws = GetWorksheet("保存用");
+	 Excel::Worksheet^ws = getWorksheet("保存用");
 	 if(ws == nullptr)
 	 {
 		 xlWorksheets->Add(System::Reflection::Missing::Value,xlWorksheet[xlWorksheet->Count-1],System::Reflection::Missing::Value,System::Reflection::Missing::Value);
@@ -230,7 +230,7 @@ void myExcel::Open(System::String^ fn)
 			
 }
 
-void myExcel::Close()
+void ExcelObject::Close()
 {
 	int count = xlWorksheet->Count;
 	for(int i=1;i < count;i++)

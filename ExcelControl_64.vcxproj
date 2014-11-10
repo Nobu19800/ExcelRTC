@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>ExcelRTC</TargetName>
+    <TargetName>ExcelControl</TargetName>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -102,23 +102,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExcelControl.h" />
+    <ClInclude Include="ExcelObject.h" />
     <ClInclude Include="ExcelTask.h" />
-    <ClInclude Include="myExcel.h" />
-    <ClInclude Include="MyObject.h" />
     <ClInclude Include="SpreadSheetSkel.h" />
     <ClInclude Include="SpreadSheetStub.h" />
     <ClInclude Include="SpreadSheetSVC_impl.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SubFunction.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompSearch.cpp" />
     <ClCompile Include="ExcelControl.cpp" />
+    <ClCompile Include="ExcelObject.cpp" />
     <ClCompile Include="ExcelTask.cpp" />
-    <ClCompile Include="myExcel.cpp" />
-    <ClCompile Include="MyObject.cpp" />
     <ClCompile Include="SpreadSheetSK.cc" />
     <ClCompile Include="SpreadSheetSVC_impl.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="SubFunction.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

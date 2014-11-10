@@ -134,30 +134,31 @@
     <ClCompile Include="CompSearch.cpp" />
     <ClCompile Include="ExcelControlComp.cpp" />
     <ClCompile Include="ExcelControl.cpp" />
+    <ClCompile Include="ExcelObject.cpp" />
     <ClCompile Include="ExcelTask.cpp" />
     <ClCompile Include="FormControl.cpp" />
-    <ClCompile Include="myExcel.cpp" />
-    <ClCompile Include="MyObject.cpp" />
     <ClCompile Include="SpreadSheetSK.cc" />
     <ClCompile Include="SpreadSheetSVC_impl.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SubFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExcelControl.h" />
+    <ClInclude Include="ExcelDataPort.h" />
+    <ClInclude Include="ExcelObject.h" />
     <ClInclude Include="ExcelTask.h" />
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="myExcel.h" />
-    <ClInclude Include="MyObject.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SpreadSheetSkel.h" />
     <ClInclude Include="SpreadSheetStub.h" />
     <ClInclude Include="SpreadSheetSVC_impl.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SubFunction.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.ico" />

@@ -8,8 +8,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "myExcel.h"
-#include "MyObject.h"
+#include "ExcelObject.h"
+#include "SubFunction.h"
 
 
 namespace ExcelRTC {
@@ -74,7 +74,7 @@ namespace ExcelRTC {
 		/**
 		*@brief データポートを作成する関数
 		*/
-		void CreatePort();
+		void createPort();
 		
 		/**
 		*@brief データポートを削除する関数
@@ -89,12 +89,12 @@ namespace ExcelRTC {
 		/**
 		*@brief 更新した列番号を初期化する関数
 		*/
-		void ResetPort();
+		void resetPort();
 		
 		/**
 		*@brief 全てのデータポートの更新した列番号を初期化する関数
 		*/
-		void ResetAllPort();
+		void resetAllPort();
 		
 		/**
 		*@brief Excelファイルを開く関数
@@ -538,7 +538,7 @@ namespace ExcelRTC {
 				 SetTree();
 			 }
 private: System::Void AllResetbutton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 ResetAllPort();
+			 resetAllPort();
 		 }
 private: System::Void Loadbutton_Click(System::Object^  sender, System::EventArgs^  e) {
 			 OpenFile();
@@ -547,13 +547,13 @@ private: System::Void Deletebutton_Click(System::Object^  sender, System::EventA
 			 DeletePort();
 		 }
 private: System::Void Addbutton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 CreatePort();
+			 createPort();
 		 }
 private: System::Void Closebutton_Click(System::Object^  sender, System::EventArgs^  e) {
-			myExcel::Obj->Close();
+			ExcelObject::Obj->Close();
 		 }
 private: System::Void Resetbutton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 ResetPort();
+			 resetPort();
 		 }
 private: System::Void InfotextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }

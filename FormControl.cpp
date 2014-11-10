@@ -17,7 +17,7 @@ extern ExcelControl *tertc;
 void ExcelRTC::Form1::SetTree()
 {
 	this->RTCtreeView->Nodes->Clear();
-	TreeObject *to = tertc->GetRTCTree(MarshalString(NamingServertextBox->Text));
+	TreeObject *to = tertc->getRTCTree(MarshalString(NamingServertextBox->Text));
 	
 	if(to)
 	{
@@ -27,18 +27,18 @@ void ExcelRTC::Form1::SetTree()
 
 
 		this->SheetcomboBox->Items->Clear();
-		for(int i=0;i < myExcel::Obj->xlWorksheet->Count;i++)
+		for(int i=0;i < ExcelObject::Obj->xlWorksheet->Count;i++)
 		{
-			this->SheetcomboBox->Items->Add(myExcel::Obj->xlWorksheet[i]->Name);
+			this->SheetcomboBox->Items->Add(ExcelObject::Obj->xlWorksheet[i]->Name);
 		}
-		this->SheetcomboBox->Text = myExcel::Obj->xlWorksheet[0]->Name;
+		this->SheetcomboBox->Text = ExcelObject::Obj->xlWorksheet[0]->Name;
 	
 		LawtextBox->Text = "A";
 		ColtextBox->Text = "1";
 		LentextBox->Text = "A";
 		LowcheckBox->Checked = true;
 
-		tertc->Load();
+		tertc->load();
 	
 		UpdatePortList();
 	}
@@ -49,18 +49,18 @@ void ExcelRTC::Form1::SetTree()
 
 void ExcelRTC::Form1::AttachInPort()
 {
-	MyPortBase *mpb = tertc->GetInPort(MarshalString(PortListcomboBox->Text));
+	ExcelPortBase *mpb = tertc->getInPort(MarshalString(PortListcomboBox->Text));
 	
 	if(mpb == NULL)
 	{
-		mpb = tertc->GetOutPort(MarshalString(PortListcomboBox->Text));
+		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb == NULL)
 		{
 			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			if(bt.size() > 1)
 			{
 				bt.erase(bt.begin());
-				mpb = tertc->GetDPort(bt);
+				mpb = tertc->getDPort(bt);
 			}
 		}
 	}
@@ -70,7 +70,7 @@ void ExcelRTC::Form1::AttachInPort()
 		
 	if(mpb != NULL)
 	{
-		tertc->AttachPort(mpb, MarshalString(InPortcomboBox->Text));
+		tertc->attachPort(mpb, MarshalString(InPortcomboBox->Text));
 	}
 	else
 	{
@@ -83,24 +83,24 @@ void ExcelRTC::Form1::AttachInPort()
 
 void ExcelRTC::Form1::DetachInPort()
 {
-	MyPortBase *mpb = tertc->GetInPort(MarshalString(PortListcomboBox->Text));
+	ExcelPortBase *mpb = tertc->getInPort(MarshalString(PortListcomboBox->Text));
 	if(mpb == NULL)
 	{
-		mpb = tertc->GetOutPort(MarshalString(PortListcomboBox->Text));
+		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb == NULL)
 		{
 			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			if(bt.size() > 1)
 			{
 				bt.erase(bt.begin());
-				mpb = tertc->GetDPort(bt);
+				mpb = tertc->getDPort(bt);
 			}
 		}
 	}
 
 	if(mpb != NULL)
 	{
-		tertc->DetachPort(mpb, MarshalString(AttachcomboBox->Text));
+		tertc->detachPort(mpb, MarshalString(AttachcomboBox->Text));
 		AttachcomboBox->Text = "";
 	}
 	else
@@ -126,18 +126,18 @@ void ExcelRTC::Form1::UpdateInPortList()
 
 void ExcelRTC::Form1::UpdateAttachList()
 {
-	MyPortBase *mpb = tertc->GetInPort(MarshalString(PortListcomboBox->Text));
+	ExcelPortBase *mpb = tertc->getInPort(MarshalString(PortListcomboBox->Text));
 
 	if(mpb == NULL)
 	{
-		mpb = tertc->GetOutPort(MarshalString(PortListcomboBox->Text));
+		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb == NULL)
 		{
 			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			if(bt.size() > 1)
 			{
 				bt.erase(bt.begin());
-				mpb = tertc->GetDPort(bt);
+				mpb = tertc->getDPort(bt);
 			}
 		}
 	}
@@ -171,18 +171,18 @@ void ExcelRTC::Form1::SetPortParamEx(std::string m_low, int m_col, std::string m
 
 void ExcelRTC::Form1::SetPortParam()
 {
-	MyPortBase *mpb = tertc->GetInPort(MarshalString(PortListcomboBox->Text));
+	ExcelPortBase *mpb = tertc->getInPort(MarshalString(PortListcomboBox->Text));
 	
 	if(mpb == NULL)
 	{
-		mpb = tertc->GetOutPort(MarshalString(PortListcomboBox->Text));
+		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb == NULL)
 		{
 			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			if(bt.size() > 1)
 			{
 				bt.erase(bt.begin());
-				mpb = tertc->GetDPort(bt);
+				mpb = tertc->getDPort(bt);
 			}
 		}
 	}
@@ -213,7 +213,7 @@ void ExcelRTC::Form1::SetPortParam()
 
 		
 }
-void ExcelRTC::Form1::ResetPort()
+void ExcelRTC::Form1::resetPort()
 {
 	std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 	
@@ -222,7 +222,7 @@ void ExcelRTC::Form1::ResetPort()
 		bt.erase(bt.begin());
 	
 
-		MyPortBase *mpb = tertc->GetDPort(bt);
+		ExcelPortBase *mpb = tertc->getDPort(bt);
 		if(mpb != NULL)
 		{
 			mpb->num = 0;
@@ -231,12 +231,12 @@ void ExcelRTC::Form1::ResetPort()
 
 }
 
-void ExcelRTC::Form1::ResetAllPort()
+void ExcelRTC::Form1::resetAllPort()
 {
-	tertc->ResetAllPort();
+	tertc->resetAllPort();
 }
 
-void ExcelRTC::Form1::CreatePort()
+void ExcelRTC::Form1::createPort()
 {
 		
 	int c = string2binary<int>(MarshalString(this->ColtextBox->Text),10);
@@ -245,17 +245,17 @@ void ExcelRTC::Form1::CreatePort()
 	std::string sn = MarshalString(this->SheetcomboBox->Text);
 	bool mstate = LowcheckBox->Checked;
 
-	MyPortBase *mpb = tertc->GetInPort(MarshalString(PortListcomboBox->Text));
+	ExcelPortBase *mpb = tertc->getInPort(MarshalString(PortListcomboBox->Text));
 	if(mpb != NULL)
 	{
-		mpb->SetExcelParam(c, l, sn, leng, mstate);
+		mpb->setParam(c, l, sn, leng, mstate);
 	}
 	else
 	{
-		mpb = tertc->GetOutPort(MarshalString(PortListcomboBox->Text));
+		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb != NULL)
 		{
-			mpb->SetExcelParam(c, l, sn, leng, mstate);
+			mpb->setParam(c, l, sn, leng, mstate);
 		}
 		else
 		{
@@ -266,11 +266,11 @@ void ExcelRTC::Form1::CreatePort()
 				bt.erase(bt.begin());
 
 				
-				MyPortBase* mpb = tertc->SetDPort(bt,c,l,sn,leng,mstate,true);
+				ExcelPortBase* mpb = tertc->setDPort(bt,c,l,sn,leng,mstate,true);
 				if(mpb != NULL)
 				{
 					this->InfotextBox->Text = "ì¬Ï‚Ý";
-					tertc->Save();
+					tertc->save();
 
 					
 				}
@@ -293,24 +293,24 @@ void ExcelRTC::Form1::CreatePort()
 
 void ExcelRTC::Form1::DeletePort()
 {
-	MyPortBase *mpb = tertc->GetInPort(MarshalString(PortListcomboBox->Text));
+	ExcelPortBase *mpb = tertc->getInPort(MarshalString(PortListcomboBox->Text));
 	if(mpb != NULL)
 	{
-		tertc->DeleteOtherPort(*(mpb->mop));
+		tertc->deleteOtherPort(*(mpb->mop));
 	}
 	else
 	{
-		mpb = tertc->GetOutPort(MarshalString(PortListcomboBox->Text));
+		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb != NULL)
 		{
-			tertc->DeleteOtherPort(*(mpb->mop));
+			tertc->deleteOtherPort(*(mpb->mop));
 		}
 		else
 		{
 			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			bt.erase(bt.begin());
 	
-			tertc->DelDPort(bt);
+			tertc->delDPort(bt);
 		}
 	}
 
@@ -341,7 +341,7 @@ void ExcelRTC::Form1::InitFunc()
 
 	if(tertc)
 	{
-		tertc->Load();
+		tertc->load();
 		
 		UpdatePortList();
 	}
@@ -358,10 +358,10 @@ void ExcelRTC::Form1::OpenFile()
 	 {
 		 std::string filePath = MarshalString(openFileDialog1->FileName);
 		 filePath = Replace(filePath, "\\", "/");
-		 tertc->SetFilePath(filePath);
-		 myExcel::Obj->Open(openFileDialog1->FileName);
+		 tertc->setFilePath(filePath);
+		 ExcelObject::Obj->Open(openFileDialog1->FileName);
 		 currentDirectory = System::IO::Path::GetDirectoryName(openFileDialog1->FileName);
-		 //tertc->Load();
+		 //tertc->load();
 		 
 		 UpdatePortList();
 	 }

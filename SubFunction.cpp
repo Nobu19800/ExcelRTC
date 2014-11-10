@@ -1,12 +1,12 @@
 /*!
- * @file  MyObject.cpp
+ * @file  SubFunction.cpp
  * @brief •¶š—ñ‚Ì‘€ì“™
  *
  */
 
 #include "stdafx.h"
 
-#include "MyObject.h"
+#include "SubFunction.h"
 
 using namespace std;
 

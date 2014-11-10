@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "MyObject.h"
+#include "SubFunction.h"
 
 using namespace std;
 
