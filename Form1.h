@@ -258,7 +258,7 @@ namespace ExcelRTC {
 			this->Resetbutton->Name = L"Resetbutton";
 			this->Resetbutton->Size = System::Drawing::Size(138, 23);
 			this->Resetbutton->TabIndex = 0;
-			this->Resetbutton->Text = L"列番号初期化";
+			this->Resetbutton->Text = L"行番号初期化";
 			this->Resetbutton->UseVisualStyleBackColor = true;
 			this->Resetbutton->Click += gcnew System::EventHandler(this, &Form1::Resetbutton_Click);
 			// 
@@ -268,7 +268,7 @@ namespace ExcelRTC {
 			this->AllResetbutton->Name = L"AllResetbutton";
 			this->AllResetbutton->Size = System::Drawing::Size(138, 23);
 			this->AllResetbutton->TabIndex = 1;
-			this->AllResetbutton->Text = L"全ての列番号を初期化";
+			this->AllResetbutton->Text = L"全ての行番号を初期化";
 			this->AllResetbutton->UseVisualStyleBackColor = true;
 			this->AllResetbutton->Click += gcnew System::EventHandler(this, &Form1::AllResetbutton_Click);
 			// 
@@ -389,7 +389,7 @@ namespace ExcelRTC {
 			this->Collabel->Name = L"Collabel";
 			this->Collabel->Size = System::Drawing::Size(41, 12);
 			this->Collabel->TabIndex = 14;
-			this->Collabel->Text = L"行番号";
+			this->Collabel->Text = L"列番号";
 			// 
 			// Sheetlabel
 			// 
@@ -407,7 +407,7 @@ namespace ExcelRTC {
 			this->Lawlabel->Name = L"Lawlabel";
 			this->Lawlabel->Size = System::Drawing::Size(41, 12);
 			this->Lawlabel->TabIndex = 16;
-			this->Lawlabel->Text = L"列番号";
+			this->Lawlabel->Text = L"行番号";
 			this->Lawlabel->Click += gcnew System::EventHandler(this, &Form1::Lawlabel_Click);
 			// 
 			// ManeServerlabel
