@@ -128,7 +128,7 @@ void ListRecursive(CosNaming::NamingContext_ptr context,vector<OtherPort> &rtcli
 							vector<string> namebuff2=name;
 							string tname = tp[(CORBA::ULong)k]->get_port_profile()->name;
 							PortService_var p = tp[(CORBA::ULong)k];
-							vector<string> pn = split(tname, ".");
+							vector<string> pn = coil::split(tname, ".");
 							namebuff2.push_back(pn[1]);
 
 							TreeObject *to3 = new TreeObject(string(pn[1]));

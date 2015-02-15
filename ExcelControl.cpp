@@ -428,7 +428,9 @@ void ExcelControl::configUpdate()
 {
 
 	this->m_configsets.update("default", "file_path");
-	std::string sfn = Replace(file_path, "/", "\\");
+	std::string sfn = file_path;
+	coil::replaceString(sfn, "/", "\\");
+	
 	System::String ^tfn = gcnew System::String(sfn.c_str());
 	//System::Console::WriteLine(tfn);
 	
@@ -959,13 +961,16 @@ void ExcelControl::load()
 				if(lw[i] != ""){
 				
 					
-					vector<string> confs = split(lw[i], "#");
+					vector<string> confs = coil::split(lw[i], "#");
 				
 					if(confs.size() > 4)
 					{
 					
-						vector<string> mpath = split(confs[0], "/");
-						int col = string2binary<int>(confs[1],10);
+						vector<string> mpath = coil::split(confs[0], "/");
+						
+						int col;
+						coil::stringTo<int>(col,confs[1].c_str());
+
 						std::string low = confs[2];
 						string sheetname = confs[3];
 						std::string len = confs[4];
@@ -983,7 +988,7 @@ void ExcelControl::load()
 						
 						if(mpb)
 						{
-							vector<string> atrtc = split(confs[6], "/");
+							vector<string> atrtc = coil::split(confs[6], "/");
 					
 							for(int j=0;j < atrtc.size();j++)
 							{
@@ -1055,9 +1060,10 @@ ExcelPortBase* ExcelControl::createPort(OtherPort &op, int c, std::string l, std
 	
 	
 	
-	string tdt = split(DataType, ":")[1];
+	string tdt = coil::split(DataType, ":")[1];
 
-	tdt = Replace(tdt, "RTC/", "");
+	
+	coil::replaceString(tdt, "RTC/", "");
 
 	ExcelPortBase* mpb = NULL;
 	

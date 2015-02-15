@@ -10,20 +10,6 @@
 
 using namespace std;
 
-std::string Replace( std::string String1, std::string String2, std::string String3 )
-{
-    std::string::size_type  Pos( String1.find( String2 ) );
-
-    while( Pos != std::string::npos )
-    {
-        String1.replace( Pos, String2.length(), String3 );
-        Pos = String1.find( String2, Pos + String3.length() );
-    }
-
-    return String1;
-}
-
-
 int convertStrToVal(std::string m_str)
 {
 	if(m_str.size() > 0)
@@ -51,6 +37,8 @@ int convertStrToVal(std::string m_str)
 	 
 }
 
+
+
 std::string MarshalString ( System::String ^ s) {
    using namespace System::Runtime::InteropServices;
    const char* chars = 
@@ -61,13 +49,3 @@ std::string MarshalString ( System::String ^ s) {
    return os;
 }
 
-vector<string> split(const string &str, const string &delim){
-  vector<string> res;
-  size_t current = 0, found, delimlen = delim.size();
-  while((found = str.find(delim, current)) != string::npos){
-    res.push_back(string(str, current, found - current));
-    current = found + delimlen;
-  }
-  res.push_back(string(str, current, str.size() - current));
-  return res;
-}

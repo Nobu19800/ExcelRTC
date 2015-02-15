@@ -261,9 +261,10 @@ public:
 					c1->Interior->ColorIndex = 6;*/
 
 					try{
+						T c_tmp;
+						coil::stringTo<T>(c_tmp,MarshalString(c1->Value2->ToString()).c_str());
 						
-						
-						v.push_back(string2binary<T>(MarshalString(c1->Value2->ToString()),10));
+						v.push_back(c_tmp);
 						
 					}
 					catch(...)

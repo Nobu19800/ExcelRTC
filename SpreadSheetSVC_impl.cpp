@@ -8,9 +8,12 @@
 #include "SpreadSheetSVC_impl.h"
 
 #include <vector>
+#include <coil/stringutil.h>
 
 #include "ExcelObject.h"
 #include "SubFunction.h"
+
+
 
 
 
@@ -31,7 +34,9 @@ mSpreadSheetSVC_impl::~mSpreadSheetSVC_impl()
 
 char* mSpreadSheetSVC_impl::get_string(const char* l, const char* c, const char* sn)
 {
-	std::string cans = ExcelObject::Obj->getCellValueSingle(string2binary<int>(c,10),l, sn);
+	int c_tmp;
+	coil::stringTo<int>(c_tmp,c);
+	std::string cans = ExcelObject::Obj->getCellValueSingle(c_tmp,l, sn);
 	//char *ans = const_cast <char *>(cans);
 	std::cout << cans.c_str() << std::endl;
 	
@@ -49,8 +54,10 @@ char* mSpreadSheetSVC_impl::get_string(const char* l, const char* c, const char*
 
 void mSpreadSheetSVC_impl::set_value(const char* l, const char* c, const char* sn, CORBA::Float v)
 {
+	int c_tmp;
+	coil::stringTo<int>(c_tmp,c);
 
-	ExcelObject::Obj->setCellValueSingle<float>(string2binary<int>(c,10),l, sn, v);
+	ExcelObject::Obj->setCellValueSingle<float>(c_tmp,l, sn, v);
   
 #ifndef WIN32
   #warning "Code missing in function <void mSpreadSheetSVC_impl::set_value(const char* l, const char* c, const char* sn, CORBA::Float v)>"
@@ -79,8 +86,10 @@ void mSpreadSheetSVC_impl::set_value_range(const char* l, const char* c, const c
 
 void mSpreadSheetSVC_impl::set_string(const char* l, const char* c, const char* sn, const char* v)
 {
-	
-	ExcelObject::Obj->setCellValueSingle<System::String^>(string2binary<int>(c,10),l, sn, gcnew System::String(v));
+	int c_tmp;
+	coil::stringTo<int>(c_tmp,c);
+
+	ExcelObject::Obj->setCellValueSingle<System::String^>(c_tmp,l, sn, gcnew System::String(v));
   
 #ifndef WIN32
   #warning "Code missing in function <void mSpreadSheetSVC_impl::set_string(const char* l, const char* c, const char* sn, const char* v)>"

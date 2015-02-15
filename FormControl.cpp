@@ -56,7 +56,7 @@ void ExcelRTC::Form1::AttachInPort()
 		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb == NULL)
 		{
-			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
+			std::vector<std::string> bt = coil::split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			if(bt.size() > 1)
 			{
 				bt.erase(bt.begin());
@@ -89,7 +89,7 @@ void ExcelRTC::Form1::DetachInPort()
 		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb == NULL)
 		{
-			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
+			std::vector<std::string> bt = coil::split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			if(bt.size() > 1)
 			{
 				bt.erase(bt.begin());
@@ -133,7 +133,7 @@ void ExcelRTC::Form1::UpdateAttachList()
 		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb == NULL)
 		{
-			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
+			std::vector<std::string> bt = coil::split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			if(bt.size() > 1)
 			{
 				bt.erase(bt.begin());
@@ -178,7 +178,7 @@ void ExcelRTC::Form1::SetPortParam()
 		mpb = tertc->getOutPort(MarshalString(PortListcomboBox->Text));
 		if(mpb == NULL)
 		{
-			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
+			std::vector<std::string> bt = coil::split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			if(bt.size() > 1)
 			{
 				bt.erase(bt.begin());
@@ -215,7 +215,7 @@ void ExcelRTC::Form1::SetPortParam()
 }
 void ExcelRTC::Form1::resetPort()
 {
-	std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
+	std::vector<std::string> bt = coil::split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 	
 	if(bt.size() > 1)
 	{
@@ -239,7 +239,9 @@ void ExcelRTC::Form1::resetAllPort()
 void ExcelRTC::Form1::createPort()
 {
 		
-	int c = string2binary<int>(MarshalString(this->ColtextBox->Text),10);
+	int c;
+	coil::stringTo<int>(c,MarshalString(this->ColtextBox->Text).c_str());
+
 	std::string l = MarshalString(this->LawtextBox->Text);
 	std::string leng = MarshalString(this->LentextBox->Text);
 	std::string sn = MarshalString(this->SheetcomboBox->Text);
@@ -259,7 +261,7 @@ void ExcelRTC::Form1::createPort()
 		}
 		else
 		{
-			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
+			std::vector<std::string> bt = coil::split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 
 			if(bt.size() > 1)
 			{
@@ -307,7 +309,7 @@ void ExcelRTC::Form1::DeletePort()
 		}
 		else
 		{
-			std::vector<std::string> bt = split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
+			std::vector<std::string> bt = coil::split(MarshalString(this->RTCtreeView->SelectedNode->FullPath), "\\");
 			bt.erase(bt.begin());
 	
 			tertc->delDPort(bt);
@@ -357,7 +359,7 @@ void ExcelRTC::Form1::OpenFile()
 	 if(openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 	 {
 		 std::string filePath = MarshalString(openFileDialog1->FileName);
-		 filePath = Replace(filePath, "\\", "/");
+		 coil::replaceString(filePath, "\\", "/");
 		 tertc->setFilePath(filePath);
 		 ExcelObject::Obj->Open(openFileDialog1->FileName);
 		 currentDirectory = System::IO::Path::GetDirectoryName(openFileDialog1->FileName);
