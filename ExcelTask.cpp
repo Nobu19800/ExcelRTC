@@ -26,9 +26,13 @@ int ExcelTask::svc()
 	
 	
 	ExcelObject::Obj = gcnew ExcelObject();
-	std::string filePath = "";
-    coil::Properties& prop(::RTC::Manager::instance().getConfig());
-    getProperty(prop, "excel.filename", filePath);
+	std::string filePath = mrtc->getFileName();
+	if(filePath == "NewFile")
+	{
+		filePath = "";
+	}
+    //coil::Properties& prop(::RTC::Manager::instance().getConfig());
+    //getProperty(prop, "excel.filename", filePath);
 	
 	coil::replaceString(filePath,  "/", "\\");
 	

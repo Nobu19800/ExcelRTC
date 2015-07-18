@@ -43,7 +43,7 @@ static const char* excelrtc_spec[] =
     "description",       "Excel Control Component",
     "version",           "0.0.2",
     "vendor",            "Miyamoto Nobuhiko",
-    "category",          "Category",
+    "category",          "Office",
     "activity_type",     "PERIODIC",
     "kind",              "DataFlowComponent",
     "max_instance",      "1",
@@ -132,9 +132,9 @@ ExcelControl::ExcelControl(RTC::Manager* manager)
 	{
 		createPort(rtclist[i]);
 	}*/
+	
 
-	et = new ExcelTask(this);
-	et->activate();
+	
 	
 
 	
@@ -142,6 +142,12 @@ ExcelControl::ExcelControl(RTC::Manager* manager)
 
 ExcelControl::~ExcelControl()
 {
+}
+
+std::string ExcelControl::getFileName()
+{
+
+	return file_path;
 }
 
 TreeObject* ExcelControl::getRTCTree(string IP_adress)
@@ -193,22 +199,30 @@ RTC::ReturnCode_t ExcelControl::onInitialize()
   bindParameter("c_move", c_move, "1");
   bindParameter("attach_Port", attach_Port, "None");
 
-  std::string filePath = "";
+  this->m_configsets.update("default", "file_path");
+  et = new ExcelTask(this);
+  et->activate();
+
+  m_SpreadSheetPort.registerProvider("spreadsheet", "SpreadSheet::mSpreadSheet", m_spreadsheet);
+
+  addPort(m_SpreadSheetPort);
+  
+  
+
+  /*std::string filePath = "";
   coil::Properties& prop(::RTC::Manager::instance().getConfig());
   getProperty(prop, "excel.filename", filePath);
-  setFilePath(filePath);
+  setFilePath(filePath);*/
 
 
   this->addConfigurationSetListener(ON_SET_CONFIG_SET, new ExcelConfigUpdateParam(this));
   
 
   
-  m_SpreadSheetPort.registerProvider("spreadsheet", "SpreadSheet::mSpreadSheet", m_spreadsheet);
-
-  addPort(m_SpreadSheetPort);
-
   
 
+  
+  
  
   
 

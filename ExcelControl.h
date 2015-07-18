@@ -550,7 +550,7 @@ class ExcelControl
 
 
    
-   
+   std::string getFileName();
 
  protected:
 	std::string file_path;	/**<@@brief  */
