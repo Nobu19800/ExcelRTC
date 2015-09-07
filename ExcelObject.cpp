@@ -10,6 +10,9 @@
 #include <iostream>
 
 
+/**
+*@brief Excelを操作するクラスのコンストラクタ
+*/
 ExcelObject::ExcelObject()
 {
 	xlApplication = nullptr;
@@ -26,6 +29,12 @@ ExcelObject::ExcelObject()
 	blue = 0;
 }
 
+/**
+*@brief データ取得中のセルの背景の色を設定
+* @param r 背景の色(R)
+* @param g 背景の色(G)
+* @param b 背景の色(B)
+*/
 void ExcelObject::setColor(int r, int g, int b)
 {
 	red = r;
@@ -33,6 +42,11 @@ void ExcelObject::setColor(int r, int g, int b)
 	blue = b;
 }
 
+/**
+*@brief 名前からワークシートを取得する関数
+* @param sn シート名
+* @return シートオブジェクト
+*/
 Excel::Worksheet^ ExcelObject::getWorksheet(std::string sn)
 {
 	for(int i=0;i < xlWorksheet->Count;i++)
@@ -47,6 +61,13 @@ Excel::Worksheet^ ExcelObject::getWorksheet(std::string sn)
 	return nullptr;
 }
 
+/**
+*@brief セルの色を無色にする関数
+* @param c 列番号
+* @param l 行番号
+* @param sn シート名
+* @param leng 行の範囲
+*/
 void ExcelObject::resetCellColor(int c, std::string l, std::string sn, std::string len)
 {
 	Excel::Worksheet^ws = getWorksheet(sn);
@@ -71,6 +92,13 @@ void ExcelObject::resetCellColor(int c, std::string l, std::string sn, std::stri
 	}
 }
 
+/**
+*@brief 単一のセルの文字列を変更する関数
+* @param c 列番号
+* @param l 行番号
+* @param sn シート名
+* @param val 入力する文字列
+*/
 void ExcelObject::setCellStringSingle(int c, std::string l, std::string sn, std::string val)
 {
 	int t_l = convertStrToVal(l);
@@ -85,6 +113,10 @@ void ExcelObject::setCellStringSingle(int c, std::string l, std::string sn, std:
 	}
 }
 
+/**
+*@brief 保存用ワークシートに書き込む関数
+* @param sf 書き込む文字列
+*/
 void ExcelObject::saveRTC(std::vector<std::string> sf)
 {
 	Excel::Worksheet^ws = getWorksheet("保存用");
@@ -98,6 +130,11 @@ void ExcelObject::saveRTC(std::vector<std::string> sf)
 		}
 	}
 }
+
+/**
+*@brief データポートの情報を保存用ワークシートから読み込む関数
+* @return 読み込んだ文字列
+*/
 std::vector<std::string> ExcelObject::loadRTC()
 {
 	Excel::Worksheet^ws = getWorksheet("保存用");
@@ -132,7 +169,10 @@ std::vector<std::string> ExcelObject::loadRTC()
 }
 
 
-
+/**
+*@brief Excelファイルを開く関数
+* @param fn ファイル名
+*/
 void ExcelObject::Open(System::String^ fn)
 {
 	
@@ -230,6 +270,9 @@ void ExcelObject::Open(System::String^ fn)
 			
 }
 
+/**
+*@brief COMオブジェクトを解放する関数
+*/
 void ExcelObject::Close()
 {
 	int count = xlWorksheet->Count;

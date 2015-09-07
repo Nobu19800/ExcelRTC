@@ -34,6 +34,7 @@ public:
 		ExcelTask(ExcelControl *m_rtc);
 		/**
 		*@brief スレッドを実行
+		* @return 
 		*/
 		virtual int svc();
 		

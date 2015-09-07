@@ -11,7 +11,9 @@
 #include "ExcelObject.h"
 
 
-
+/**
+*@brief Excelの起動、COMの参照をするスレッドのコンストラクタ
+*/
 ExcelTask::ExcelTask(ExcelControl *m_rtc)
 {
 	mrtc = m_rtc;
@@ -20,7 +22,10 @@ ExcelTask::ExcelTask(ExcelControl *m_rtc)
 
 
 
-
+/**
+*@brief スレッドを実行
+* @return
+*/
 int ExcelTask::svc()
 {
 	

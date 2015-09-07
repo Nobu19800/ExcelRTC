@@ -46,9 +46,22 @@ class OtherPort;
 
 
 
-
+/**
+*@brief 現在のパスからRTCを検索して、データポートをリストに追加
+* @param context ネーミングコンテキスト
+* @param rtclist データポートのリスト
+* @param name 現在のパス
+* @param to RTCのデータポートのツリー
+*/
 void ListRecursive(CosNaming::NamingContext_ptr context,std::vector<OtherPort> &rtclist,std::string &name, TreeObject *to);
 
+/**
+*@brief データポートのリストを作成
+* @param naming ネーミングコンテキスト
+* @param rtclist データポートのリスト
+* @param to RTCのデータポートのツリー
+* @param IP_adress IPアドレス
+*/
 int rtc_get_rtclist(RTC::CorbaNaming &naming,std::vector<OtherPort> &rtclist, TreeObject *to, std::string IP_adress);
 
 
@@ -549,7 +562,10 @@ class ExcelControl
    mSpreadSheetSVC_impl m_spreadsheet;	/**<　@brief  */
 
 
-   
+   /**
+   *@brief ファイルを取得する関数
+   * @return ファイル名
+   */
    std::string getFileName();
 
  protected:

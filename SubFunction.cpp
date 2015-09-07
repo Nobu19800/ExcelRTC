@@ -10,6 +10,12 @@
 
 using namespace std;
 
+
+/**
+*@brief セルの番号を数値に変換する関数
+* @param m_str セルの番号(アルファベット)
+* @return 対応する数値
+*/
 int convertStrToVal(std::string m_str)
 {
 	if(m_str.size() > 0)
@@ -38,7 +44,11 @@ int convertStrToVal(std::string m_str)
 }
 
 
-
+/**
+*@brief System::Stringをstd::stringに変換する関数
+* @param s 変換前の文字列
+* @return 変換後の文字列
+*/
 std::string MarshalString ( System::String ^ s) {
    using namespace System::Runtime::InteropServices;
    const char* chars = 

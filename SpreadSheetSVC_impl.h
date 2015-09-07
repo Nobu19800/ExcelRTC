@@ -22,15 +22,15 @@ class mSpreadSheetSVC_impl
 
  public:
   /*!
-   * @brief standard constructor
+   * @brief コンストラクタ
    */
    mSpreadSheetSVC_impl();
   /*!
-   * @brief destructor
+   * @brief デストラクタ
    */
    virtual ~mSpreadSheetSVC_impl();
 
-   // attributes and operations
+   
    /**
    *@brief セルの文字列を取得
    * @param l 行番号

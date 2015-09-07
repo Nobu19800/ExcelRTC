@@ -16,7 +16,10 @@
 using namespace ExcelRTC;
 
 
-
+/**
+*@brief RTC初期化
+* @param manager マネージャオブジェクト
+*/
 void MyModuleInit(RTC::Manager* manager)
 {
   ExcelControlInit(manager);
@@ -39,7 +42,10 @@ void MyModuleInit(RTC::Manager* manager)
 
 
 
-
+/**
+*@brief メイン関数
+* @param args コマンドライン引数
+*/
 [STAThreadAttribute]
 int main(array<System::String ^> ^args)
 {

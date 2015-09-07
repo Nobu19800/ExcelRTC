@@ -93,7 +93,7 @@ static const char* excelrtc_spec[] =
 
 
 
-void SetTree(TreeObject *to)
+/*void SetTree(TreeObject *to)
 {
 	
 	
@@ -106,12 +106,15 @@ void SetTree(TreeObject *to)
 	{
 		SetTree(to->to[i]);
 	}
-}
+}*/
 
 
 
 
-
+/**
+*@brief Excelを操作するRTコンポーネントのコンストラクタ
+* @param manager マネージャオブジェクト
+*/
 ExcelControl::ExcelControl(RTC::Manager* manager)
   : RTC::DataFlowComponentBase(manager),
   m_SpreadSheetPort("SpreadSheet"),
@@ -140,16 +143,28 @@ ExcelControl::ExcelControl(RTC::Manager* manager)
 	
 }
 
+/**
+*@brief Excelを操作するRTコンポーネントのデストラクタ
+*/
 ExcelControl::~ExcelControl()
 {
 }
 
+/**
+*@brief ファイルを取得する関数
+* @return ファイル名
+*/
 std::string ExcelControl::getFileName()
 {
 
 	return file_path;
 }
 
+/**
+*@brief RTCのデータポートのツリーを取得する関数
+* @param IP_adress ネームサーバの名前
+* @return ツリーオブジェクト
+*/
 TreeObject* ExcelControl::getRTCTree(string IP_adress)
 {
 	try
@@ -178,6 +193,10 @@ TreeObject* ExcelControl::getRTCTree(string IP_adress)
 	
 }
 
+/**
+*@brief 初期化処理用コールバック関数
+* @return RTC::ReturnCode_t
+*/
 RTC::ReturnCode_t ExcelControl::onInitialize()
 {
 	//ExcelObject::Obj = gcnew ExcelObject();
@@ -230,6 +249,10 @@ RTC::ReturnCode_t ExcelControl::onInitialize()
 }
 
 
+/**
+*@brief ファイル名のコンフィギュレーションパラメータ変更の関数
+* @param FP ファイル名
+*/
 void ExcelControl::setFilePath(std::string FP)
 {
 	
@@ -252,6 +275,11 @@ void ExcelControl::setFilePath(std::string FP)
 	
 }
 
+/**
+*@brief 不活性化時のコールバック関数
+* @param ec_id target ExecutionContext Id
+* @return RTC::ReturnCode_t
+*/
 RTC::ReturnCode_t ExcelControl::onDeactivated(RTC::UniqueId ec_id)
 {
 	resetAllPort();
@@ -259,13 +287,19 @@ RTC::ReturnCode_t ExcelControl::onDeactivated(RTC::UniqueId ec_id)
 	return RTC::RTC_OK;
 }
 
-
+/**
+*@brief 終了処理のコールバック関数
+* @return RTC::ReturnCode_t
+*/
 RTC::ReturnCode_t ExcelControl::onFinalize()
 {
   ExcelObject::Obj->Close();
   return RTC::RTC_OK;
 }
 
+/**
+*@brief セルの名前を記入
+*/
 void ExcelControl::update_cellName()
 {
 	for(int i=0;i < ConfInPorts.size();i++)
@@ -298,7 +332,11 @@ void ExcelControl::update_cellName()
 
 
 
-
+/**
+*@brief 周期処理用コールバック関数
+* @param ec_id target ExecutionContext Id
+* @return RTC::ReturnCode_t
+*/
 RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
 {
 	if(actionLock == 1)
@@ -362,6 +400,10 @@ RTC::ReturnCode_t ExcelControl::onExecute(RTC::UniqueId ec_id)
   return RTC::RTC_OK;
 }
 
+/**
+*@brief 関連付けしたデータポートの処理
+* @param ip インポート
+*/
 void ExcelControl::updateAPort(ExcelPortBase* ip)
 {
 	for(int i=0;i < ip->attachPort.size();i++)
@@ -425,7 +467,10 @@ void ExcelControl::updateAPort(ExcelPortBase* ip)
 	}
 }
 
-
+/**
+*@brief データポートを削除する関数
+* @param pt 削除するデータポートのパス
+*/
 void ExcelControl::delDPort(std::vector<std::string> pt)
 {
 	for(int i=0;i < rtclist.size();i++)
@@ -438,6 +483,9 @@ void ExcelControl::delDPort(std::vector<std::string> pt)
 	}
 }
 
+/**
+*@brief コンフィギュレーションパラメータが変更されたときに呼び出される関数
+*/
 void ExcelControl::configUpdate()
 {
 
@@ -661,6 +709,11 @@ void ExcelControl::configUpdate()
 	
 }
 
+/**
+*@brief データポートを取得する関数
+* @param pt 取得するデータポートのパス
+* @return データポートオブジェクト
+*/
 ExcelPortBase* ExcelControl::getDPort(std::vector<std::string> pt)
 {
 	for(int i=0;i < rtclist.size();i++)
@@ -674,6 +727,18 @@ ExcelPortBase* ExcelControl::getDPort(std::vector<std::string> pt)
 	return NULL;
 }
 
+
+/**
+*@brief データポートの作成、値の設定を行う関数
+* @param pt 接続するデータポートのパス
+* @param c 列番号
+* @param l 行番号
+* @param sn シート名
+* @param leng 行の範囲
+* @param mstate 列を移動する場合はTrue
+* @param msflag Trueの場合はメッセージボックスの表示とセルに名前の書き込みを行う
+* @return データポートオブジェクト
+*/
 ExcelPortBase* ExcelControl::setDPort(std::vector<std::string> pt, int c, std::string l, std::string sn, std::string leng, bool mstate, bool msflag)
 {
 	/*for(int i=0;i < pt.size();i++)
@@ -743,6 +808,10 @@ ExcelPortBase* ExcelControl::setDPort(std::vector<std::string> pt, int c, std::s
 	return NULL;
 }
 
+/**
+*@brief データポートを削除する関数
+* @param op 削除するデータポート
+*/
 void ExcelControl::deleteOtherPort(OtherPort &op)
 {
 	
@@ -767,6 +836,11 @@ void ExcelControl::deleteOtherPort(OtherPort &op)
 	
 }
 
+/**
+*@brief データポートを関連付ける関数
+* @param mpb 関連付けるアウトポート
+* @param n 関連付けるインポートの名前
+*/
 void ExcelControl::attachPort(ExcelPortBase *mpb, std::string n)
 {
 	
@@ -801,6 +875,12 @@ void ExcelControl::attachPort(ExcelPortBase *mpb, std::string n)
 
 	save();
 }
+
+/**
+*@brief データポートの関連付けを解除する関数
+* @param mpb 関連付けを解除するアウトポート
+* @param n 関連付けを解除するインポートの名前
+*/
 void ExcelControl::detachPort(ExcelPortBase *mpb, std::string n)
 {
 	ExcelPortBase *ip = getInPort(n);
@@ -841,6 +921,11 @@ void ExcelControl::detachPort(ExcelPortBase *mpb, std::string n)
 	save();
 }
 
+/**
+*@brief インポートを取得する関数
+* @param n インポートの名前
+* @return データポートオブジェクト
+*/
 ExcelPortBase *ExcelControl::getInPort(std::string n)
 {
 	for(int i=0;i < InPorts.size();i++)
@@ -853,6 +938,12 @@ ExcelPortBase *ExcelControl::getInPort(std::string n)
 	return NULL;
 }
 
+
+/**
+*@brief アウトポートを取得する関数
+* @param n アウトポートの名前
+* @return データポートオブジェクト
+*/
 ExcelPortBase *ExcelControl::getOutPort(std::string n)
 {
 	for(int i=0;i < OutPorts.size();i++)
@@ -864,6 +955,12 @@ ExcelPortBase *ExcelControl::getOutPort(std::string n)
 	}
 	return NULL;
 }
+
+/**
+*@brief コンフィギュレーションパラメータで設定したインポートを取得する関数
+* @param n インポートの名前
+* @return データポートオブジェクト
+*/
 ExcelPortBase *ExcelControl::getConfInPort(std::string n)
 {
 	for(int i=0;i < ConfInPorts.size();i++)
@@ -877,6 +974,11 @@ ExcelPortBase *ExcelControl::getConfInPort(std::string n)
 	return NULL;
 }
 
+/**
+*@brief コンフィギュレーションパラメータで設定したアウトポートを取得する関数
+* @param n アウトポートの名前
+* @return データポートオブジェクト
+*/
 ExcelPortBase *ExcelControl::getConfOutPort(std::string n)
 {
 	
@@ -891,7 +993,9 @@ ExcelPortBase *ExcelControl::getConfOutPort(std::string n)
 }
 
 
-
+/**
+*@brief 全てのデータポートを削除する関数
+*/
 void ExcelControl::deleteAllPort()
 {
 	for(int i=0;i < InPorts.size();i++)
@@ -915,6 +1019,10 @@ void ExcelControl::deleteAllPort()
 	InPorts.clear();
 	OutPorts.clear();
 }
+
+/**
+*@brief RTCの情報を保存用シートに書き込む関数
+*/
 void ExcelControl::save()
 {
 	//update_cellName();
@@ -956,6 +1064,10 @@ void ExcelControl::save()
 
 	ExcelObject::Obj->saveRTC(v);
 }
+
+/**
+*@brief RTCの情報をほ場用シートより読み込む関数
+*/
 void ExcelControl::load()
 {
 	
@@ -1021,10 +1133,18 @@ void ExcelControl::load()
 	
 }
 
+/**
+*@brief データを書き込む列を初期化する
+* @param mpb データポートオブジェクト
+*/
 void ExcelControl::resetPort(ExcelPortBase* mpb)
 {
 	mpb->num = 0;
 }
+
+/**
+*@brief 全てのデータを書き込む列を初期化する
+*/
 void ExcelControl::resetAllPort()
 {
 	for(int i=0;i < InPorts.size();i++)
@@ -1063,6 +1183,16 @@ void ExcelControl::resetAllPort()
 	}
 }
 
+/**
+*@brief データポートを作成する関数
+* @param op 接続するデータポート
+* @param c 列番号
+* @param l 行番号
+* @param sn シート名
+* @param leng 行の範囲
+* @param mstate 列を移動する場合はTrue
+* @return 作成したデータポート
+*/
 ExcelPortBase* ExcelControl::createPort(OtherPort &op, int c, std::string l, std::string sn, std::string leng, bool mstate)
 {
 	

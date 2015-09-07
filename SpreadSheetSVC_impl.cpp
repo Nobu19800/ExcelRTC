@@ -18,20 +18,30 @@
 
 
 
-
+/*!
+* @brief Excelを操作するインターフェースのコンストラクタ
+*/
 mSpreadSheetSVC_impl::mSpreadSheetSVC_impl()
 {
 
 }
 
-
+/*!
+* @brief Excelを操作するインターフェースのデストラクタ
+*/
 mSpreadSheetSVC_impl::~mSpreadSheetSVC_impl()
 {
 
 }
 
 
-
+/**
+*@brief セルの文字列を取得
+* @param l 行番号
+* @param c 列番号
+* @param sn シート名
+* @return セルの文字列
+*/
 char* mSpreadSheetSVC_impl::get_string(const char* l, const char* c, const char* sn)
 {
 	int c_tmp;
@@ -51,7 +61,13 @@ char* mSpreadSheetSVC_impl::get_string(const char* l, const char* c, const char*
   //return 0;
 }
 
-
+/**
+*@brief セルの値を設定
+* @param l 行番号
+* @param c 列番号
+* @param sn シート名
+* @param v 設定する値
+*/
 void mSpreadSheetSVC_impl::set_value(const char* l, const char* c, const char* sn, CORBA::Float v)
 {
 	int c_tmp;
@@ -64,7 +80,9 @@ void mSpreadSheetSVC_impl::set_value(const char* l, const char* c, const char* s
 #endif
 }
 
-
+/**
+*@brief 未実装
+*/
 StringList *mSpreadSheetSVC_impl::get_string_range(const char* l1, const char* c1, const char* l2, const char* c2, const char* sn)
 {
   
@@ -74,7 +92,9 @@ StringList *mSpreadSheetSVC_impl::get_string_range(const char* l1, const char* c
   return 0;
 }
 
-
+/**
+*@brief 未実装
+*/
 void mSpreadSheetSVC_impl::set_value_range(const char* l, const char* c, const char* sn, FloatList v)
 {
   
@@ -83,7 +103,13 @@ void mSpreadSheetSVC_impl::set_value_range(const char* l, const char* c, const c
 #endif
 }
 
-
+/**
+*@brief セルの文字列を設定
+* @param l 行番号
+* @param c 列番号
+* @param sn シート名
+* @param v 設定する文字列
+*/
 void mSpreadSheetSVC_impl::set_string(const char* l, const char* c, const char* sn, const char* v)
 {
 	int c_tmp;
@@ -96,7 +122,9 @@ void mSpreadSheetSVC_impl::set_string(const char* l, const char* c, const char* 
 #endif
 }
 
-
+/**
+*@brief 未実装
+*/
 void mSpreadSheetSVC_impl::set_string_range(const char* l, const char* c, const char* sn, StringList v)
 {
   
